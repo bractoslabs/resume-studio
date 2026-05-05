@@ -101,6 +101,40 @@ export const ImportModal = ({ draft, error, setDraft, setError, onCreate, onClos
               </div>
               <Button className="primary" onClick={onCreate}>Create resume</Button>
             </div>
+            <div className="import-review-grid">
+              <section className="import-review-panel">
+                <h4>Detected contact</h4>
+                <dl className="import-review-details">
+                  <div><dt>Name</dt><dd>{draft.review.contact.name || "Not detected"}</dd></div>
+                  <div><dt>Title</dt><dd>{draft.review.contact.title || "Not detected"}</dd></div>
+                  <div><dt>Email</dt><dd>{draft.review.contact.email || "Not detected"}</dd></div>
+                  <div><dt>Phone</dt><dd>{draft.review.contact.phone || "Not detected"}</dd></div>
+                  <div><dt>Location</dt><dd>{draft.review.contact.location || "Not detected"}</dd></div>
+                </dl>
+              </section>
+              <section className="import-review-panel">
+                <h4>Parsed content</h4>
+                <dl className="import-review-details">
+                  <div><dt>Sections</dt><dd>{draft.sections.length ? draft.sections.join(", ") : "None"}</dd></div>
+                  <div><dt>Bullets</dt><dd>{draft.review.bulletCount}</dd></div>
+                  <div><dt>Confidence</dt><dd>{draft.confidence}%</dd></div>
+                </dl>
+              </section>
+            </div>
+            <div className="import-review-grid">
+              <section className="import-review-panel">
+                <h4>Cleanups applied</h4>
+                {draft.review.repairedFields.length ? (
+                  <ul className="import-review-list">{draft.review.repairedFields.map((field) => <li key={field}>{field}</li>)}</ul>
+                ) : <p>No automatic cleanup was needed.</p>}
+              </section>
+              <section className="import-review-panel">
+                <h4>Needs review</h4>
+                {draft.review.ignoredFields.length ? (
+                  <ul className="import-review-list">{draft.review.ignoredFields.map((field) => <li key={field}>{field}</li>)}</ul>
+                ) : <p>No missing import fields detected.</p>}
+              </section>
+            </div>
             <details>
               <summary>Edit imported Markdown</summary>
               <textarea aria-label="Clean imported Markdown" value={draft.markdown} onChange={(event) => setDraft({ ...draft, markdown: event.target.value })} />

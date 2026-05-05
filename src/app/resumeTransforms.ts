@@ -181,6 +181,51 @@ ${bodyLines}
 `;
 };
 
+const detectedImportSections = (content: string) => [...content.matchAll(/^##\s+(.+)$/gm)].map((match) => match[1].trim());
+
+const sourceHasImportedSectionHeading = (source: string) => source
+  .replace(/\r\n?/g, "\n")
+  .split("\n")
+  .some((line) => isImportedSectionHeading(line.replace(/[ \t]+/g, " ").trim()));
+
+const sourceHasDatedJobHeader = (source: string) => source
+  .replace(/\r\n?/g, "\n")
+  .split("\n")
+  .some((line) => dateRangePattern.test(line.trim()) && !/^[-*•]\s+/.test(line.trim()));
+
+const importReviewNotes = (fileName: string, source: string, markdown: string, sections: string[], resumeForge: ReturnType<typeof parseResumeForgeResumeFile>) => {
+  const { frontmatter } = parseFrontmatter(markdown);
+  const bulletCount = (markdown.match(/^\s*[-*]\s+/gm) ?? []).length;
+  const repairedFields = [
+    resumeForge ? "Restored Resume Studio JSON metadata" : "",
+    fileName.toLowerCase().endsWith(".json") && !resumeForge ? "Converted JSON Resume fields to Resume Studio Markdown" : "",
+    !source.trimStart().startsWith("---") ? "Added Resume Studio frontmatter" : "",
+    /•/.test(source) ? "Converted bullet symbols to Markdown bullets" : "",
+    sourceHasImportedSectionHeading(source) ? "Converted plain-text headings to Markdown sections" : "",
+    sourceHasDatedJobHeader(source) ? "Marked dated experience lines as job entries" : "",
+  ].filter(Boolean);
+  const ignoredFields = [
+    frontmatter.name ? "" : "Name not detected",
+    frontmatter.email ? "" : "Email not detected",
+    frontmatter.phone ? "" : "Phone not detected",
+    frontmatter.location ? "" : "Location not detected",
+    sections.length ? "" : "Standard sections not detected",
+    bulletCount ? "" : "Resume bullets not detected",
+  ].filter(Boolean);
+  return {
+    contact: {
+      name: frontmatter.name ?? "",
+      title: frontmatter.title ?? frontmatter.targetRole ?? "",
+      email: frontmatter.email ?? "",
+      phone: frontmatter.phone ?? "",
+      location: frontmatter.location ?? "",
+    },
+    bulletCount,
+    ignoredFields,
+    repairedFields: [...new Set(repairedFields)],
+  };
+};
+
 export const markdownFromImport = (fileName: string, source: string) => {
   const lower = fileName.toLowerCase();
   if (lower.endsWith(".json")) {
@@ -235,7 +280,7 @@ export const buildImportDraft = (fileName: string, source: string): ImportDraft 
   const resumeForge = fileName.toLowerCase().endsWith(".json") ? parseResumeForgeResumeFile(source) : null;
   const markdown = markdownFromImport(fileName, source);
   const { content, frontmatter } = parseFrontmatter(markdown);
-  const sections = [...content.matchAll(/^##\s+(.+)$/gm)].map((match) => match[1].trim());
+  const sections = detectedImportSections(content);
   const confidence = Math.min(
     98,
     42 +
@@ -251,6 +296,7 @@ export const buildImportDraft = (fileName: string, source: string): ImportDraft 
     markdown,
     confidence: resumeForge ? Math.max(confidence, 96) : confidence,
     sections,
+    review: importReviewNotes(fileName, source, markdown, sections, resumeForge),
     resumePatch: resumeForge ? {
       title: resumeForge.resume.title,
       targetRole: resumeForge.resume.targetRole,

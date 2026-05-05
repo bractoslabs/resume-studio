@@ -8,7 +8,7 @@ Public roadmap for improving Resume Studio's usability, usefulness, UI/UX, and l
 2. ~~Make the existing job seeker checklist actionable by linking each checklist item to the relevant screen or section.~~
 3. ~~Delay backup reminders until meaningful edits or first export so new users are not interrupted immediately after creating a draft.~~
 4. ~~Add placeholder detection for starter content such as "Your Name", "Target Role", and "[add metric]" and group those issues into a clear pre-export warning.~~
-5. Add an import review screen that shows detected sections, contact details, bullets, parsing confidence, and ignored or repaired fields before creating a resume.
+5. ~~Add an import review screen that shows detected sections, contact details, bullets, parsing confidence, and ignored or repaired fields before creating a resume.~~
 
 ## Editor and Resume Building
 

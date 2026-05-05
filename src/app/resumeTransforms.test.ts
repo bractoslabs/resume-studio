@@ -39,6 +39,28 @@ describe("resume app transforms", () => {
     expect(draft.markdown).toContain("Avery Chen");
     expect(draft.sections).toEqual(expect.arrayContaining(["Experience", "Skills"]));
     expect(draft.confidence).toBeGreaterThan(50);
+    expect(draft.review.contact.name).toBe("Avery Chen");
+    expect(draft.review.bulletCount).toBe(2);
+  });
+
+  it("summarizes import review cleanups and missing fields", () => {
+    const draft = buildImportDraft("resume.txt", [
+      "Avery Chen",
+      "avery@example.com | Chicago, IL",
+      "EXPERIENCE",
+      "Northwind Labs | 2022 - Present",
+      "• Improved onboarding by 24%",
+    ].join("\n"));
+    expect(draft.review.contact.email).toBe("avery@example.com");
+    expect(draft.review.contact.location).toBe("Chicago, IL");
+    expect(draft.review.bulletCount).toBe(1);
+    expect(draft.review.repairedFields).toEqual(expect.arrayContaining([
+      "Added Resume Studio frontmatter",
+      "Converted bullet symbols to Markdown bullets",
+      "Converted plain-text headings to Markdown sections",
+      "Marked dated experience lines as job entries",
+    ]));
+    expect(draft.review.ignoredFields).toContain("Phone not detected");
   });
 
   it("splits imported experience into generic dated job entries", () => {
