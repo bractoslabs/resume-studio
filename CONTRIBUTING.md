@@ -34,7 +34,7 @@ Good first contributions include:
 - Small UI copy improvements
 - Focused tests for existing behavior
 
-Maintainers can copy starter issue drafts from [docs/starter-issues.md](docs/starter-issues.md).
+Maintainers may label focused backlog items from [To-Do.md](To-Do.md) as `good first issue` or `help wanted` when they are ready for contributors.
 
 ## Local Setup
 

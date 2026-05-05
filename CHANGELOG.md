@@ -10,7 +10,7 @@ Upcoming public beta release focused on launch readiness. Core features are usab
 - SEO metadata, favicon, app icon, and web manifest.
 - Public Privacy, Terms, and Security pages.
 - Local-storage warning and backup guidance.
-- Browser support, known limitations, public roadmap, and starter issue docs.
+- Browser support, known limitations, and public roadmap/backlog updates.
 - ESLint, Prettier, and Dependabot configuration.
 - Public beta pill and subtle Bractos Labs attribution.
 
@@ -18,7 +18,7 @@ Upcoming public beta release focused on launch readiness. Core features are usab
 
 - Export wording now uses Print / Save as PDF for browser-print-based output.
 - Import copy now sets expectations for Markdown, TXT, DOCX, selectable-text PDFs, and scanned/image-only PDFs.
-- README now links public roadmap and contributor starter issue drafts.
+- README now links the root public roadmap/backlog.
 - CI now runs lint, format check, unit tests, and build.
 
 ### Fixed
@@ -28,11 +28,11 @@ Upcoming public beta release focused on launch readiness. Core features are usab
 ### Security
 
 - Markdown/HTML sanitizer tests cover scripts, inline event handlers, unsafe links, malformed HTML, SVG payloads, and safe Markdown formatting.
-- SECURITY.md explains the static local-first public beta security model.
+- README explains the static local-first public beta security model and private reporting path.
 
 ### Documentation
 
-- Community files, issue templates, pull request template, release checklist, public roadmap, and starter issue drafts are included.
+- Community files, issue templates, pull request template, and root public roadmap/backlog are included.
 
 ### Known Limitations
 

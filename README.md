@@ -76,7 +76,7 @@ Contributions are welcome. Resume Studio is in public beta, so maintainers may b
 
 Never include private resume content, personal contact information, job application details, or other sensitive data in public issues, PRs, screenshots, or fixtures.
 
-See [docs/roadmap.md](docs/roadmap.md) for the public roadmap and [docs/starter-issues.md](docs/starter-issues.md) for ready-to-copy contributor issue drafts.
+See [To-Do.md](To-Do.md) for the public roadmap and longer-term product backlog.
 
 GitHub Discussions may be enabled later for broader community feedback. Until then, use Issues for actionable bugs, feature requests, accessibility problems, import/export issues, and documentation improvements.
 
@@ -160,15 +160,21 @@ Browser storage is per browser and device. Work saved in one browser profile may
 
 Markdown is rendered client-side. Resume Studio allows Markdown and limited HTML, then sanitizes rendered HTML and links before inserting content into the preview.
 
-Do not paste untrusted complex HTML unless you understand the risk. Review resume content before export, and report security issues privately to labs@bractos.com.
+Do not paste untrusted complex HTML unless you understand the risk. Review resume content before export.
 
-See [SECURITY.md](SECURITY.md) for the full security model and vulnerability reporting path.
+## Security Reports
 
-## Project Docs
+Email security vulnerabilities to labs@bractos.com. Do not open a public GitHub issue for security reports.
 
-- [Release checklist](docs/release-checklist.md)
-- [Public roadmap](docs/roadmap.md)
-- [Starter issue drafts](docs/starter-issues.md)
+Include a clear description, steps to reproduce, browser and operating system if relevant, potential impact, and proof-of-concept details if safe to share privately.
+
+Resume Studio is a static, local-first public beta. Resume content is intended to remain in browser storage on the user's device. The current beta does not require an account, does not include cloud sync, and does not include cloud resume storage.
+
+## Community Conduct
+
+Be respectful, constructive, and professional in issues, pull requests, and project discussions. Harassment, personal attacks, publishing private information, or other abusive behavior is not welcome.
+
+Report conduct concerns privately to labs@bractos.com.
 
 ## Privacy and Storage
 
