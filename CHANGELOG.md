@@ -10,7 +10,7 @@ Upcoming public beta release focused on launch readiness. Core features are usab
 - SEO metadata, favicon, app icon, and web manifest.
 - Public Privacy, Terms, and Security pages.
 - Local-storage warning and backup guidance.
-- Browser support, known limitations, testing, accessibility, roadmap, and starter issue docs.
+- Browser support, known limitations, public roadmap, and starter issue docs.
 - ESLint, Prettier, and Dependabot configuration.
 - Public beta pill and subtle Bractos Labs attribution.
 
@@ -23,17 +23,16 @@ Upcoming public beta release focused on launch readiness. Core features are usab
 
 ### Fixed
 
-- Light-mode review/checklist surfaces now use the app theme instead of dark public-page cards.
 - Light-mode styling is more consistent across review and checklist surfaces.
 
 ### Security
 
 - Markdown/HTML sanitizer tests cover scripts, inline event handlers, unsafe links, malformed HTML, SVG payloads, and safe Markdown formatting.
-- Security model docs and SECURITY.md explain the static local-first public beta model.
+- SECURITY.md explains the static local-first public beta security model.
 
 ### Documentation
 
-- Community files, issue templates, pull request template, release checklist, accessibility docs, testing docs, and GitHub Discussions guidance are included.
+- Community files, issue templates, pull request template, release checklist, public roadmap, and starter issue drafts are included.
 
 ### Known Limitations
 

@@ -5,7 +5,7 @@ Use this checklist before each public Resume Studio release.
 ## Pre-Release Basics
 
 - [ ] Package version matches the intended release.
-- [ ] CHANGELOG and release notes are updated.
+- [ ] CHANGELOG is updated.
 - [ ] `npm test` passes.
 - [ ] `npm run lint` passes.
 - [ ] `npm run format:check` passes.

@@ -78,6 +78,8 @@ Never include private resume content, personal contact information, job applicat
 
 See [docs/roadmap.md](docs/roadmap.md) for the public roadmap and [docs/starter-issues.md](docs/starter-issues.md) for ready-to-copy contributor issue drafts.
 
+GitHub Discussions may be enabled later for broader community feedback. Until then, use Issues for actionable bugs, feature requests, accessibility problems, import/export issues, and documentation improvements.
+
 ## Environment Variables
 
 No environment variables are required for the current static local-first app.
@@ -160,16 +162,13 @@ Markdown is rendered client-side. Resume Studio allows Markdown and limited HTML
 
 Do not paste untrusted complex HTML unless you understand the risk. Review resume content before export, and report security issues privately to labs@bractos.com.
 
-See [docs/security-model.md](docs/security-model.md) for more detail.
+See [SECURITY.md](SECURITY.md) for the full security model and vulnerability reporting path.
 
-## Launch Docs
+## Project Docs
 
-- [Testing](docs/testing.md)
-- [Accessibility](docs/accessibility.md)
 - [Release checklist](docs/release-checklist.md)
 - [Public roadmap](docs/roadmap.md)
 - [Starter issue drafts](docs/starter-issues.md)
-- [GitHub Discussions guidance](docs/github-discussions.md)
 
 ## Privacy and Storage
 
@@ -180,10 +179,6 @@ Resume Studio defaults to guest/local-first mode:
 - Backup and restore are explicit JSON actions.
 - Clear data requires confirmation.
 - Sharing UI and data-model placeholders exist, but backend share links are not enabled yet.
-
-## Roadmap
-
-See [docs/roadmap.md](docs/roadmap.md).
 
 ## License
 

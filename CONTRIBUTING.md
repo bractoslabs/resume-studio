@@ -48,6 +48,8 @@ Then open the local URL printed by Vite.
 Useful commands:
 
 ```bash
+npm run lint
+npm run format:check
 npm test
 npm run build
 ```
@@ -74,6 +76,8 @@ Run tests and the production build before opening a pull request.
 ## Accessibility
 
 Resume Studio handles important job-search workflows. UI contributions should be keyboard-accessible, readable at small widths, and clear without relying only on color or icons.
+
+Current accessibility expectations include visible focus states, meaningful button labels, dialog semantics, Escape-key handling where dialogs support it, and warnings that do not rely only on color.
 
 ## Privacy
 
