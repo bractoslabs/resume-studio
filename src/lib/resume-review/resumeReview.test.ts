@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { analyzeResume, analyzeJobKeywords, parsePlainText } from ".";
+import { defaultResumeMarkdown } from "../defaultDraft";
 
 const weakResume = `---
 name: ""
@@ -81,6 +82,14 @@ describe("resume review engine", () => {
     expect(result.issues.some((issue) => issue.title === "Weak bullet opening")).toBe(true);
     expect(result.issues.some((issue) => issue.title === "Missing measurable result")).toBe(true);
     expect(result.groups.mustFix.some((issue) => issue.title === "End date before start date")).toBe(true);
+  });
+
+  it("groups starter placeholders into a pre-export warning", () => {
+    const result = analyzeResume({ markdown: defaultResumeMarkdown });
+    const placeholderIssue = result.groups.mustFix.find((issue) => issue.title === "Starter placeholders still present");
+    expect(placeholderIssue?.location).toBe("Pre-export check");
+    expect(placeholderIssue?.suggestedFix).toContain("candidate name");
+    expect(placeholderIssue?.suggestedFix).toContain("metric placeholder");
   });
 
   it("matches deterministic job keywords without an LLM", () => {

@@ -17,6 +17,7 @@
 .section-review-grid,
 .achievement-audit,
 .keyword-review-card,
+.pre-export-warning,
 .fit-assistant,
 .notes-card,
 .form-card,
@@ -99,6 +100,36 @@
 .achievement-audit h3,
 .keyword-review-card h3 {
   margin: 0;
+}
+
+.pre-export-warning {
+  display: grid;
+  gap: 10px;
+  margin: 16px 0;
+  border-color: color-mix(in srgb, var(--danger) 45%, var(--line));
+  background: color-mix(in srgb, var(--danger) 10%, var(--panel));
+}
+
+.pre-export-warning h3,
+.pre-export-warning p {
+  margin: 0;
+}
+
+.pre-export-warning p,
+.pre-export-warning span {
+  color: var(--muted);
+}
+
+.pre-export-warning ul {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding-left: 18px;
+}
+
+.pre-export-warning li span {
+  display: block;
+  margin-top: 2px;
 }
 
 .section-review-grid header p,

@@ -8,11 +8,12 @@ import { metricsRules } from "./rules/metricsRules";
 import { dateRules } from "./rules/dateRules";
 import { keywordRules } from "./rules/keywordRules";
 import { exportRules } from "./rules/exportRules";
+import { placeholderRules } from "./rules/placeholderRules";
 import { overallScore, scoreReview } from "./scoring";
 import { buildAchievementAudit, buildSectionReviews } from "./insights";
 import type { ResumeReviewContext, ResumeReviewIssue, ResumeReviewResult, ResumeReviewRule } from "./types";
 
-const rules: ResumeReviewRule[] = [contactRules, structureRules, formattingRules, bulletRules, metricsRules, dateRules, keywordRules, exportRules];
+const rules: ResumeReviewRule[] = [placeholderRules, contactRules, structureRules, formattingRules, bulletRules, metricsRules, dateRules, keywordRules, exportRules];
 
 const dedupe = (issues: ResumeReviewIssue[]) => {
   const seen = new Set<string>();

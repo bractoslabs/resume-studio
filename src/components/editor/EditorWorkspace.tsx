@@ -303,6 +303,7 @@ export const EditorWorkspace = (props: EditorWorkspaceProps) => {
               downloadBackup={downloadBackup}
               recordExport={recordExport}
               activePageCount={activePageCount}
+              reviewIssues={reviewIssues}
               applyDesignPatch={applyDesignPatch}
               setMarkdown={setMarkdown}
             />

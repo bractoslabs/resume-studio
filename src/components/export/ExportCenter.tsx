@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Archive, Clipboard, Copy, Download, FileDown, Minimize2, Printer } from "lucide-react";
 import type { ResumeDocument, ResumeTemplate } from "../../lib/types";
+import type { ResumeReviewIssue } from "../../lib/resume-review";
 import { parseFrontmatter, renderMarkdown } from "../../lib/markdown";
 import { exportDocx, exportHtml, exportJsonResume, exportMarkdown, exportPlainText, exportResumeForgeJson, exportYaml, printPdf } from "../../lib/exporters";
 import { Button } from "../common/Button";
@@ -17,14 +18,16 @@ interface ExportCenterProps {
   downloadBackup: () => void;
   recordExport?: (format: string) => void;
   activePageCount: number;
+  reviewIssues: ResumeReviewIssue[];
   applyDesignPatch: (patch: Partial<ReturnType<typeof parseFrontmatter>["frontmatter"]>) => void;
   setMarkdown: (markdown: string) => void;
 }
 
 type ExportAction = [label: string, description: string, action: () => void | Promise<void>, enabled: boolean];
 
-export const ExportCenter = ({ resume, renderedHtml, style, template, atsMode, setAtsMode, downloadBackup, recordExport, activePageCount, applyDesignPatch, setMarkdown }: ExportCenterProps) => {
+export const ExportCenter = ({ resume, renderedHtml, style, template, atsMode, setAtsMode, downloadBackup, recordExport, activePageCount, reviewIssues, applyDesignPatch, setMarkdown }: ExportCenterProps) => {
   const [status, setStatus] = useState("");
+  const preExportIssues = reviewIssues.filter((issue) => issue.location === "Pre-export check" || issue.priority === "must-fix");
   const runExport = async (label: string, action: () => void | Promise<void>, shouldRecord = true) => {
     try {
       await action();
@@ -47,6 +50,15 @@ export const ExportCenter = ({ resume, renderedHtml, style, template, atsMode, s
         </div>
       </section>
       {status && <p className="status-note" role="status">{status}</p>}
+      {preExportIssues.length > 0 && (
+        <section className="pre-export-warning" aria-label="Pre-export warnings">
+          <h3>Fix before exporting</h3>
+          <p>Resolve these items before sending this resume to an employer.</p>
+          <ul>
+            {preExportIssues.slice(0, 4).map((issue) => <li key={issue.id}><strong>{issue.title}</strong><span>{issue.suggestedFix}</span></li>)}
+          </ul>
+        </section>
+      )}
       <section className="export-settings">
         <h3>Export settings</h3>
         <p className="muted">Template, color, font, and page size live in the Design panel.</p>
