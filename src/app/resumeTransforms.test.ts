@@ -139,6 +139,28 @@ describe("resume app transforms", () => {
     expect(draft.review.contact.location).toBe("Memphis, TN");
   });
 
+  it("rebuilds structure from flattened DOCX import text", () => {
+    const draft = buildImportDraft(
+      "friend.docx",
+      [
+        "SUJEEVAN RATNASINGHAM",
+        "Product Development",
+        "sratnasi@uoguelph.ca | 1-519-827-8294 | Guelph, ON",
+        "Guelph, ON www.linkedin.com/in/sratnasingham Solutions Architect | Innovative Executive | Data Scientist Product Development | Communication | Technology Dynamic, accomplished Executive and Solutions Architect highly regarded for designing scalable solutions. Demonstrated excellent strategic planning skills and understanding of relevant processes to secure funding from high-profile agencies. Selected Highlights Designed outstanding and globally recognized software platforms and applications. Core Competencies Solutions Development Communication Life Sciences Process Development Leadership and Collaboration Cloud Computing Data Science Research and Analysis Cybersecurity Machine Learning and AI Enterprise Integration Selected Recent Publications Li R, Ratnasingham S, Zarubieva I. PROTAX-GPU: A scalable probabilistic taxonomic classification system for DNA barcodes. Recent Professional Experience Wildnom | Austin, Texas | August-2024 – Present Co-Founder, Chief Data Officer Worked with partner firms to merge technologies and assets. Biolytica Inc | Guelph, ON | Feb-2018 – Present Founder, Chief Executive Officer Translated technologies developed at the University of Guelph to functional products with commercial viability. NOT-FOR-PROFIT Corporation | Guelph, ON | 2017 – 2024 Director and Treasurer Developed operating plans and procedures.",
+      ].join("\n"),
+    );
+
+    expect(draft.review.contact.name).toBe("SUJEEVAN RATNASINGHAM");
+    expect(draft.review.contact.email).toBe("sratnasi@uoguelph.ca");
+    expect(draft.sections).toEqual(expect.arrayContaining(["Highlights", "Skills", "Selected Publications", "Professional Experience"]));
+    expect(draft.markdown).toContain("Demonstrated excellent strategic planning skills");
+    expect(draft.markdown).not.toContain("## Skills\nand understanding");
+    expect(draft.markdown.match(/^###\s+/gm)).toHaveLength(3);
+    expect(draft.markdown).toContain("### Wildnom | Austin, Texas | August-2024 – Present");
+    expect(draft.markdown).toContain("### Biolytica Inc | Guelph, ON | Feb-2018 – Present");
+    expect(draft.markdown).toContain("### NOT-FOR-PROFIT Corporation | Guelph, ON | 2017 – 2024");
+  });
+
   it("builds import drafts from uploaded markdown files", async () => {
     const file = new File(["Avery Chen\n\n## Experience\n- Built tools"], "avery.md", { type: "text/markdown" });
     const draft = await buildImportDraftFromFile(file);

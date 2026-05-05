@@ -77,19 +77,113 @@ const frontmatterValue = (value = "") => JSON.stringify(value.replace(/\s+/g, " 
 
 const monthPattern =
   "(?:jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|jun(?:e)?|jul(?:y)?|aug(?:ust)?|sep(?:t(?:ember)?)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)";
-const datePointPattern = `(?:(?:${monthPattern})\\s+)?(?:19|20)\\d{2}|present|current|now`;
+const datePointPattern = `(?:(?:${monthPattern})[\\s-]+)?(?:19|20)\\d{2}|present|current|now`;
 const dateRangePattern = new RegExp(`\\b(?:${datePointPattern})\\s*(?:-|–|—|to)\\s*(?:${datePointPattern})\\b`, "i");
 const emailPattern = /[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i;
 const phonePattern = /(?:\+?1[\s.-]?)?(?:\(\d{3}\)|\d{3})[\s.-]?\d{3}[\s.-]?\d{4}/;
 const loosePhonePattern = /(?:\+?1[\s.-]?)?(?:\(\d{3}\)|\d{3})[\s.-]*\d{3}[\s.-]*\d[\s.-]*\d{3}/;
 const locationPattern = /\b[A-Z][A-Za-z .'-]+,\s*[A-Z]{2}\b/;
 
-const isImportedSectionHeading = (line: string) => /^[A-Z][A-Z0-9&/.,'() -]{2,}$/.test(line) && /[A-Z]/.test(line) && line.length < 70;
+const importedSectionAliases = [
+  "professional experience",
+  "recent professional experience",
+  "work experience",
+  "employment history",
+  "career history",
+  "selected highlights",
+  "highlights",
+  "summary",
+  "professional summary",
+  "profile",
+  "core competencies",
+  "competencies",
+  "skills",
+  "technical skills",
+  "selected recent publications",
+  "selected publications",
+  "publications",
+  "education",
+  "certifications",
+  "projects",
+  "awards",
+] as const;
+
+const importedSectionAliasPattern = new RegExp(`\\b(${importedSectionAliases.join("|").replace(/\s+/g, "\\s+")})\\b`, "gi");
+
+const normalizeImportedSectionName = (section: string) => {
+  const normalized = section.replace(/\s+/g, " ").trim();
+  if (/recent professional experience/i.test(normalized)) return "Professional Experience";
+  if (/selected recent publications|selected publications/i.test(normalized)) return "Selected Publications";
+  if (/core competencies|competencies|technical skills|skills/i.test(normalized)) return "Skills";
+  if (/selected highlights|highlights/i.test(normalized)) return "Highlights";
+  if (/professional summary|profile|summary/i.test(normalized)) return "Summary";
+  return titleCaseSection(normalized);
+};
+
+const isImportedSectionHeading = (line: string) =>
+  (/^[A-Z][A-Z0-9&/.,'() -]{2,}$/.test(line) && /[A-Z]/.test(line) && line.length < 70) ||
+  importedSectionAliases.some((section) => section.toLowerCase() === line.toLowerCase());
 
 const isExperienceSection = (section: string) => /experience|employment|work history|career|professional background/i.test(section);
 
 const isLikelyJobHeader = (line: string, section: string) =>
-  isExperienceSection(section) && dateRangePattern.test(line) && !line.startsWith("- ") && !line.startsWith("#") && line.length <= 180;
+  isExperienceSection(section) && dateRangePattern.test(line) && !line.startsWith("- ") && !line.startsWith("#") && line.length <= 220;
+
+const splitInlineImportedSections = (line: string) => {
+  const normalized = line.replace(/[ \t]+/g, " ").trim();
+  if (!normalized || normalized.startsWith("#") || normalized.startsWith("- ")) return [normalized].filter(Boolean);
+  const output: string[] = [];
+  let remaining = normalized;
+  let safety = 0;
+  while (remaining && safety < 8) {
+    safety += 1;
+    const matches = [...remaining.matchAll(importedSectionAliasPattern)];
+    const match = matches.find((candidate) => {
+      const text = candidate[0];
+      const isSingleWord = !/\s/.test(text);
+      return isSingleWord
+        ? (candidate.index ?? 0) === 0 || text === text.toUpperCase()
+        : /^[A-Z]/.test(text) || text === text.toUpperCase();
+    });
+    if (!match || match.index === undefined) {
+      output.push(remaining);
+      break;
+    }
+    const before = remaining.slice(0, match.index).trim();
+    const section = normalizeImportedSectionName(match[0]);
+    if (before) output.push(before);
+    output.push(`## ${section}`);
+    remaining = remaining.slice(match.index + match[0].length).trim();
+  }
+  return output.filter(Boolean);
+};
+
+const splitInlineExperienceRuns = (line: string, currentSection: string) => {
+  if (!isExperienceSection(currentSection) || line.startsWith("#") || line.startsWith("- ")) return [line];
+  const companyPattern =
+    /(?=\b[A-Z][A-Za-z0-9&.,'()/ -]{2,80}\s*\|\s*[A-Z][A-Za-z .'-]+,\s*(?:[A-Z]{2}|[A-Z][A-Za-z ]+)\s*\|\s*(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:t(?:ember)?)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?|(?:19|20)\d{2})[A-Za-z0-9\s-]*(?:-|–|—|to)\s*(?:Present|Current|Now|(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:t(?:ember)?)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?|(?:19|20)\d{2})[A-Za-z0-9\s-]*))/g;
+  const starts = [...line.matchAll(companyPattern)]
+    .map((match) => match.index ?? 0)
+    .filter((index) => {
+      const header = line.slice(index, line.indexOf("|", index)).trim();
+      const words = header.split(/\s+/).filter(Boolean);
+      return header && header.length <= 65 && words.length <= 7 && !/[.!?]/.test(header);
+    })
+    .reduce<number[]>((accepted, index) => {
+      const previous = accepted[accepted.length - 1];
+      if (previous !== undefined && index < line.indexOf("|", previous)) return accepted;
+      accepted.push(index);
+      return accepted;
+    }, [])
+    .filter((index) => index > 0);
+  if (!starts.length) return [line];
+
+  const splitAt = [0, ...starts, line.length];
+  return splitAt
+    .slice(0, -1)
+    .map((start, index) => line.slice(start, splitAt[index + 1]).trim())
+    .filter(Boolean);
+};
 
 const formatImportedBodyLines = (lines: string[]) => {
   let currentSection = "";
@@ -113,6 +207,17 @@ const formatImportedBodyLines = (lines: string[]) => {
     const previous = output[output.length - 1];
     if (previous?.startsWith("- ") && !normalized.startsWith("- ") && !normalized.startsWith("#")) {
       output[output.length - 1] = `${previous.replace(/-\s*$/, "-")}${previous.endsWith("-") ? "" : " "}${normalized}`;
+      return output;
+    }
+    const expandedLines = splitInlineExperienceRuns(normalized, currentSection);
+    if (expandedLines.length > 1) {
+      expandedLines.forEach((expandedLine) => {
+        if (isLikelyJobHeader(expandedLine, currentSection)) {
+          output.push(`\n### ${expandedLine}\n`);
+        } else {
+          output.push(expandedLine);
+        }
+      });
       return output;
     }
     output.push(normalized);
@@ -185,6 +290,7 @@ const importedMarkdownFromText = (fileName: string, source: string) => {
   const rawLines = normalizeImportedSource(source)
     .split("\n")
     .map((line) => line.replace(/[ \t]+/g, " ").trim())
+    .flatMap(splitInlineImportedSections)
     .filter(Boolean);
   const lines = rawLines.reduce<string[]>((merged, line) => {
     const previous = merged[merged.length - 1];
