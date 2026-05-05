@@ -3,10 +3,16 @@ import { requiredSectionGroups } from "./data/standardSections";
 import { hasMetricSignal } from "./rules/bulletRules";
 import type { ResumeAchievementAudit, ResumeReviewDocument, ResumeReviewIssue, ResumeSectionReview } from "./types";
 
-const normalize = (value: string) => value.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+const normalize = (value: string) =>
+  value
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
 
-const scopePattern = /\b(team|teams|customer|customers|user|users|client|clients|revenue|budget|pipeline|platform|system|systems|product|products|market|markets|region|regions|country|countries|project|projects|program|programs|workflow|workflows|operation|operations|staff|engineer|engineers|stakeholder|stakeholders|vendor|vendors|\d+\+?)\b/i;
-const outcomePattern = /\b(reduced|increased|improved|decreased|saved|grew|launched|delivered|accelerated|expanded|standardized|streamlined|optimized|enabled|converted|raised|secured|cut|lifted|lowered|shortened|prevented|resolved|recovered|generated|won)\b/i;
+const scopePattern =
+  /\b(team|teams|customer|customers|user|users|client|clients|revenue|budget|pipeline|platform|system|systems|product|products|market|markets|region|regions|country|countries|project|projects|program|programs|workflow|workflows|operation|operations|staff|engineer|engineers|stakeholder|stakeholders|vendor|vendors|\d+\+?)\b/i;
+const outcomePattern =
+  /\b(reduced|increased|improved|decreased|saved|grew|launched|delivered|accelerated|expanded|standardized|streamlined|optimized|enabled|converted|raised|secured|cut|lifted|lowered|shortened|prevented|resolved|recovered|generated|won)\b/i;
 
 const sectionBlock = (document: ResumeReviewDocument, aliases: string[]) => {
   const escaped = aliases.map((alias) => alias.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|");
@@ -30,13 +36,43 @@ const section = (patch: ResumeSectionReview): ResumeSectionReview => patch;
 
 export const buildSectionReviews = (document: ResumeReviewDocument, issues: ResumeReviewIssue[]): ResumeSectionReview[] => {
   const contactMissing = issues.filter((issue) => issue.category === "contact").length;
-  const sectionDefs: Array<{ id: string; label: string; aliases: string[]; required: boolean; categories: ResumeReviewIssue["category"][] }> = [
-    { id: "summary", label: "Summary", aliases: requiredSectionGroups.summary, required: true, categories: ["structure", "recruiter-skim"] },
-    { id: "experience", label: "Experience", aliases: requiredSectionGroups.experience, required: true, categories: ["structure", "bullet-quality", "impact-metrics", "recruiter-skim"] },
+  const sectionDefs: Array<{
+    id: string;
+    label: string;
+    aliases: string[];
+    required: boolean;
+    categories: ResumeReviewIssue["category"][];
+  }> = [
+    {
+      id: "summary",
+      label: "Summary",
+      aliases: requiredSectionGroups.summary,
+      required: true,
+      categories: ["structure", "recruiter-skim"],
+    },
+    {
+      id: "experience",
+      label: "Experience",
+      aliases: requiredSectionGroups.experience,
+      required: true,
+      categories: ["structure", "bullet-quality", "impact-metrics", "recruiter-skim"],
+    },
     { id: "skills", label: "Skills", aliases: requiredSectionGroups.skills, required: true, categories: ["structure", "keyword-match"] },
     { id: "education", label: "Education", aliases: requiredSectionGroups.education, required: true, categories: ["structure"] },
-    { id: "projects", label: "Projects", aliases: ["projects", "selected projects"], required: false, categories: ["structure", "bullet-quality", "impact-metrics"] },
-    { id: "certifications", label: "Certifications", aliases: ["certifications", "certificates", "licenses"], required: false, categories: ["structure", "keyword-match"] },
+    {
+      id: "projects",
+      label: "Projects",
+      aliases: ["projects", "selected projects"],
+      required: false,
+      categories: ["structure", "bullet-quality", "impact-metrics"],
+    },
+    {
+      id: "certifications",
+      label: "Certifications",
+      aliases: ["certifications", "certificates", "licenses"],
+      required: false,
+      categories: ["structure", "keyword-match"],
+    },
   ];
 
   const contactScore = Math.max(0, 100 - contactMissing * 24);
@@ -48,7 +84,9 @@ export const buildSectionReviews = (document: ResumeReviewDocument, issues: Resu
       score: contactScore,
       issueCount: contactMissing,
       signal: contactMissing ? "Some contact fields are missing or hard to parse." : "Contact details look parser-friendly.",
-      recommendation: contactMissing ? "Complete name, email, phone, location, and the most useful professional links." : "Keep the header concise and text-based.",
+      recommendation: contactMissing
+        ? "Complete name, email, phone, location, and the most useful professional links."
+        : "Keep the header concise and text-based.",
     }),
   ];
 
@@ -56,21 +94,41 @@ export const buildSectionReviews = (document: ResumeReviewDocument, issues: Resu
     const present = hasSection(document, definition.aliases);
     const block = sectionBlock(document, definition.aliases);
     const relatedIssues = sectionIssues(issues, definition.aliases, definition.categories);
-    const bulletCount = document.bullets.filter((bullet) => definition.aliases.some((alias) => normalize(bullet.section).includes(normalize(alias)))).length;
+    const bulletCount = document.bullets.filter((bullet) =>
+      definition.aliases.some((alias) => normalize(bullet.section).includes(normalize(alias))),
+    ).length;
     const contentWords = block.split(/\s+/).filter(Boolean).length;
-    const scoreValue = present ? Math.max(0, 100 - relatedIssues.length * 14 - (definition.id === "experience" && bulletCount < 3 ? 18 : 0)) : definition.required ? 0 : 100;
+    const scoreValue = present
+      ? Math.max(0, 100 - relatedIssues.length * 14 - (definition.id === "experience" && bulletCount < 3 ? 18 : 0))
+      : definition.required
+        ? 0
+        : 100;
     const status: ResumeSectionReview["status"] = !present && definition.required ? "missing" : scoreValue < 72 ? "needs-work" : "strong";
     const signal = !present
-      ? definition.required ? `${definition.label} section is not detected.` : `No ${definition.label.toLowerCase()} section detected, which is fine if it is not relevant.`
+      ? definition.required
+        ? `${definition.label} section is not detected.`
+        : `No ${definition.label.toLowerCase()} section detected, which is fine if it is not relevant.`
       : definition.id === "experience"
         ? `${bulletCount} experience bullet${bulletCount === 1 ? "" : "s"} detected.`
         : `${contentWords} word${contentWords === 1 ? "" : "s"} detected.`;
     const recommendation = !present
-      ? definition.required ? `Add a truthful ${definition.label.toLowerCase()} section or rename the equivalent section clearly.` : `Add ${definition.label.toLowerCase()} only when it strengthens the target role story.`
+      ? definition.required
+        ? `Add a truthful ${definition.label.toLowerCase()} section or rename the equivalent section clearly.`
+        : `Add ${definition.label.toLowerCase()} only when it strengthens the target role story.`
       : relatedIssues.length
         ? `Resolve the ${relatedIssues.length} review item${relatedIssues.length === 1 ? "" : "s"} tied to this section.`
         : "No obvious section issue detected.";
-    reviews.push(section({ id: definition.id, label: definition.label, status, score: scoreValue, issueCount: relatedIssues.length, signal, recommendation }));
+    reviews.push(
+      section({
+        id: definition.id,
+        label: definition.label,
+        status,
+        score: scoreValue,
+        issueCount: relatedIssues.length,
+        signal,
+        recommendation,
+      }),
+    );
   });
 
   return reviews;
@@ -82,12 +140,9 @@ const bulletCompleteness = (text: string) => {
   const hasMetric = hasMetricSignal(text);
   const hasScope = scopePattern.test(text);
   const hasOutcome = outcomePattern.test(text) || hasMetric;
-  const missing = [
-    !hasAction && "action verb",
-    !hasScope && "scope",
-    !hasMetric && "metric or scale",
-    !hasOutcome && "outcome",
-  ].filter((value): value is string => Boolean(value));
+  const missing = [!hasAction && "action verb", !hasScope && "scope", !hasMetric && "metric or scale", !hasOutcome && "outcome"].filter(
+    (value): value is string => Boolean(value),
+  );
   return { hasAction, hasMetric, hasScope, hasOutcome, missing, complete: missing.length === 0 };
 };
 
@@ -109,9 +164,10 @@ export const buildAchievementAudit = (document: ResumeReviewDocument): ResumeAch
         section: sectionName,
         bulletCount: bullets.length,
         completeCount,
-        recommendation: completeCount === bullets.length
-          ? "Achievement signals look strong."
-          : "Add verified scope, metrics, or outcomes to the weaker bullets.",
+        recommendation:
+          completeCount === bullets.length
+            ? "Achievement signals look strong."
+            : "Add verified scope, metrics, or outcomes to the weaker bullets.",
       };
     }),
     opportunities: checks

@@ -42,8 +42,7 @@ export const jsonResumeFromMarkdown = (resume: ResumeDocument) => {
   };
 };
 
-const escapeHtml = (value: string) =>
-  value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+const escapeHtml = (value: string) => value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 
 export const htmlDocument = (resume: ResumeDocument, renderedHtml: string, style = "") => `<!doctype html>
 <html lang="en">
@@ -60,19 +59,31 @@ export const exportMarkdown = (resume: ResumeDocument) =>
   downloadBlob(new Blob([resume.markdown], { type: "text/markdown;charset=utf-8" }), `${slugify(resume.title)}.md`);
 
 export const exportPlainText = (resume: ResumeDocument) =>
-  downloadBlob(new Blob([renderMarkdown(resume.markdown, true).plainText], { type: "text/plain;charset=utf-8" }), `${slugify(resume.title)}.txt`);
+  downloadBlob(
+    new Blob([renderMarkdown(resume.markdown, true).plainText], { type: "text/plain;charset=utf-8" }),
+    `${slugify(resume.title)}.txt`,
+  );
 
 export const exportHtml = (resume: ResumeDocument, renderedHtml: string, style = "") =>
   downloadBlob(new Blob([htmlDocument(resume, renderedHtml, style)], { type: "text/html;charset=utf-8" }), `${slugify(resume.title)}.html`);
 
 export const exportJsonResume = (resume: ResumeDocument) =>
-  downloadBlob(new Blob([JSON.stringify(jsonResumeFromMarkdown(resume), null, 2)], { type: "application/json;charset=utf-8" }), `${slugify(resume.title)}.json`);
+  downloadBlob(
+    new Blob([JSON.stringify(jsonResumeFromMarkdown(resume), null, 2)], { type: "application/json;charset=utf-8" }),
+    `${slugify(resume.title)}.json`,
+  );
 
 export const exportResumeForgeJson = (resume: ResumeDocument) =>
-  downloadBlob(new Blob([JSON.stringify(createResumeForgeResumeFile(resume), null, 2)], { type: "application/json;charset=utf-8" }), `${slugify(resume.title)}.resume-studio.json`);
+  downloadBlob(
+    new Blob([JSON.stringify(createResumeForgeResumeFile(resume), null, 2)], { type: "application/json;charset=utf-8" }),
+    `${slugify(resume.title)}.resume-studio.json`,
+  );
 
 export const exportYaml = (resume: ResumeDocument) =>
-  downloadBlob(new Blob([YAML.stringify(jsonResumeFromMarkdown(resume))], { type: "text/yaml;charset=utf-8" }), `${slugify(resume.title)}.yaml`);
+  downloadBlob(
+    new Blob([YAML.stringify(jsonResumeFromMarkdown(resume))], { type: "text/yaml;charset=utf-8" }),
+    `${slugify(resume.title)}.yaml`,
+  );
 
 export const exportBackup = (state: AppState) =>
   downloadBlob(new Blob([serializeBackup(state)], { type: "application/json;charset=utf-8" }), backupFilename());

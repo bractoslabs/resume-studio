@@ -4,7 +4,11 @@
   gap: 12px;
 }
 
-.rail-card, .panel, .structured-card, .issue, .version-row {
+.rail-card,
+.panel,
+.structured-card,
+.issue,
+.version-row {
   background: var(--panel);
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -46,7 +50,8 @@
   background: var(--panel);
 }
 
-.score-ring strong, .score-ring span {
+.score-ring strong,
+.score-ring span {
   position: relative;
   z-index: 1;
 }
@@ -86,20 +91,23 @@
   line-height: 1.55;
 }
 
-.control-grid, .form-grid {
+.control-grid,
+.form-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
   gap: 12px;
 }
 
-.form-grid label, .panel label {
+.form-grid label,
+.panel label {
   display: grid;
   gap: 6px;
   color: var(--muted);
   font-size: 13px;
 }
 
-.form-grid input, .panel textarea {
+.form-grid input,
+.panel textarea {
   min-height: 42px;
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -165,7 +173,8 @@
   text-overflow: clip;
 }
 
-.issues, .versions {
+.issues,
+.versions {
   display: grid;
   gap: 10px;
 }
@@ -186,9 +195,18 @@
   font-size: 12px;
 }
 
-.issue .critical { background: #fee2e2; color: #991b1b; }
-.issue .warning { background: #fef3c7; color: #92400e; }
-.issue .info { background: #dbeafe; color: #1e40af; }
+.issue .critical {
+  background: #fee2e2;
+  color: #991b1b;
+}
+.issue .warning {
+  background: #fef3c7;
+  color: #92400e;
+}
+.issue .info {
+  background: #dbeafe;
+  color: #1e40af;
+}
 
 .keyword-list div {
   display: flex;
@@ -231,7 +249,11 @@
   margin-bottom: 10px;
 }
 
-.structured-card input, .structured-card textarea, .tracker-row input, .tracker-row textarea, .tracker-row select {
+.structured-card input,
+.structured-card textarea,
+.tracker-row input,
+.tracker-row textarea,
+.tracker-row select {
   width: 100%;
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -292,7 +314,7 @@
 .command-modal {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,.36);
+  background: rgba(0, 0, 0, 0.36);
   display: grid;
   place-items: start center;
   padding-top: 10vh;
@@ -356,6 +378,13 @@
 }
 
 @keyframes fade {
-  0%, 80% { opacity: 1; transform: translateY(0); }
-  100% { opacity: 0; transform: translateY(8px); }
+  0%,
+  80% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(8px);
+  }
 }

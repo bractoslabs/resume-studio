@@ -4,15 +4,23 @@ import { analyzeJobKeywords } from "./resume-review";
 
 describe("job matcher", () => {
   it("extracts and compares keywords", () => {
-    const report = compareResumeToJob("## Skills\n- React, TypeScript", "Senior Frontend Engineer required React TypeScript AWS collaboration");
+    const report = compareResumeToJob(
+      "## Skills\n- React, TypeScript",
+      "Senior Frontend Engineer required React TypeScript AWS collaboration",
+    );
     expect(report.matched).toContain("React");
     expect(report.missing.length).toBeGreaterThan(0);
   });
 
   it("filters generic noisy words while keeping meaningful phrases", () => {
-    const report = analyzeJobKeywords("", "We are an innovative team seeking a motivated candidate with experience in AI agents, distributed systems, and human feedback. Required qualifications: Python and model evaluation.");
+    const report = analyzeJobKeywords(
+      "",
+      "We are an innovative team seeking a motivated candidate with experience in AI agents, distributed systems, and human feedback. Required qualifications: Python and model evaluation.",
+    );
     expect(report.ignoredGenericTerms).toEqual(expect.arrayContaining(["innovative", "team", "candidate", "experience"]));
-    expect(report.industryTerms).toEqual(expect.arrayContaining(["AI agents", "distributed systems", "human feedback", "model evaluation"]));
+    expect(report.industryTerms).toEqual(
+      expect.arrayContaining(["AI agents", "distributed systems", "human feedback", "model evaluation"]),
+    );
     expect(report.missing).not.toEqual(expect.arrayContaining(["ability", "team", "systems", "project"]));
   });
 
@@ -26,7 +34,10 @@ describe("job matcher", () => {
   });
 
   it("weights required terms above preferred terms", () => {
-    const report = analyzeJobKeywords("", "Required qualifications:\n- Python\n- data pipelines\nPreferred qualifications:\n- mentoring\n- Tableau");
+    const report = analyzeJobKeywords(
+      "",
+      "Required qualifications:\n- Python\n- data pipelines\nPreferred qualifications:\n- mentoring\n- Tableau",
+    );
     expect(report.requiredSkills).toEqual(expect.arrayContaining(["Python", "data pipelines"]));
     expect(report.preferredSkills).toEqual(expect.arrayContaining(["Tableau"]));
   });

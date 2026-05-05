@@ -24,6 +24,8 @@ Use GitHub Issues for feature requests. Describe the problem first, then the sol
 
 Before opening a larger pull request, check whether there is an issue or start a short discussion in the issue tracker. This helps avoid duplicated work and keeps changes aligned with the product.
 
+GitHub Discussions may be enabled later for broader community feedback. Until then, use Issues for actionable work and labs@bractos.com for private context.
+
 Good first contributions include:
 
 - Clear bug fixes
@@ -31,6 +33,8 @@ Good first contributions include:
 - Documentation fixes
 - Small UI copy improvements
 - Focused tests for existing behavior
+
+Maintainers can copy starter issue drafts from [docs/starter-issues.md](docs/starter-issues.md).
 
 ## Local Setup
 
@@ -75,7 +79,7 @@ Resume Studio handles important job-search workflows. UI contributions should be
 
 Never include private resume content, personal contact information, job application details, or sensitive data in issues, pull requests, tests, screenshots, fixtures, or sample files.
 
-Use fake or sanitized examples only.
+Use fictional or sanitized examples only.
 
 ## Documentation
 

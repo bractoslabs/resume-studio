@@ -2,6 +2,8 @@
 
 Public roadmap for improving Resume Studio's usability, usefulness, UI/UX, and long-term product quality.
 
+For the public-facing roadmap, see [docs/roadmap.md](docs/roadmap.md). This file remains a broader internal working list.
+
 ## Product Flow and Onboarding
 
 1. ~~Add a first-run setup flow that guides users through contact details, target role, import or template selection, review, and first export.~~

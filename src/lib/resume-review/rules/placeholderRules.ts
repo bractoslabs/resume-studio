@@ -20,21 +20,21 @@ const starterPlaceholderPatterns: Array<[RegExp, string]> = [
 ];
 
 export const placeholderRules: ResumeReviewRule = (document) => {
-  const found = starterPlaceholderPatterns
-    .filter(([pattern]) => pattern.test(document.markdown))
-    .map(([, label]) => label);
+  const found = starterPlaceholderPatterns.filter(([pattern]) => pattern.test(document.markdown)).map(([, label]) => label);
 
   if (!found.length) return [];
 
   const labels = [...new Set(found)];
-  return [issue({
-    title: "Starter placeholders still present",
-    severity: "critical",
-    priority: "must-fix",
-    category: "export-safety",
-    location: "Pre-export check",
-    whyItMatters: "Starter placeholders can accidentally be sent to employers and make the resume look unfinished.",
-    suggestedFix: `Replace or remove these placeholders before exporting: ${labels.join(", ")}.`,
-    safeAutoFix: false,
-  })];
+  return [
+    issue({
+      title: "Starter placeholders still present",
+      severity: "critical",
+      priority: "must-fix",
+      category: "export-safety",
+      location: "Pre-export check",
+      whyItMatters: "Starter placeholders can accidentally be sent to employers and make the resume look unfinished.",
+      suggestedFix: `Replace or remove these placeholders before exporting: ${labels.join(", ")}.`,
+      safeAutoFix: false,
+    }),
+  ];
 };

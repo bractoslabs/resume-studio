@@ -18,8 +18,10 @@ export const parsePlainText = (markdown: string): PlainTextParseResult => {
   if (atsRiskPatterns.image.test(source)) warnings.push("Images are removed from the plain-text parse.");
   if (atsRiskPatterns.columnHint.test(source)) warnings.push("Column/sidebar layout hints may create confusing reading order.");
   if (atsRiskPatterns.hiddenAts.test(content)) warnings.push("ATS-only or hidden-from-ATS directives change what parsers may see.");
-  if (/^\s*\|.+\|\s*$/m.test(source)) readingOrderNotes.push("Table rows are flattened into normal text; verify that labels and values still make sense.");
-  if (/sidebar|left column|right column|two-column/i.test(source)) readingOrderNotes.push("Column/sidebar language was detected; verify that the preview reads top-to-bottom in the intended order.");
+  if (/^\s*\|.+\|\s*$/m.test(source))
+    readingOrderNotes.push("Table rows are flattened into normal text; verify that labels and values still make sense.");
+  if (/sidebar|left column|right column|two-column/i.test(source))
+    readingOrderNotes.push("Column/sidebar language was detected; verify that the preview reads top-to-bottom in the intended order.");
   if ((source.match(/\{\{icon:/gi) ?? []).length > 3) readingOrderNotes.push("Several icon labels were converted to plain words.");
 
   const contact = [

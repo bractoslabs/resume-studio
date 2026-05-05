@@ -5,6 +5,9 @@
   .app-rail span {
     display: none;
   }
+  .rail-attribution {
+    display: none;
+  }
   .rail-brand .beta-pill {
     display: none;
   }
@@ -58,6 +61,9 @@
     width: 100%;
     padding: 24px 16px 64px;
   }
+  .mobile-editor-note {
+    display: block;
+  }
   .page-header,
   .recommended-export,
   .backup-reminder,
@@ -80,6 +86,10 @@
   }
   .workflow-panel {
     padding: 18px 14px;
+  }
+  .modal-card {
+    max-height: calc(100dvh - 24px);
+    overflow: auto;
   }
   .review-hero,
   .review-hero > div:first-child,

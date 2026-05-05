@@ -12,7 +12,7 @@
   color: color-mix(in srgb, var(--accent-ui) 72%, var(--ink));
   font-size: 11px;
   font-weight: 740;
-  letter-spacing: .04em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
 }
 
@@ -125,9 +125,9 @@
   inset: 0;
   pointer-events: none;
   background:
-    linear-gradient(90deg, rgba(255,255,255,.035) 0 1px, transparent 1px 100%) 0 0 / 72px 72px,
+    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 0 1px, transparent 1px 100%) 0 0 / 72px 72px,
     radial-gradient(circle at 72% 6%, color-mix(in srgb, var(--accent-2) 12%, transparent), transparent 24rem);
-  opacity: .52;
+  opacity: 0.52;
 }
 
 .left-sidebar,
@@ -148,7 +148,7 @@
   color: var(--muted);
   font-size: 10px;
   font-weight: 780;
-  letter-spacing: .12em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 
@@ -162,6 +162,6 @@
 }
 
 .preview-pane .resume-page {
-  outline: 1px solid rgba(255,255,255,.22);
+  outline: 1px solid rgba(255, 255, 255, 0.22);
   outline-offset: 10px;
 }

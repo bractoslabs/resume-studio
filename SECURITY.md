@@ -40,7 +40,7 @@ Maintainers should enable GitHub security features in repository settings where 
 - Secret scanning
 - Code scanning or default setup, if available
 
-The repo includes Dependabot and dependency review workflow files, but some GitHub security features still require repository settings.
+The repo includes Dependabot configuration, but GitHub security features still require repository settings.
 
 ## Responsible Disclosure
 

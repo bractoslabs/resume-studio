@@ -21,8 +21,8 @@
 
 .nav-rail button.active,
 .nav-rail button:not(.btn):hover {
-  border-color: rgba(20, 184, 166, .2);
-  background: rgba(20, 184, 166, .11);
+  border-color: rgba(20, 184, 166, 0.2);
+  background: rgba(20, 184, 166, 0.11);
   color: #2dd4bf;
 }
 
@@ -38,9 +38,9 @@
 .nav-storage small {
   display: block;
   padding: 10px;
-  border: 1px solid rgba(148, 163, 184, .18);
+  border: 1px solid rgba(148, 163, 184, 0.18);
   border-radius: 7px;
-  background: rgba(15, 23, 42, .45);
+  background: rgba(15, 23, 42, 0.45);
 }
 
 .nav-storage span {
@@ -75,14 +75,14 @@
   padding: 0;
   color: #dce7e3;
   font-size: 13px;
-  letter-spacing: .08em;
+  letter-spacing: 0.08em;
 }
 
 .compact-search {
   min-height: 34px;
   margin: 8px 0 10px;
   border-radius: 5px;
-  background: rgba(15, 23, 42, .45);
+  background: rgba(15, 23, 42, 0.45);
 }
 
 .resume-list-card {
@@ -94,9 +94,9 @@
   gap: 8px;
   margin-bottom: 8px;
   padding: 10px;
-  border: 1px solid rgba(148, 163, 184, .2);
+  border: 1px solid rgba(148, 163, 184, 0.2);
   border-radius: 7px;
-  background: rgba(15, 23, 42, .36);
+  background: rgba(15, 23, 42, 0.36);
   color: #e5eee9;
   text-align: left;
   cursor: pointer;
@@ -104,7 +104,9 @@
 
 .resume-list-card.active {
   border-color: #14b8a6;
-  box-shadow: inset 0 0 0 1px rgba(20, 184, 166, .35), 0 0 24px rgba(20, 184, 166, .12);
+  box-shadow:
+    inset 0 0 0 1px rgba(20, 184, 166, 0.35),
+    0 0 24px rgba(20, 184, 166, 0.12);
 }
 
 .resume-list-card strong {
@@ -127,9 +129,7 @@
   width: 42px;
   height: 42px;
   border-radius: 999px;
-  background:
-    conic-gradient(#76df24 var(--score), rgba(148, 163, 184, .18) 0),
-    rgba(15, 23, 42, .6);
+  background: conic-gradient(#76df24 var(--score), rgba(148, 163, 184, 0.18) 0), rgba(15, 23, 42, 0.6);
 }
 
 .resume-list-card .score-ring::before {
@@ -146,8 +146,8 @@
 
 .pro-editor .side-row {
   min-height: 31px;
-  border: 1px solid rgba(148, 163, 184, .13);
+  border: 1px solid rgba(148, 163, 184, 0.13);
   border-radius: 5px;
-  background: rgba(15, 23, 42, .28);
+  background: rgba(15, 23, 42, 0.28);
   font-size: 12px;
 }

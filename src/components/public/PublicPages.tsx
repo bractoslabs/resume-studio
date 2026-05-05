@@ -7,23 +7,62 @@ export const LandingSections = ({ setView }: { setView: (view: View) => void }) 
     <section className="landing-section how-it-works">
       <h2>How it works</h2>
       <div className="landing-grid four">
-        {["Create a resume in Markdown or guided mode.", "Run Resume Review for quality and readability issues.", "Use Keyword & Fit Check without fabricating facts.", "Use Print / Save as PDF, DOCX, Markdown, plain text, HTML, JSON Resume, or experimental YAML."].map((item, index) => <article key={item}><span>{index + 1}</span><p>{item}</p></article>)}
+        {[
+          "Create a resume in Markdown or guided mode.",
+          "Run Resume Review for quality and readability issues.",
+          "Use Keyword & Fit Check without fabricating facts.",
+          "Use Print / Save as PDF, DOCX, Markdown, plain text, HTML, JSON Resume, or experimental YAML.",
+        ].map((item, index) => (
+          <article key={item}>
+            <span>{index + 1}</span>
+            <p>{item}</p>
+          </article>
+        ))}
       </div>
     </section>
     <section className="landing-section">
       <h2>Features</h2>
       <div className="landing-grid">
-        {["Markdown source of truth with guided editing", "Live preview with print-oriented styling", "Explainable Resume Review and plain-text parse preview", "Keyword overlap and truthful tailoring suggestions", "Version history, templates, and local backups", "Cover letter, LinkedIn, and interview prep career tools"].map((item) => <article key={item}><Check size={16} /><p>{item}</p></article>)}
+        {[
+          "Markdown source of truth with guided editing",
+          "Live preview with print-oriented styling",
+          "Explainable Resume Review and plain-text parse preview",
+          "Keyword overlap and truthful tailoring suggestions",
+          "Version history, templates, and local backups",
+          "Cover letter, LinkedIn, and interview prep career tools",
+        ].map((item) => (
+          <article key={item}>
+            <Check size={16} />
+            <p>{item}</p>
+          </article>
+        ))}
       </div>
     </section>
     <section className="landing-section split">
-      <div><h2>Privacy-first design</h2><p>Guest mode stores resumes in your browser. Resume Studio does not require accounts, does not add analytics by default, and does not upload resume content in this static beta.</p><Button onClick={() => setView("privacy")}>Read privacy notes</Button></div>
-      <div><h2>Export formats</h2><p>Print / Save as PDF opens your browser print dialog and keeps text selectable through print CSS. Plain text helps with job portals. Markdown is ideal for editing and backups. JSON Resume supports portability.</p><Button onClick={() => setView("dashboard")}>Start free</Button></div>
+      <div>
+        <h2>Privacy-first design</h2>
+        <p>
+          Guest mode stores resumes in your browser. Resume Studio does not require accounts, does not add analytics by default, and does
+          not upload resume content in this static beta.
+        </p>
+        <Button onClick={() => setView("privacy")}>Read privacy notes</Button>
+      </div>
+      <div>
+        <h2>Export formats</h2>
+        <p>
+          Print / Save as PDF opens your browser print dialog and keeps text selectable through print CSS. Plain text helps with job
+          portals. Markdown is ideal for editing and backups. JSON Resume supports portability.
+        </p>
+        <Button onClick={() => setView("dashboard")}>Start free</Button>
+      </div>
     </section>
     <section className="landing-section beta-note-section">
       <article className="beta-note-card">
         <strong>Public beta</strong>
-        <p>Resume Studio is in public beta. Core features are usable, but imports, exports, templates, and review tools may continue to change.</p>
+        <p>
+          Resume Studio is in public beta. Core features are usable, but imports, exports, templates, and review tools may continue to
+          change.
+        </p>
         <p>Please keep a backup of important resumes and review exported files before sending them.</p>
       </article>
     </section>
@@ -33,10 +72,24 @@ export const LandingSections = ({ setView }: { setView: (view: View) => void }) 
         ["Is Resume Studio free?", "Yes. The public beta is free to use, with no account requirement and no paywalls."],
         ["Does it use an LLM?", "No. Review, Keyword & Fit Check, and helper drafts are local rule-based suggestions."],
         ["Where is my data stored?", "In this browser until you export, copy, download, or delete it."],
-        ["Can I import an existing resume?", "Yes. Paste text or upload Markdown, TXT, JSON Resume, YAML, and text-extracted formats when available."],
-        ["Which browsers work best?", "Best tested on current Chrome, Edge, and Safari desktop. Firefox should work, but Print / Save as PDF output may vary. Mobile works for review and light edits, but full resume editing is best on desktop."],
-        ["What are the current beta limitations?", "Resume Studio saves data locally in your browser, not to an account. Print / Save as PDF uses your browser's print dialog, DOCX export may not match visual templates perfectly, scanned PDFs may not import, and review tools are guidance only. Resume Studio does not guarantee ATS results, interviews, or job offers."],
-      ].map(([q, a]) => <details key={q}><summary>{q}</summary><p>{a}</p></details>)}
+        [
+          "Can I import an existing resume?",
+          "Best import results come from Markdown, TXT, and DOCX. Selectable-text PDFs may work. Scanned or image-only PDFs are not supported yet.",
+        ],
+        [
+          "Which browsers work best?",
+          "Best tested on current Chrome, Edge, and Safari desktop. Firefox should work, but Print / Save as PDF output may vary. Mobile works for review and light edits, but full resume editing is best on desktop.",
+        ],
+        [
+          "What are the current beta limitations?",
+          "Resume Studio saves data locally in your browser, not to an account. Print / Save as PDF uses your browser's print dialog, DOCX export may not match visual templates perfectly, scanned PDFs may not import, and review tools are guidance only. Resume Studio does not guarantee ATS results, interviews, or job offers.",
+        ],
+      ].map(([q, a]) => (
+        <details key={q}>
+          <summary>{q}</summary>
+          <p>{a}</p>
+        </details>
+      ))}
     </section>
     <PublicFooter setView={setView} />
   </>
@@ -44,9 +97,31 @@ export const LandingSections = ({ setView }: { setView: (view: View) => void }) 
 
 const PublicFooter = ({ setView }: { setView: (view: View) => void }) => (
   <footer className="public-footer">
-    <strong>Resume Studio</strong>
-    <span>Free, private, Markdown-first resume builder.</span>
-    {(["about", "privacy", "terms", "security", "feedback", "free"] as View[]).map((item) => <button key={item} onClick={() => setView(item)}>{item}</button>)}
+    <div className="public-footer-brand">
+      <strong>Resume Studio</strong>
+      <span>Free, private, Markdown-first resume builder.</span>
+      <span>
+        Built by{" "}
+        <a href="https://bractos.com" target="_blank" rel="noopener noreferrer">
+          Bractos Labs
+        </a>
+        . Open source under{" "}
+        <a href="https://github.com/bractoslabs/resume-studio/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">
+          MIT
+        </a>
+        .
+      </span>
+    </div>
+    <nav aria-label="Public pages">
+      {(["about", "privacy", "terms", "security", "feedback", "free"] as View[]).map((item) => (
+        <button key={item} onClick={() => setView(item)}>
+          {item}
+        </button>
+      ))}
+      <a href="https://github.com/bractoslabs/resume-studio" target="_blank" rel="noopener noreferrer">
+        GitHub
+      </a>
+    </nav>
   </footer>
 );
 
@@ -115,9 +190,7 @@ const privacySections = [
   },
   {
     title: "Children",
-    body: [
-      "Resume Studio is intended for general professional use and is not designed to collect information from children.",
-    ],
+    body: ["Resume Studio is intended for general professional use and is not designed to collect information from children."],
   },
   {
     title: "Changes to This Policy",
@@ -131,16 +204,23 @@ const PrivacyPolicyPage = () => (
   <section className="public-copy privacy-policy">
     <p className="policy-kicker">Effective date: May 2026</p>
     <h1>Privacy Policy</h1>
-    <p className="policy-intro">Resume Studio is designed to be local-first. In the current public beta, your resume content stays in your browser. You do not need an account, and Bractos Labs does not receive, store, or review your resume content through the app.</p>
+    <p className="policy-intro">
+      Resume Studio is designed to be local-first. In the current public beta, your resume content stays in your browser. You do not need an
+      account, and Bractos Labs does not receive, store, or review your resume content through the app.
+    </p>
     {privacySections.map((section) => (
       <article className="policy-section" key={section.title}>
         <h2>{section.title}</h2>
-        {section.body.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+        {section.body.map((paragraph) => (
+          <p key={paragraph}>{paragraph}</p>
+        ))}
       </article>
     ))}
     <article className="policy-section">
       <h2>Contact</h2>
-      <p>Questions or private feedback can be sent to <a href="mailto:labs@bractos.com">labs@bractos.com</a>.</p>
+      <p>
+        Questions or private feedback can be sent to <a href="mailto:labs@bractos.com">labs@bractos.com</a>.
+      </p>
     </article>
   </section>
 );
@@ -190,9 +270,7 @@ const termsSections = [
   },
   {
     title: "Open-Source License",
-    body: [
-      "Resume Studio source code is available under the MIT License.",
-    ],
+    body: ["Resume Studio source code is available under the MIT License."],
     link: { href: "https://github.com/bractoslabs/resume-studio/blob/main/LICENSE", label: "Read the MIT License" },
   },
   {
@@ -246,7 +324,12 @@ const securitySections = [
   },
 ];
 
-const SectionedPublicPage = ({ title, intro, sections, effectiveDate }: {
+const SectionedPublicPage = ({
+  title,
+  intro,
+  sections,
+  effectiveDate,
+}: {
   title: string;
   intro: string;
   effectiveDate?: string;
@@ -259,27 +342,70 @@ const SectionedPublicPage = ({ title, intro, sections, effectiveDate }: {
     {sections.map((section) => (
       <article className="policy-section" key={section.title}>
         <h2>{section.title}</h2>
-        {section.body.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
-        {section.link && <p><a href={section.link.href} target="_blank" rel="noopener noreferrer">{section.link.label}</a></p>}
+        {section.body.map((paragraph) => (
+          <p key={paragraph}>{paragraph}</p>
+        ))}
+        {section.link && (
+          <p>
+            <a href={section.link.href} target="_blank" rel="noopener noreferrer">
+              {section.link.label}
+            </a>
+          </p>
+        )}
       </article>
     ))}
     <article className="policy-section">
       <h2>Contact</h2>
-      <p>Questions or private feedback can be sent to <a href="mailto:labs@bractos.com">labs@bractos.com</a>.</p>
+      <p>
+        Questions or private feedback can be sent to <a href="mailto:labs@bractos.com">labs@bractos.com</a>.
+      </p>
     </article>
   </section>
 );
 
-export const PublicInfoPage = ({ view, setView, openFeedback }: { view: View; setView: (view: View) => void; openFeedback: () => void }) => {
+export const PublicInfoPage = ({
+  view,
+  setView,
+  openFeedback,
+}: {
+  view: View;
+  setView: (view: View) => void;
+  openFeedback: () => void;
+}) => {
   const content: Record<string, { title: string; body: string[] }> = {
-    about: { title: "About", body: ["Resume Studio helps serious job seekers create, review, tailor, and export resumes without accounts or paywalls.", "The product is Markdown-first, privacy-conscious, and designed to avoid fabricated achievements."] },
-    feedback: { title: "Feedback", body: ["Resume Studio is in public beta. GitHub Issues are the best place to report bugs, request features, or share export/import problems.", "If your feedback includes private resume details, email Bractos Labs instead of posting publicly."] },
-    free: { title: "Resume Studio is free", body: ["There are no paywalls, no hidden export gates, and no account gates.", "The goal is a trustworthy free public beta for creating serious resumes."] },
+    about: {
+      title: "About",
+      body: [
+        "Resume Studio helps serious job seekers create, review, tailor, and export resumes without accounts or paywalls.",
+        "The product is Markdown-first, privacy-conscious, and designed to avoid fabricated achievements.",
+      ],
+    },
+    feedback: {
+      title: "Feedback",
+      body: [
+        "Resume Studio is in public beta. GitHub Issues are the best place to report bugs, request features, or share export/import problems.",
+        "If your feedback includes private resume details, email Bractos Labs instead of posting publicly.",
+      ],
+    },
+    free: {
+      title: "Resume Studio is free",
+      body: [
+        "There are no paywalls, no hidden export gates, and no account gates.",
+        "The goal is a trustworthy free public beta for creating serious resumes.",
+      ],
+    },
   };
   const page = content[view] ?? content.about;
   return (
     <main className="public-page">
-      <nav className="topbar clean-topbar"><button className="brand" onClick={() => setView("landing")}><FileText size={22} /> Resume Studio <small className="beta-pill">Public beta</small></button><Button className="primary" onClick={() => setView("dashboard")}>Start building</Button></nav>
+      <nav className="topbar clean-topbar">
+        <button className="brand" onClick={() => setView("landing")}>
+          <FileText size={22} /> Resume Studio <small className="beta-pill">Public beta</small>
+        </button>
+        <Button className="primary" onClick={() => setView("dashboard")}>
+          Start building
+        </Button>
+      </nav>
       {view === "privacy" ? (
         <PrivacyPolicyPage />
       ) : view === "terms" ? (
@@ -298,8 +424,14 @@ export const PublicInfoPage = ({ view, setView, openFeedback }: { view: View; se
       ) : (
         <section className="public-copy">
           <h1>{page.title}</h1>
-          {page.body.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
-          {view === "feedback" && <Button className="primary" onClick={openFeedback}>Open feedback form</Button>}
+          {page.body.map((paragraph) => (
+            <p key={paragraph}>{paragraph}</p>
+          ))}
+          {view === "feedback" && (
+            <Button className="primary" onClick={openFeedback}>
+              Open feedback form
+            </Button>
+          )}
         </section>
       )}
       <PublicFooter setView={setView} />

@@ -4,6 +4,17 @@
   flex-direction: column;
 }
 
+.mobile-editor-note {
+  display: none;
+  margin: 0;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--line);
+  background: color-mix(in srgb, var(--accent-ui) 8%, var(--panel));
+  color: color-mix(in srgb, var(--ink) 78%, var(--muted));
+  font-size: 13px;
+  line-height: 1.45;
+}
+
 .editor-topbar {
   min-height: 68px;
   display: grid;
@@ -181,8 +192,7 @@
 .preview-column {
   min-width: 0;
   overflow: auto;
-  background:
-    linear-gradient(180deg, color-mix(in srgb, var(--canvas) 96%, white), var(--canvas));
+  background: linear-gradient(180deg, color-mix(in srgb, var(--canvas) 96%, white), var(--canvas));
   padding: 0 28px 80px;
 }
 
@@ -217,9 +227,9 @@
 .preview-controls button,
 .preview-controls select {
   min-height: 32px;
-  border: 1px solid rgba(255,255,255,.18);
+  border: 1px solid rgba(255, 255, 255, 0.18);
   border-radius: 7px;
-  background: rgba(255,255,255,.09);
+  background: rgba(255, 255, 255, 0.09);
   color: #fff;
   padding: 0 9px;
 }

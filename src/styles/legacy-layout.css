@@ -93,7 +93,12 @@
   border-radius: 8px;
 }
 
-.search input, .title-input, .form-grid input, .panel textarea, .panel select, .dashboard-tools select {
+.search input,
+.title-input,
+.form-grid input,
+.panel textarea,
+.panel select,
+.dashboard-tools select {
   width: 100%;
   border: 0;
   background: transparent;
@@ -101,7 +106,8 @@
   outline: 0;
 }
 
-.dashboard-tools select, .panel select {
+.dashboard-tools select,
+.panel select {
   min-height: 42px;
   border: 1px solid var(--line);
   background: var(--panel);
@@ -123,7 +129,7 @@
   border: 1px solid var(--line);
   border-radius: 8px;
   padding: 16px;
-  box-shadow: 0 8px 24px rgba(23, 32, 29, .06);
+  box-shadow: 0 8px 24px rgba(23, 32, 29, 0.06);
 }
 
 .card-main {
@@ -143,7 +149,10 @@
   font-size: 20px;
 }
 
-.card-main p, .card-meta, .tags, .save-state {
+.card-main p,
+.card-meta,
+.tags,
+.save-state {
   color: var(--muted);
 }
 
@@ -163,7 +172,8 @@
   margin-bottom: 12px;
 }
 
-.tags span, .keyword-list span {
+.tags span,
+.keyword-list span {
   background: var(--panel-soft);
   border: 1px solid var(--line);
   padding: 4px 8px;
@@ -178,7 +188,8 @@
   overflow: hidden;
 }
 
-.left-sidebar, .right-rail {
+.left-sidebar,
+.right-rail {
   border-right: 1px solid var(--line);
   background: var(--panel);
   overflow: auto;
@@ -194,12 +205,13 @@
   margin-top: 18px;
 }
 
-.sidebar-section h3, .rail-card h3 {
+.sidebar-section h3,
+.rail-card h3 {
   margin: 0 0 8px;
   color: var(--muted);
   text-transform: uppercase;
   font-size: 11px;
-  letter-spacing: .08em;
+  letter-spacing: 0.08em;
 }
 
 .side-row {
@@ -223,7 +235,8 @@
   white-space: nowrap;
 }
 
-.side-row.active, .side-row:hover {
+.side-row.active,
+.side-row:hover {
   background: var(--panel-soft);
 }
 
@@ -291,7 +304,7 @@
   min-height: 0;
   flex: 1;
   display: grid;
-  grid-template-columns: minmax(420px, 1fr) minmax(360px, .86fr);
+  grid-template-columns: minmax(420px, 1fr) minmax(360px, 0.86fr);
 }
 
 .panes.preview-hidden {
@@ -364,8 +377,8 @@
 
 .preview-head button {
   margin-left: 4px;
-  border: 1px solid rgba(255,255,255,.26);
-  background: rgba(255,255,255,.12);
+  border: 1px solid rgba(255, 255, 255, 0.26);
+  background: rgba(255, 255, 255, 0.12);
   color: white;
   border-radius: 6px;
 }

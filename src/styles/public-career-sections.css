@@ -81,22 +81,31 @@
   color: var(--muted);
 }
 
+.public-footer-brand {
+  display: grid;
+  gap: 5px;
+}
+
 .public-footer nav {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
 }
 
-.public-footer button {
+.public-footer button,
+.public-footer a {
   border: 0;
   background: transparent;
   color: var(--muted);
   cursor: pointer;
+  text-decoration: none;
 }
 
 .public-footer button:hover,
-.public-footer button:focus-visible {
-  color: var(--accent);
+.public-footer button:focus-visible,
+.public-footer a:hover,
+.public-footer a:focus-visible {
+  color: var(--accent-ui);
 }
 
 .public-page {

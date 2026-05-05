@@ -31,18 +31,20 @@ describe("markdown engine", () => {
   });
 
   it("sanitizes unsafe links", () => {
-    const result = renderMarkdown("[bad](javascript:alert(1))\n\n<a href=\"data:text/html,boom\">bad</a>");
+    const result = renderMarkdown('[bad](javascript:alert(1))\n\n<a href="data:text/html,boom">bad</a>');
     expect(result.html).not.toContain("javascript:");
     expect(result.html).not.toContain("data:text");
   });
 
   it("removes dangerous inline HTML and event handlers", () => {
-    const result = renderMarkdown([
-      "<script>alert(1)</script>",
-      "<img src=x onerror=alert(1)>",
-      "<button onclick=\"alert(1)\">bad</button>",
-      "<svg onload=\"alert(1)\"><circle /></svg>",
-    ].join("\n"));
+    const result = renderMarkdown(
+      [
+        "<script>alert(1)</script>",
+        "<img src=x onerror=alert(1)>",
+        '<button onclick="alert(1)">bad</button>',
+        '<svg onload="alert(1)"><circle /></svg>',
+      ].join("\n"),
+    );
 
     expect(result.html).not.toContain("<script");
     expect(result.html).not.toContain("onerror");

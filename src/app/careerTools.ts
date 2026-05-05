@@ -28,8 +28,7 @@ export interface InterviewPrepDraft {
 
 const placeholder = (label: string) => `[${label}]`;
 
-const unique = (values: string[]) =>
-  [...new Set(values.map((value) => value.trim()).filter(Boolean))];
+const unique = (values: string[]) => [...new Set(values.map((value) => value.trim()).filter(Boolean))];
 
 const cleanBullet = (line: string) => line.replace(/^\s*[-*•‣▪]\s+/, "").trim();
 
@@ -49,10 +48,16 @@ export const buildCareerResumeContext = (resume: ResumeDocument): CareerResumeCo
   const { frontmatter, content } = parseFrontmatter(resume.markdown);
   const structured = parseStructuredResume(resume.markdown);
   const text = rendered.plainText;
-  const bullets = content.split("\n").filter((line) => /^\s*[-*•‣▪]\s+/.test(line)).map(cleanBullet).filter(Boolean);
+  const bullets = content
+    .split("\n")
+    .filter((line) => /^\s*[-*•‣▪]\s+/.test(line))
+    .map(cleanBullet)
+    .filter(Boolean);
   const skillCandidates = [
     ...structured.skills,
-    ...(text.match(/\b(?:React|TypeScript|JavaScript|Python|SQL|PostgreSQL|Node\.js|Leadership|Operations|Product|Platform|AI|Machine Learning|Sales|Finance|Strategy|Go-to-market|Data|Analytics)\b/gi) ?? []),
+    ...(text.match(
+      /\b(?:React|TypeScript|JavaScript|Python|SQL|PostgreSQL|Node\.js|Leadership|Operations|Product|Platform|AI|Machine Learning|Sales|Finance|Strategy|Go-to-market|Data|Analytics)\b/gi,
+    ) ?? []),
   ];
   const summary = structured.summary || firstSentence(text) || placeholder("add a brief summary from your resume");
   return {
@@ -123,7 +128,10 @@ export const generateRecruiterMessageDraft = (resume: ResumeDocument, roleContex
   const context = buildCareerResumeContext(resume);
   const job = jobContext(roleContext, context.targetRole);
   const skills = job.skills.length ? job.skills : context.skills.slice(0, 4);
-  const proof = context.bullets.find((bullet) => /\d|%|\$|reduced|increased|improved|saved|grew|launched|built|led/i.test(bullet)) ?? context.bullets[0] ?? placeholder("add one verified resume proof point");
+  const proof =
+    context.bullets.find((bullet) => /\d|%|\$|reduced|increased|improved|saved|grew|launched|built|led/i.test(bullet)) ??
+    context.bullets[0] ??
+    placeholder("add one verified resume proof point");
   return `Hi ${placeholder("recruiter name")},
 
 I’m reaching out about ${job.role} at ${job.company}. My resume includes experience with ${skills.join(", ") || placeholder("verified skills from your resume")}.
@@ -152,8 +160,12 @@ export const generateInterviewPrepDraft = (resume: ResumeDocument, roleContext =
       "What would you do in the first 30-60 days in this role?",
       "Which part of your background is most relevant, and which part needs more context?",
     ],
-    starPrompts: bullets.slice(0, 8).map((bullet) => `For "${bullet}", prepare Situation, Task, Action, Result, and add a verified metric if one exists.`),
-    weakAreas: weakAreas.length ? weakAreas : ["No obvious weak areas from the current bullets. Still prepare context for scope, tradeoffs, and your exact role."],
+    starPrompts: bullets
+      .slice(0, 8)
+      .map((bullet) => `For "${bullet}", prepare Situation, Task, Action, Result, and add a verified metric if one exists.`),
+    weakAreas: weakAreas.length
+      ? weakAreas
+      : ["No obvious weak areas from the current bullets. Still prepare context for scope, tradeoffs, and your exact role."],
   };
 };
 
@@ -187,4 +199,8 @@ ${draft.about}
 ${draft.connectionMessage}
 `;
 
-export const markdownToPlainText = (markdown: string) => markdown.replace(/^#+\s+/gm, "").replace(/\n{3,}/g, "\n\n").trim();
+export const markdownToPlainText = (markdown: string) =>
+  markdown
+    .replace(/^#+\s+/gm, "")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();

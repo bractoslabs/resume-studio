@@ -14,13 +14,7 @@ import {
   Sparkles,
   Sun,
 } from "lucide-react";
-import type {
-  AppState,
-  JobTarget,
-  ResumeDocument,
-  ResumeVersion,
-  StructuredResume,
-} from "./lib/types";
+import type { AppState, JobTarget, ResumeDocument, ResumeVersion, StructuredResume } from "./lib/types";
 import { analyzeAts } from "./lib/ats";
 import { defaultResumeMarkdown } from "./lib/defaultDraft";
 import {
@@ -40,13 +34,7 @@ import { getTemplate } from "./lib/templates";
 import { downloadBlob, nowIso, uid } from "./lib/utils";
 import { compareResumeToJob, extractJobTarget } from "./lib/jobMatcher";
 import { analyzeResume } from "./lib/resume-review";
-import {
-  parseFrontmatter,
-  parseStructuredResume,
-  renderMarkdown,
-  structuredToMarkdown,
-  updateMarkdownFrontmatter,
-} from "./lib/markdown";
+import { parseFrontmatter, parseStructuredResume, renderMarkdown, structuredToMarkdown, updateMarkdownFrontmatter } from "./lib/markdown";
 import { printPdf } from "./lib/exporters";
 import {
   ClearLocalDataDialog,
@@ -69,7 +57,18 @@ import {
   SaveVersionDialog,
   SettingsPage,
 } from "./components/AppSections";
-import type { DeleteDraft, EditMode, ImportDraft, NewResumeSetup, RenameDraft, RestoreDraft, SaveVersionDraft, TermReviewState, View, WorkflowTab } from "./app/types";
+import type {
+  DeleteDraft,
+  EditMode,
+  ImportDraft,
+  NewResumeSetup,
+  RenameDraft,
+  RestoreDraft,
+  SaveVersionDraft,
+  TermReviewState,
+  View,
+  WorkflowTab,
+} from "./app/types";
 import { snippets } from "./app/constants";
 import { publicPathToView, viewToPath } from "./app/viewRouting";
 import { Button } from "./components/common/Button";
@@ -129,7 +128,10 @@ function App() {
     if (window.location.pathname !== path) window.history.pushState({ view: next }, "", path);
   };
 
-  const downloadBackup = (sourceState = state, message = "Backup downloaded. Keep this file somewhere safe so you can restore your work later.") => {
+  const downloadBackup = (
+    sourceState = state,
+    message = "Backup downloaded. Keep this file somewhere safe so you can restore your work later.",
+  ) => {
     downloadBlob(new Blob([serializeBackup(sourceState)], { type: "application/json;charset=utf-8" }), backupFilename());
     setState((current) => ({
       ...current,
@@ -159,10 +161,16 @@ function App() {
   };
 
   const activeResume = state.resumes.find((resume) => resume.id === state.activeResumeId) ?? state.resumes[0];
-  const rendered = useMemo(() => renderMarkdown(activeResume?.markdown ?? defaultResumeMarkdown, atsMode), [activeResume?.markdown, atsMode]);
+  const rendered = useMemo(
+    () => renderMarkdown(activeResume?.markdown ?? defaultResumeMarkdown, atsMode),
+    [activeResume?.markdown, atsMode],
+  );
   const landingRendered = useMemo(() => renderMarkdown(defaultResumeMarkdown, false), []);
   const template = getTemplate(activeResume?.templateId ?? rendered.frontmatter.template);
-  const jobMatch = useMemo(() => (jobDescription.trim() ? compareResumeToJob(activeResume?.markdown ?? "", jobDescription) : null), [activeResume?.markdown, jobDescription]);
+  const jobMatch = useMemo(
+    () => (jobDescription.trim() ? compareResumeToJob(activeResume?.markdown ?? "", jobDescription) : null),
+    [activeResume?.markdown, jobDescription],
+  );
   const activePageCount = pageCountEstimate(rendered.plainText);
   const resumeReview = useMemo(
     () => analyzeResume({ markdown: activeResume?.markdown ?? "", jobDescription, pageCount: activePageCount }),
@@ -176,21 +184,29 @@ function App() {
     () => resumeReview.issues.filter((issue) => !ignoredIssues.includes(issue.id)),
     [resumeReview.issues, ignoredIssues],
   );
-  const checklist = useMemo(() => (activeResume ? resumeChecklist(activeResume, ats, jobDescription) : []), [activeResume, ats, jobDescription]);
+  const checklist = useMemo(
+    () => (activeResume ? resumeChecklist(activeResume, ats, jobDescription) : []),
+    [activeResume, ats, jobDescription],
+  );
   const compareVersion = activeResume?.versions.find((version) => version.id === versionCompareId);
 
   useEffect(() => {
-    loadStateAsync().then((loaded) => {
-      hydratedRef.current = true;
-      setState(loaded);
-      lastSnapshotMarkdownRef.current = (loaded.resumes.find((resume) => resume.id === loaded.activeResumeId) ?? loaded.resumes[0])?.markdown ?? "";
-      setLastSavedAt(loaded.storageMeta?.lastSavedAt ?? "");
-      setSaveStateText(loaded.storageMeta?.lastSavedAt ? `Saved locally at ${timeOnly(loaded.storageMeta.lastSavedAt)}` : "Saved locally");
-    }).catch(() => {
-      hydratedRef.current = true;
-      setSaveFailed("Could not read browser storage. Download a backup before closing.");
-      setSaveStateText("Save failed");
-    });
+    loadStateAsync()
+      .then((loaded) => {
+        hydratedRef.current = true;
+        setState(loaded);
+        lastSnapshotMarkdownRef.current =
+          (loaded.resumes.find((resume) => resume.id === loaded.activeResumeId) ?? loaded.resumes[0])?.markdown ?? "";
+        setLastSavedAt(loaded.storageMeta?.lastSavedAt ?? "");
+        setSaveStateText(
+          loaded.storageMeta?.lastSavedAt ? `Saved locally at ${timeOnly(loaded.storageMeta.lastSavedAt)}` : "Saved locally",
+        );
+      })
+      .catch(() => {
+        hydratedRef.current = true;
+        setSaveFailed("Could not read browser storage. Download a backup before closing.");
+        setSaveStateText("Save failed");
+      });
   }, []);
 
   useEffect(() => {
@@ -198,15 +214,17 @@ function App() {
     setSaveStateText("Saving...");
     if (saveTimerRef.current) window.clearTimeout(saveTimerRef.current);
     saveTimerRef.current = window.setTimeout(() => {
-      saveState(state).then((result) => {
-        const savedAt = result.state.storageMeta?.lastSavedAt ?? nowIso();
-        setLastSavedAt(savedAt);
-        setSaveFailed(result.ok ? "" : result.error);
-        setSaveStateText(result.ok ? `Saved locally at ${timeOnly(savedAt)}` : "Save failed");
-      }).catch((error) => {
-        setSaveFailed(error instanceof Error ? error.message : "Could not save. Download a backup before closing.");
-        setSaveStateText("Save failed");
-      });
+      saveState(state)
+        .then((result) => {
+          const savedAt = result.state.storageMeta?.lastSavedAt ?? nowIso();
+          setLastSavedAt(savedAt);
+          setSaveFailed(result.ok ? "" : result.error);
+          setSaveStateText(result.ok ? `Saved locally at ${timeOnly(savedAt)}` : "Save failed");
+        })
+        .catch((error) => {
+          setSaveFailed(error instanceof Error ? error.message : "Could not save. Download a backup before closing.");
+          setSaveStateText("Save failed");
+        });
     }, 350);
     return () => {
       if (saveTimerRef.current) window.clearTimeout(saveTimerRef.current);
@@ -216,12 +234,20 @@ function App() {
   useEffect(() => {
     if (!activeResume || activeResume.markdown === lastSnapshotMarkdownRef.current) return;
     if (snapshotTimerRef.current) window.clearTimeout(snapshotTimerRef.current);
-    snapshotTimerRef.current = window.setTimeout(() => {
-      if (!activeResume || activeResume.markdown === lastSnapshotMarkdownRef.current) return;
-      const snapshot = createSnapshotVersion(activeResume.markdown, "Autosaved snapshot", "Created automatically while editing.", "autosave");
-      lastSnapshotMarkdownRef.current = activeResume.markdown;
-      updateResume(activeResume.id, (resume) => ({ versions: pruneSnapshots([snapshot, ...resume.versions]) }));
-    }, 5 * 60 * 1000);
+    snapshotTimerRef.current = window.setTimeout(
+      () => {
+        if (!activeResume || activeResume.markdown === lastSnapshotMarkdownRef.current) return;
+        const snapshot = createSnapshotVersion(
+          activeResume.markdown,
+          "Autosaved snapshot",
+          "Created automatically while editing.",
+          "autosave",
+        );
+        lastSnapshotMarkdownRef.current = activeResume.markdown;
+        updateResume(activeResume.id, (resume) => ({ versions: pruneSnapshots([snapshot, ...resume.versions]) }));
+      },
+      5 * 60 * 1000,
+    );
     return () => {
       if (snapshotTimerRef.current) window.clearTimeout(snapshotTimerRef.current);
     };
@@ -247,7 +273,7 @@ function App() {
       }
       if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "p") {
         event.preventDefault();
-          printPdf(activeResume?.pageSize ?? "letter");
+        printPdf(activeResume?.pageSize ?? "letter");
       }
       if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
         event.preventDefault();
@@ -267,7 +293,12 @@ function App() {
         if (resume.id !== id) return resume;
         const resolved = typeof patch === "function" ? patch(resume) : patch;
         const markdownChanged = "markdown" in resolved && resolved.markdown !== resume.markdown;
-        return { ...resume, ...resolved, updatedAt: nowIso(), exportedSinceLastChange: markdownChanged ? false : resume.exportedSinceLastChange };
+        return {
+          ...resume,
+          ...resolved,
+          updatedAt: nowIso(),
+          exportedSinceLastChange: markdownChanged ? false : resume.exportedSinceLastChange,
+        };
       }),
     }));
   };
@@ -278,8 +309,8 @@ function App() {
       markdown,
       title: parsed.hasFrontmatter ? parsed.frontmatter.name || activeResume.title : activeResume.title,
       targetRole: parsed.hasFrontmatter ? parsed.frontmatter.targetRole || activeResume.targetRole : activeResume.targetRole,
-      pageSize: parsed.hasFrontmatter ? parsed.frontmatter.pageSize ?? activeResume.pageSize : activeResume.pageSize,
-      templateId: parsed.hasFrontmatter ? parsed.frontmatter.template ?? activeResume.templateId : activeResume.templateId,
+      pageSize: parsed.hasFrontmatter ? (parsed.frontmatter.pageSize ?? activeResume.pageSize) : activeResume.pageSize,
+      templateId: parsed.hasFrontmatter ? (parsed.frontmatter.template ?? activeResume.templateId) : activeResume.templateId,
     });
   };
 
@@ -304,7 +335,10 @@ function App() {
     const shouldRecommendBackup = kind === "duplicate" || kind === "import";
     setState((current) => ({
       ...current,
-      storageMeta: { ...current.storageMeta, significantChangesSinceBackup: shouldRecommendBackup ? true : current.storageMeta?.significantChangesSinceBackup },
+      storageMeta: {
+        ...current.storageMeta,
+        significantChangesSinceBackup: shouldRecommendBackup ? true : current.storageMeta?.significantChangesSinceBackup,
+      },
       resumes: [resume, ...current.resumes],
       activeResumeId: resume.id,
     }));
@@ -320,7 +354,12 @@ function App() {
     const deletingLastResume = state.resumes.length === 1 && state.resumes[0]?.id === id;
     setState((current) => {
       const resumes = current.resumes.filter((resume) => resume.id !== id);
-      return { ...current, storageMeta: { ...current.storageMeta, significantChangesSinceBackup: true }, resumes, activeResumeId: resumes[0]?.id ?? "" };
+      return {
+        ...current,
+        storageMeta: { ...current.storageMeta, significantChangesSinceBackup: true },
+        resumes,
+        activeResumeId: resumes[0]?.id ?? "",
+      };
     });
     if (deletingLastResume) {
       setView("dashboard");
@@ -332,7 +371,12 @@ function App() {
     if (!importDraft) return;
     createSystemSnapshot("Before import", "Automatic safety snapshot before importing a resume.");
     const resume = createResumeFromImportDraft(importDraft);
-    setState((current) => ({ ...current, storageMeta: { ...current.storageMeta, significantChangesSinceBackup: true }, resumes: [resume, ...current.resumes], activeResumeId: resume.id }));
+    setState((current) => ({
+      ...current,
+      storageMeta: { ...current.storageMeta, significantChangesSinceBackup: true },
+      resumes: [resume, ...current.resumes],
+      activeResumeId: resume.id,
+    }));
     setImportOpen(false);
     setNewResumeOpen(false);
     setImportDraft(null);
@@ -404,20 +448,21 @@ function App() {
     });
   };
 
-  const saveJobTarget = (createVersion: boolean, termReview: Record<string, "important" | "not-relevant" | "have" | "do-not-have"> = {}) => {
+  const saveJobTarget = (
+    createVersion: boolean,
+    termReview: Record<string, "important" | "not-relevant" | "have" | "do-not-have"> = {},
+  ) => {
     if (!jobDescription.trim()) return;
     const target: JobTarget = extractJobTarget(jobDescription);
     const termDecisions = Object.entries(termReview).map(([label, status]) => ({ label, status, updatedAt: nowIso() }));
-    const missingImportant = target.analysis?.missing?.filter((term) => termReview[term] !== "not-relevant" && termReview[term] !== "do-not-have").slice(0, 12) ?? [];
+    const missingImportant =
+      target.analysis?.missing?.filter((term) => termReview[term] !== "not-relevant" && termReview[term] !== "do-not-have").slice(0, 12) ??
+      [];
     const targetWithReview: JobTarget = {
       ...target,
       status: createVersion ? "tailoring" : "interested",
       termDecisions,
-      checklist: [
-        "Review important missing terms",
-        "Add skills or claims only if they are true",
-        "Use Print / Save as PDF when ready",
-      ],
+      checklist: ["Review important missing terms", "Add skills or claims only if they are true", "Use Print / Save as PDF when ready"],
     };
     const version: ResumeVersion = {
       id: uid("version"),
@@ -445,24 +490,30 @@ function App() {
     });
 
   const pageStyle = {
-    "--resume-font": [rendered.frontmatter.font || template.fontFamily, rendered.frontmatter.cjkFont, "Arial", "sans-serif"].filter(Boolean).join(", "),
+    "--resume-font": [rendered.frontmatter.font || template.fontFamily, rendered.frontmatter.cjkFont, "Arial", "sans-serif"]
+      .filter(Boolean)
+      .join(", "),
     "--resume-font-size": rendered.frontmatter.fontSizePx ? `${rendered.frontmatter.fontSizePx}px` : `${template.fontSize}pt`,
     "--resume-line-height": rendered.frontmatter.lineHeight ?? template.lineHeight,
-    "--resume-margin-y": rendered.frontmatter.marginVerticalPx !== undefined ? `${rendered.frontmatter.marginVerticalPx}px` : `${template.margin}in`,
-    "--resume-margin-x": rendered.frontmatter.marginHorizontalPx !== undefined ? `${rendered.frontmatter.marginHorizontalPx}px` : `${template.margin}in`,
+    "--resume-margin-y":
+      rendered.frontmatter.marginVerticalPx !== undefined ? `${rendered.frontmatter.marginVerticalPx}px` : `${template.margin}in`,
+    "--resume-margin-x":
+      rendered.frontmatter.marginHorizontalPx !== undefined ? `${rendered.frontmatter.marginHorizontalPx}px` : `${template.margin}in`,
     "--accent": rendered.frontmatter.accentColor || template.accentColor,
     "--paragraph-spacing": `${rendered.frontmatter.paragraphSpacingPx ?? 5}px`,
     "--bullet-gap": template.bulletSpacing === "compact" ? "1px" : template.bulletSpacing === "airy" ? "5px" : "3px",
   } as React.CSSProperties;
 
-  const hasMeaningfulBackupWork = state.resumes.some((resume) => (
-    resume.updatedAt !== resume.createdAt ||
-    resume.versions.length > 1 ||
-    Boolean(resume.lastExportedAt || resume.importedSource) ||
-    resume.jobTargets.length > 0 ||
-    resume.applications.length > 0
-  ));
-  const backupRecommended = Boolean(state.storageMeta?.significantChangesSinceBackup) || (!state.storageMeta?.lastBackupAt && hasMeaningfulBackupWork);
+  const hasMeaningfulBackupWork = state.resumes.some(
+    (resume) =>
+      resume.updatedAt !== resume.createdAt ||
+      resume.versions.length > 1 ||
+      Boolean(resume.lastExportedAt || resume.importedSource) ||
+      resume.jobTargets.length > 0 ||
+      resume.applications.length > 0,
+  );
+  const backupRecommended =
+    Boolean(state.storageMeta?.significantChangesSinceBackup) || (!state.storageMeta?.lastBackupAt && hasMeaningfulBackupWork);
 
   const shouldShowBackupReminder = (() => {
     const meta = state.storageMeta;
@@ -471,7 +522,8 @@ function App() {
     const dismissedAt = meta?.lastBackupReminderDismissedAt ? +new Date(meta.lastBackupReminderDismissedAt) : 0;
     if (dismissedAt && Date.now() - dismissedAt < 24 * 60 * 60 * 1000) return false;
     if (!meta?.lastBackupAt && hasMeaningfulBackupWork) return true;
-    if (meta?.lastBackupAt && meta.significantChangesSinceBackup && Date.now() - +new Date(meta.lastBackupAt) > 7 * 24 * 60 * 60 * 1000) return true;
+    if (meta?.lastBackupAt && meta.significantChangesSinceBackup && Date.now() - +new Date(meta.lastBackupAt) > 7 * 24 * 60 * 60 * 1000)
+      return true;
     return false;
   })();
   const shouldShowLocalStorageWarning = state.resumes.length > 0 && !state.storageMeta?.localStorageWarningDismissedAt;
@@ -482,18 +534,35 @@ function App() {
   const shell = (children: React.ReactNode) => (
     <main className="product-shell">
       <aside className="app-rail" aria-label="Primary navigation">
-        <button className="rail-brand" onClick={() => setView("dashboard")}><FileText size={18} /> Resume Studio <small className="beta-pill">Public beta</small></button>
-        {([
-          ["dashboard", "Dashboard", Home],
-          ["jobs", "Job Targets", BriefcaseBusiness],
-          ["helpers", "Resume Tools", Sparkles],
-          ["settings", "Settings", Settings],
-        ] satisfies Array<[View, string, typeof Home]>).map(([key, label, Icon]) => (
+        <button className="rail-brand" onClick={() => setView("dashboard")}>
+          <FileText size={18} /> Resume Studio <small className="beta-pill">Public beta</small>
+        </button>
+        {(
+          [
+            ["dashboard", "Dashboard", Home],
+            ["jobs", "Job Targets", BriefcaseBusiness],
+            ["helpers", "Resume Tools", Sparkles],
+            ["settings", "Settings", Settings],
+          ] satisfies Array<[View, string, typeof Home]>
+        ).map(([key, label, Icon]) => (
           <button key={key} className={view === key ? "active" : ""} aria-label={label} onClick={() => setView(key)}>
             <Icon size={18} /> <span>{label}</span>
           </button>
         ))}
-        <Button className="feedback-rail-btn" onClick={() => setFeedbackOpen(true)}>Feedback</Button>
+        <Button className="feedback-rail-btn" onClick={() => setFeedbackOpen(true)}>
+          Feedback
+        </Button>
+        <p className="rail-attribution">
+          Built by{" "}
+          <a href="https://bractos.com" target="_blank" rel="noopener noreferrer">
+            Bractos Labs
+          </a>
+          .{" "}
+          <a href="https://github.com/bractoslabs/resume-studio" target="_blank" rel="noopener noreferrer">
+            MIT open source
+          </a>
+          .
+        </p>
       </aside>
       <section className="product-main">
         {shouldShowLocalStorageWarning ? (
@@ -505,11 +574,15 @@ function App() {
             onDismiss={dismissLocalStorageWarning}
             onLearnMore={() => setView("privacy")}
           />
-        ) : shouldShowBackupReminder && (
-          <BackupReminderBanner
-            onBackup={() => downloadBackup()}
-            onLater={() => setState((current) => ({ ...current, storageMeta: { ...current.storageMeta, lastBackupReminderDismissedAt: nowIso() } }))}
-          />
+        ) : (
+          shouldShowBackupReminder && (
+            <BackupReminderBanner
+              onBackup={() => downloadBackup()}
+              onLater={() =>
+                setState((current) => ({ ...current, storageMeta: { ...current.storageMeta, lastBackupReminderDismissedAt: nowIso() } }))
+              }
+            />
+          )
         )}
         {children}
       </section>
@@ -527,127 +600,196 @@ function App() {
       {view === "landing" && (
         <main className="landing">
           <nav className="topbar clean-topbar">
-            <button className="brand" onClick={() => setView("dashboard")}><FileText size={22} /> Resume Studio <small className="beta-pill">Public beta</small></button>
+            <button className="brand" onClick={() => setView("dashboard")}>
+              <FileText size={22} /> Resume Studio <small className="beta-pill">Public beta</small>
+            </button>
             <div className="topbar-actions">
               <Button onClick={() => setState((current) => ({ ...current, themeMode: current.themeMode === "dark" ? "light" : "dark" }))}>
                 {state.themeMode === "dark" ? <Sun size={16} /> : <Moon size={16} />} Theme
               </Button>
-              <Button className="primary" onClick={() => setView("dashboard")}>Start building</Button>
+              <Button className="primary" onClick={() => setView("dashboard")}>
+                Start building
+              </Button>
             </div>
           </nav>
           <section className="hero focused-hero">
             <div className="hero-copy">
               <h1>Free, private, Markdown-first resume builder for serious job seekers.</h1>
-              <p>Create, review, tailor, and export resumes without an account. Resume Studio keeps your data local by default and never invents your experience.</p>
+              <p>
+                Create, review, tailor, and export resumes without an account. Resume Studio keeps your data local by default and never
+                invents your experience.
+              </p>
               <div className="hero-actions">
-                <Button className="primary large" onClick={() => setView("dashboard")}>Start building</Button>
+                <Button className="primary large" onClick={() => setView("dashboard")}>
+                  Start building
+                </Button>
               </div>
               <div className="benefits">
-                {["Free to use", "No account required", "Markdown and guided editing", "Live preview", "Resume Review", "Keyword & Fit Check", "Print / Save as PDF, DOCX, Markdown, and plain text exports", "Local-first privacy"].map((benefit) => (
-                  <span key={benefit}><Check size={14} /> {benefit}</span>
+                {[
+                  "Free to use",
+                  "No account required",
+                  "Markdown and guided editing",
+                  "Live preview",
+                  "Resume Review",
+                  "Keyword & Fit Check",
+                  "Print / Save as PDF, DOCX, Markdown, and plain text exports",
+                  "Local-first privacy",
+                ].map((benefit) => (
+                  <span key={benefit}>
+                    <Check size={14} /> {benefit}
+                  </span>
                 ))}
               </div>
             </div>
             <div className="hero-preview">
-              <ResumePreview renderedHtml={landingRendered.html} pageStyle={pageStyle} templateId="technical" pageSize="letter" zoom={0.62} warnings={0} />
+              <ResumePreview
+                renderedHtml={landingRendered.html}
+                pageStyle={pageStyle}
+                templateId="technical"
+                pageSize="letter"
+                zoom={0.62}
+                warnings={0}
+              />
             </div>
           </section>
           <LandingSections setView={setView} />
         </main>
       )}
 
-      {view === "dashboard" && shell(
-        <Dashboard
-          resumes={filteredResumes}
-          query={query}
-          setQuery={setQuery}
-          sort={sort}
-          setSort={setSort}
-          totalResumeCount={state.resumes.length}
-          lastBackupAt={state.storageMeta?.lastBackupAt}
-          backupRecommended={backupRecommended}
-          selectResume={selectResume}
-          reviewResume={reviewResume}
-          deleteResume={(resume) => setDeleteDraft({ id: resume.id, title: resume.title })}
-          duplicateResume={(resume) => addResume("duplicate", resume)}
-          renameResume={(resume) => setRenameDraft({ id: resume.id, title: resume.title })}
-          openNewResume={() => setNewResumeOpen(true)}
-          downloadBackup={downloadBackup}
-          openRestorePreview={openRestorePreview}
-        />,
-      )}
+      {view === "dashboard" &&
+        shell(
+          <Dashboard
+            resumes={filteredResumes}
+            query={query}
+            setQuery={setQuery}
+            sort={sort}
+            setSort={setSort}
+            totalResumeCount={state.resumes.length}
+            lastBackupAt={state.storageMeta?.lastBackupAt}
+            backupRecommended={backupRecommended}
+            selectResume={selectResume}
+            reviewResume={reviewResume}
+            deleteResume={(resume) => setDeleteDraft({ id: resume.id, title: resume.title })}
+            duplicateResume={(resume) => addResume("duplicate", resume)}
+            renameResume={(resume) => setRenameDraft({ id: resume.id, title: resume.title })}
+            openNewResume={() => setNewResumeOpen(true)}
+            downloadBackup={downloadBackup}
+            openRestorePreview={openRestorePreview}
+          />,
+        )}
 
-      {view === "editor" && activeResume && shell(
-        <EditorWorkspace
-          resume={activeResume}
-          resumes={state.resumes}
-          rendered={rendered}
-          template={template}
-          ats={ats}
-          review={resumeReview}
-          reviewIssues={reviewIssues}
-          jobDescription={jobDescription}
-          setJobDescription={setJobDescription}
-          jobAnalyzed={jobAnalyzed}
-          setJobAnalyzed={setJobAnalyzed}
-          jobMatch={jobMatch}
-          tab={tab}
-          setTab={setTab}
-          editMode={editMode}
-          setEditMode={(next) => {
-            setEditMode(next);
-            if (next === "guided") setStructured(parseStructuredResume(activeResume.markdown));
-          }}
-          structured={structured}
-          setStructured={setStructured}
-          setMarkdown={setMarkdown}
-          updateResume={updateResume}
-          setView={setView}
-          selectResume={selectResume}
-          captureVersion={captureVersion}
-          createSystemSnapshot={createSystemSnapshot}
-          applyStructured={applyStructured}
-          insertSnippet={insertSnippet}
-          editorRef={editorRef}
-          zoom={zoom}
-          setZoom={setZoom}
-          atsMode={atsMode}
-          setAtsMode={setAtsMode}
-          activePageCount={activePageCount}
-          checklist={checklist}
-          intelligence={intelligenceScores(activeResume.markdown, ats, jobMatch)}
-          pageStyle={pageStyle}
-          saveStateText={saveStateText}
-          lastSavedAt={lastSavedAt}
-          saveFailed={saveFailed}
-          downloadBackup={downloadBackup}
-          applyDesignPatch={applyDesignPatch}
-          designOpen={designOpen}
-          setDesignOpen={setDesignOpen}
-          saveJobTarget={saveJobTarget}
-          recordExport={recordExport}
-          ignoredIssues={ignoredIssues}
-          setIgnoredIssues={setIgnoredIssues}
-          compareVersion={compareVersion}
-          versionCompareId={versionCompareId}
-          setVersionCompareId={setVersionCompareId}
-          state={state}
-          openSaveVersion={() => setSaveVersionDraft({ name: "Named version", notes: "" })}
-          openRestoreVersion={setRestoreVersionDraft}
-        />,
-      )}
+      {view === "editor" &&
+        activeResume &&
+        shell(
+          <EditorWorkspace
+            resume={activeResume}
+            resumes={state.resumes}
+            rendered={rendered}
+            template={template}
+            ats={ats}
+            review={resumeReview}
+            reviewIssues={reviewIssues}
+            jobDescription={jobDescription}
+            setJobDescription={setJobDescription}
+            jobAnalyzed={jobAnalyzed}
+            setJobAnalyzed={setJobAnalyzed}
+            jobMatch={jobMatch}
+            tab={tab}
+            setTab={setTab}
+            editMode={editMode}
+            setEditMode={(next) => {
+              setEditMode(next);
+              if (next === "guided") setStructured(parseStructuredResume(activeResume.markdown));
+            }}
+            structured={structured}
+            setStructured={setStructured}
+            setMarkdown={setMarkdown}
+            updateResume={updateResume}
+            setView={setView}
+            selectResume={selectResume}
+            captureVersion={captureVersion}
+            createSystemSnapshot={createSystemSnapshot}
+            applyStructured={applyStructured}
+            insertSnippet={insertSnippet}
+            editorRef={editorRef}
+            zoom={zoom}
+            setZoom={setZoom}
+            atsMode={atsMode}
+            setAtsMode={setAtsMode}
+            activePageCount={activePageCount}
+            checklist={checklist}
+            intelligence={intelligenceScores(activeResume.markdown, ats, jobMatch)}
+            pageStyle={pageStyle}
+            saveStateText={saveStateText}
+            lastSavedAt={lastSavedAt}
+            saveFailed={saveFailed}
+            downloadBackup={downloadBackup}
+            applyDesignPatch={applyDesignPatch}
+            designOpen={designOpen}
+            setDesignOpen={setDesignOpen}
+            saveJobTarget={saveJobTarget}
+            recordExport={recordExport}
+            ignoredIssues={ignoredIssues}
+            setIgnoredIssues={setIgnoredIssues}
+            compareVersion={compareVersion}
+            versionCompareId={versionCompareId}
+            setVersionCompareId={setVersionCompareId}
+            state={state}
+            openSaveVersion={() => setSaveVersionDraft({ name: "Named version", notes: "" })}
+            openRestoreVersion={setRestoreVersionDraft}
+          />,
+        )}
 
-      {view === "jobs" && shell(<JobsPage resumes={state.resumes} activeResume={activeResume} updateResume={updateResume} openNewResume={() => setNewResumeOpen(true)} />)}
-      {view === "helpers" && shell(<HelpersPage resume={activeResume} resumes={state.resumes} jobDescription={jobDescription} openNewResume={() => setNewResumeOpen(true)} />)}
-      {view === "settings" && shell(<SettingsPage state={state} setState={setState} openClear={() => setConfirmClearOpen(true)} downloadBackup={downloadBackup} openRestorePreview={openRestorePreview} lastSavedAt={lastSavedAt} saveFailed={saveFailed} />)}
-      {["privacy", "terms", "security", "feedback", "about", "free"].includes(view) && <PublicInfoPage view={view} setView={setView} openFeedback={() => setFeedbackOpen(true)} />}
+      {view === "jobs" &&
+        shell(
+          <JobsPage
+            resumes={state.resumes}
+            activeResume={activeResume}
+            updateResume={updateResume}
+            openNewResume={() => setNewResumeOpen(true)}
+          />,
+        )}
+      {view === "helpers" &&
+        shell(
+          <HelpersPage
+            resume={activeResume}
+            resumes={state.resumes}
+            jobDescription={jobDescription}
+            openNewResume={() => setNewResumeOpen(true)}
+          />,
+        )}
+      {view === "settings" &&
+        shell(
+          <SettingsPage
+            state={state}
+            setState={setState}
+            openClear={() => setConfirmClearOpen(true)}
+            downloadBackup={downloadBackup}
+            openRestorePreview={openRestorePreview}
+            lastSavedAt={lastSavedAt}
+            saveFailed={saveFailed}
+          />,
+        )}
+      {["privacy", "terms", "security", "feedback", "about", "free"].includes(view) && (
+        <PublicInfoPage view={view} setView={setView} openFeedback={() => setFeedbackOpen(true)} />
+      )}
 
       {commandOpen && (
         <div className="command-modal" role="dialog" aria-label="Command palette">
           <div className="command-box">
-            <header><strong>Command palette</strong><button onClick={() => setCommandOpen(false)}>Close</button></header>
-            {snippets.map((snippet) => <button key={snippet.command} onClick={() => insertSnippet(snippet.text)}>{snippet.command}<span>{snippet.text.trim().slice(0, 70)}</span></button>)}
-            <button onClick={() => captureVersion("Command palette version")}><History size={15} /> Create version</button>
+            <header>
+              <strong>Command palette</strong>
+              <button onClick={() => setCommandOpen(false)}>Close</button>
+            </header>
+            {snippets.map((snippet) => (
+              <button key={snippet.command} onClick={() => insertSnippet(snippet.text)}>
+                {snippet.command}
+                <span>{snippet.text.trim().slice(0, 70)}</span>
+              </button>
+            ))}
+            <button onClick={() => captureVersion("Command palette version")}>
+              <History size={15} /> Create version
+            </button>
           </div>
         </div>
       )}
@@ -681,7 +823,7 @@ function App() {
             const initial = createInitialState();
             setState(initial);
             setConfirmClearOpen(false);
-            setToast("Local data cleared. Sample resumes restored.");
+            setToast("Local data cleared. Starter content restored.");
           }}
         />
       )}
@@ -751,6 +893,5 @@ function App() {
     </div>
   );
 }
-
 
 export default App;

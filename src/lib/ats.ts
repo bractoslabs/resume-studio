@@ -48,7 +48,10 @@ export const improveBulletLocal = (bullet: string, mode: string) => {
   const clean = bullet.replace(/^[-*]\s+/, "").trim();
   const hasMetric = metricPattern.test(clean);
   const action = clean.replace(/^(responsible for|helped|worked on|assisted with|handled)\s+/i, "");
-  const startsWithAction = /^(built|led|improved|developed|migrated|launched|managed|created|designed|engineered|reduced|increased|delivered|coordinated|standardized|partnered)\b/i.test(action);
+  const startsWithAction =
+    /^(built|led|improved|developed|migrated|launched|managed|created|designed|engineered|reduced|increased|delivered|coordinated|standardized|partnered)\b/i.test(
+      action,
+    );
   const prefix = mode === "executive" ? "Led" : mode === "technical" ? "Engineered" : mode === "sales" ? "Advanced" : "Improved";
   const after = `${startsWithAction ? action : `${prefix} ${action}`}${hasMetric ? "" : " to deliver [add metric/result]"}`;
   return { before: clean, after, needsUserMetric: !hasMetric };

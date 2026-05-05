@@ -64,6 +64,23 @@
   background: color-mix(in srgb, var(--accent-ui) 13%, var(--panel-soft));
 }
 
+.rail-attribution {
+  margin: 0 12px 14px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.rail-attribution a {
+  color: color-mix(in srgb, var(--accent-ui) 82%, var(--ink));
+  text-decoration: none;
+}
+
+.rail-attribution a:hover,
+.rail-attribution a:focus-visible {
+  text-decoration: underline;
+}
+
 .product-main {
   min-width: 0;
   min-height: 100vh;
