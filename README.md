@@ -1,6 +1,10 @@
 # Resume Studio
 
-Resume Studio is a Markdown-first, local-first resume builder inspired by the architecture and feature ideas in `junian/markdown-resume`, but implemented as a fuller React + TypeScript product.
+Resume Studio is an open-source resume builder for people who want a clean, fast, local-first way to write, edit, preview, and export resumes without fighting a bloated template tool.
+
+It supports Markdown editing, live resume preview, sample-based starting points, version history, local browser storage, PDF-friendly print output, and a keyword fit check to help compare a resume against a job description. 
+
+The goal is simple: give users more control over their resume while keeping the experience lightweight, readable, and easy to extend.
 
 ## What It Does
 
