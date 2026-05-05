@@ -185,6 +185,40 @@ describe("resume app transforms", () => {
     expect(draft.markdown).toContain("Built onboarding workflows");
   });
 
+  it("preserves DOCX list structure during import", async () => {
+    const doc = new Document({
+      sections: [
+        {
+          children: [
+            new Paragraph("Avery Chen"),
+            new Paragraph("Product Architect"),
+            new Paragraph("avery@example.com | Chicago, IL | (555) 010-1000"),
+            new Paragraph("Product architect with platform leadership experience."),
+            new Paragraph("Selected Highlights"),
+            new Paragraph({ text: "Launched onboarding workflow", bullet: { level: 0 } }),
+            new Paragraph({ text: "Improved activation by 18%", bullet: { level: 0 } }),
+            new Paragraph("Recent Professional Experience"),
+            new Paragraph("Northwind Labs | Chicago, IL | Jan 2022 - Present"),
+            new Paragraph("Director of Product"),
+            new Paragraph({ text: "Led roadmap across three teams", bullet: { level: 0 } }),
+          ],
+        },
+      ],
+    });
+    const buffer = await Packer.toBuffer(doc);
+    const fileBytes = new Uint8Array(buffer.buffer as ArrayBuffer, buffer.byteOffset, buffer.byteLength);
+    const file = new File([fileBytes], "structured.docx", {
+      type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    });
+    const draft = await buildImportDraftFromFile(file);
+
+    expect(draft.review.contact.title).toBe("Product Architect");
+    expect(draft.sections).toEqual(expect.arrayContaining(["Highlights", "Professional Experience"]));
+    expect(draft.review.bulletCount).toBeGreaterThanOrEqual(3);
+    expect(draft.markdown).toContain("- Launched onboarding workflow");
+    expect(draft.markdown).toContain("### Northwind Labs | Chicago, IL | Jan 2022 - Present");
+  });
+
   it("extracts readable text from PDF uploads", async () => {
     const file = new File([minimalPdfWithText("Avery Chen Experience React")], "avery.pdf", { type: "application/pdf" });
     const draft = await buildImportDraftFromFile(file);

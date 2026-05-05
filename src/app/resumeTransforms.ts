@@ -127,7 +127,12 @@ const isImportedSectionHeading = (line: string) =>
 const isExperienceSection = (section: string) => /experience|employment|work history|career|professional background/i.test(section);
 
 const isLikelyJobHeader = (line: string, section: string) =>
-  isExperienceSection(section) && dateRangePattern.test(line) && !line.startsWith("- ") && !line.startsWith("#") && line.length <= 220;
+  isExperienceSection(section) &&
+  dateRangePattern.test(line) &&
+  !line.startsWith("- ") &&
+  !line.startsWith("#") &&
+  line.length <= 220 &&
+  !/^[^|]+:\s*(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec|(?:19|20)\d{2})/i.test(line);
 
 const splitInlineImportedSections = (line: string) => {
   const normalized = line.replace(/[ \t]+/g, " ").trim();
@@ -231,13 +236,21 @@ const formatImportedBodyLines = (lines: string[]) => {
 
 const importLayoutLabels = /^(contact|profile|summary|skills?|tools?|certs?|certifications?|education|experience|projects?)$/i;
 const roleWords =
-  /\b(manager|specialist|technician|analyst|engineer|coordinator|assistant|developer|director|officer|lead|support|success|planner|operations?|marketing|service|network|cloud|cybersecurity|financial|clinic|warehouse|product|project|supply|chain|data|hr)\b/i;
+  /\b(manager|specialist|technician|analyst|engineer|architect|scientist|executive|consultant|founder|president|co-founder|cofounder|coo|ceo|cto|cio|coordinator|assistant|developer|director|officer|lead|support|success|planner|operations?|marketing|service|network|cloud|cybersecurity|financial|clinic|warehouse|product|project|supply|chain|data|hr)\b/i;
 
 const normalizeImportedSource = (source: string) =>
   source
     .replace(/\r\n?/g, "\n")
     .replace(/<\s*br\s*\/?\s*\n?\s*>/gi, "\n")
     .replace(/<\/?[^>\n]+>/g, " ");
+
+const normalizeImportedLine = (line: string) =>
+  line
+    .replace(/\[([^\]]+)]\([^)]+\)/g, "$1")
+    .replace(/(?:__|\*\*)/g, "")
+    .replace(/^\*(.+)\*$/, "$1")
+    .replace(/[ \t]+/g, " ")
+    .trim();
 
 const contactStartIndex = (line: string) => {
   const indexes = [
@@ -269,6 +282,8 @@ const importedRoleCandidate = (line: string) => {
   const candidate = lineWithoutContactDetails(line);
   if (
     !candidate ||
+    candidate.length > 140 ||
+    /[.!?]/.test(candidate) ||
     candidate.length < 3 ||
     phonePattern.test(candidate) ||
     loosePhonePattern.test(candidate) ||
@@ -286,10 +301,36 @@ const importedRoleCandidate = (line: string) => {
   return candidate;
 };
 
+const lineWithoutObviousContact = (line: string) =>
+  line
+    .replace(emailPattern, " ")
+    .replace(phonePattern, " ")
+    .replace(loosePhonePattern, " ")
+    .replace(/\b(?:https?:\/\/)?(?:www\.)?[a-z0-9-]+\.[a-z]{2,}\S*/gi, " ")
+    .replace(locationPattern, " ")
+    .replace(/\|/g, " ")
+    .replace(/🕿|🖂/gu, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+
+const isHeaderNoiseLine = (line: string, name: string, roleLine: string) => {
+  const candidate = lineWithoutContactDetails(line);
+  if (!candidate) return true;
+  if (line.startsWith("##") || isImportedSectionHeading(line)) return false;
+  if (candidate === name || candidate === roleLine) return true;
+  if (isContactLikeLine(line)) {
+    const remaining = lineWithoutObviousContact(line);
+    return !(remaining.length > 100 && /[.!?]/.test(remaining));
+  }
+  if (locationPattern.test(candidate)) return true;
+  if (/^(?:https?:\/\/)?(?:www\.)?[a-z0-9-]+\.[a-z]{2,}\S*$/i.test(candidate)) return true;
+  return candidate.length <= 120 && !/[.!?]/.test(candidate) && !line.startsWith("##") && !line.startsWith("- ");
+};
+
 const importedMarkdownFromText = (fileName: string, source: string) => {
   const rawLines = normalizeImportedSource(source)
     .split("\n")
-    .map((line) => line.replace(/[ \t]+/g, " ").trim())
+    .map(normalizeImportedLine)
     .flatMap(splitInlineImportedSections)
     .filter(Boolean);
   const lines = rawLines.reduce<string[]>((merged, line) => {
@@ -328,11 +369,13 @@ const importedMarkdownFromText = (fileName: string, source: string) => {
       .slice(Math.max(0, nameIndex + 1), Math.max(0, nameIndex + 9))
       .map(importedRoleCandidate)
       .find((line) => line && line !== contactLine && line !== name) ?? "";
-  const bodyLines = formatImportedBodyLines(
-    lines
-      .slice(nameIndex >= 0 && lineWithoutContactDetails(lines[nameIndex]) === name ? nameIndex + 1 : 0)
-      .filter((line, index) => index > 2 || line !== contactLine),
+  const firstSectionIndex = lines.findIndex((line, index) => index > nameIndex && line.startsWith("## "));
+  const firstNarrativeIndex = lines.findIndex(
+    (line, index) => index > nameIndex && (firstSectionIndex < 0 || index < firstSectionIndex) && !isHeaderNoiseLine(line, name, roleLine),
   );
+  const bodyStartIndex =
+    firstNarrativeIndex >= 0 ? firstNarrativeIndex : firstSectionIndex >= 0 ? firstSectionIndex : nameIndex >= 0 ? nameIndex + 1 : 0;
+  const bodyLines = formatImportedBodyLines(lines.slice(bodyStartIndex).filter((line, index) => index > 2 || line !== contactLine));
 
   return `---
 name: ${frontmatterValue(name)}
