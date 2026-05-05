@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { Document, Packer, Paragraph } from "docx";
-import { buildImportDraftFromFile } from "./importers";
+import { buildImportDraftFromFile, pdfPageTextFromItemsForTest } from "./importers";
 import { buildImportDraft, createResume, pageCountEstimate, resumeChecklist } from "./resumeTransforms";
 import { analyzeAts } from "../lib/ats";
 
@@ -24,6 +24,13 @@ const minimalPdfWithText = (text: string) => {
   pdf += `trailer\n<< /Size ${objects.length + 1} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF`;
   return new TextEncoder().encode(pdf);
 };
+
+const pdfItem = (str: string, x: number, y: number, width = str.length * 5) => ({
+  str,
+  transform: [1, 0, 0, 1, x, y],
+  width,
+  height: 10,
+});
 
 describe("resume app transforms", () => {
   it("creates user-owned resumes with a baseline version", () => {
@@ -224,6 +231,70 @@ describe("resume app transforms", () => {
     const draft = await buildImportDraftFromFile(file);
     expect(draft.markdown).toContain("Avery Chen");
     expect(draft.markdown).toContain("Experience React");
+  });
+
+  it("keeps two-column PDF body text in column order", () => {
+    const firstPageText = pdfPageTextFromItemsForTest([
+      pdfItem("Tiffany Lee", 48, 716),
+      pdfItem("Product Innovation Lead", 48, 674),
+      pdfItem("tiffany@example.com", 464, 699),
+      pdfItem("Skills", 52, 545),
+      pdfItem("AI & Data Systems", 52, 521),
+      pdfItem("Experience", 251, 545),
+      pdfItem("Product Innovation Lead", 251, 522),
+      pdfItem("Map of Life", 251, 503),
+      pdfItem("Jan 2025 - Present", 251, 485),
+      pdfItem("Lead development of AI-enabled biodiversity data products", 266, 467),
+      pdfItem("Data analysis & modeling", 66, 487),
+    ]);
+
+    expect(firstPageText).toContain("tiffany@example.com");
+    expect(firstPageText.indexOf("Experience")).toBeLessThan(firstPageText.indexOf("Skills"));
+    expect(firstPageText).not.toContain("Skills Experience");
+    expect(firstPageText).not.toContain("AI & Data Systems Product Innovation Lead");
+
+    const secondPageText = pdfPageTextFromItemsForTest([
+      pdfItem("Awards", 52, 730),
+      pdfItem("UX Researcher", 251, 729),
+      pdfItem("Rainforest Connection", 251, 710),
+      pdfItem("Sep 2022 - June 2024", 251, 692),
+      pdfItem("Planned and facilitated usability testing", 266, 673),
+      pdfItem("Nov 2022 - Present", 52, 512),
+      pdfItem("running goals safely as a sighted", 52, 471, 163),
+      pdfItem("Super (Previously Snapcommerce), Toronto", 250, 471, 183),
+      pdfItem("Service Canada Data Science", 52, 715),
+    ]);
+
+    expect(secondPageText.indexOf("UX Researcher")).toBeLessThan(secondPageText.indexOf("Awards"));
+    expect(secondPageText).not.toContain("Awards UX Researcher");
+    expect(secondPageText.indexOf("Super (Previously Snapcommerce), Toronto")).toBeLessThan(secondPageText.indexOf("Nov 2022 - Present"));
+    expect(secondPageText).not.toContain("sighted Super");
+  });
+
+  it("converts imported square bullet glyphs to Markdown bullets", () => {
+    const draft = buildImportDraft(
+      "tiffany.pdf",
+      [
+        "Tiffany Lee",
+        "tiffany@example.com",
+        "/tian-yeu-lee/",
+        "Product Innovation Lead",
+        "Building decision systems for biodiversity.",
+        "Experience",
+        "Product Innovation Lead",
+        "Map of Life, Remote, Full-time",
+        "Jan 2025 - Present",
+        "▪ Lead development of AI-enabled biodiversity data products",
+        "translating ecological datasets into decision-support tools.",
+        "Skills",
+        "■ Data analysis & modeling",
+      ].join("\n"),
+    );
+
+    expect(draft.review.contact.title).toBe("Product Innovation Lead");
+    expect(draft.markdown).toContain("- Lead development of AI-enabled biodiversity data products translating ecological datasets");
+    expect(draft.markdown).toContain("- Data analysis & modeling");
+    expect(draft.review.bulletCount).toBe(2);
   });
 
   it("keeps checklist and page estimate deterministic", () => {

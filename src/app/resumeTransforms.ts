@@ -88,6 +88,7 @@ const importedSectionAliases = [
   "professional experience",
   "recent professional experience",
   "work experience",
+  "experience",
   "employment history",
   "career history",
   "selected highlights",
@@ -106,6 +107,9 @@ const importedSectionAliases = [
   "certifications",
   "projects",
   "awards",
+  "volunteer",
+  "volunteering",
+  "volunteer experience",
 ] as const;
 
 const importedSectionAliasPattern = new RegExp(`\\b(${importedSectionAliases.join("|").replace(/\s+/g, "\\s+")})\\b`, "gi");
@@ -117,6 +121,7 @@ const normalizeImportedSectionName = (section: string) => {
   if (/core competencies|competencies|technical skills|skills/i.test(normalized)) return "Skills";
   if (/selected highlights|highlights/i.test(normalized)) return "Highlights";
   if (/professional summary|profile|summary/i.test(normalized)) return "Summary";
+  if (/volunteer experience|volunteering|volunteer/i.test(normalized)) return "Volunteer";
   return titleCaseSection(normalized);
 };
 
@@ -193,7 +198,7 @@ const splitInlineExperienceRuns = (line: string, currentSection: string) => {
 const formatImportedBodyLines = (lines: string[]) => {
   let currentSection = "";
   const formatted = lines.reduce<string[]>((output, line) => {
-    const normalized = line.replace(/^•\s*/, "- ");
+    const normalized = line.replace(/^[•▪■]\s*/, "- ");
     const existingSection = normalized.match(/^##\s+(.+)$/);
     if (existingSection) {
       currentSection = existingSection[1].trim();
@@ -206,11 +211,27 @@ const formatImportedBodyLines = (lines: string[]) => {
       return output;
     }
     if (isLikelyJobHeader(normalized, currentSection)) {
+      const dateOnly = normalized.replace(dateRangePattern, "").trim().length === 0;
+      if (dateOnly) {
+        const headerParts = [normalized];
+        while (headerParts.length < 3) {
+          const previousLine = output[output.length - 1]?.trim();
+          if (!previousLine || previousLine.startsWith("#") || previousLine.startsWith("- ")) break;
+          headerParts.unshift(output.pop()?.trim() ?? "");
+        }
+        output.push(`\n### ${headerParts.filter(Boolean).join(" | ")}\n`);
+        return output;
+      }
       output.push(`\n### ${normalized}\n`);
       return output;
     }
     const previous = output[output.length - 1];
     if (previous?.startsWith("- ") && !normalized.startsWith("- ") && !normalized.startsWith("#")) {
+      const startsNewBlock = /^[A-Z]/.test(normalized) && normalized.length <= 90 && !/[.!?]/.test(normalized);
+      if (startsNewBlock) {
+        output.push(normalized);
+        return output;
+      }
       output[output.length - 1] = `${previous.replace(/-\s*$/, "-")}${previous.endsWith("-") ? "" : " "}${normalized}`;
       return output;
     }
@@ -285,6 +306,7 @@ const importedRoleCandidate = (line: string) => {
     candidate.length > 140 ||
     /[.!?]/.test(candidate) ||
     candidate.length < 3 ||
+    /^\/[^/]+\/$/.test(candidate) ||
     phonePattern.test(candidate) ||
     loosePhonePattern.test(candidate) ||
     /^\(?\d/.test(candidate) ||
@@ -294,7 +316,7 @@ const importedRoleCandidate = (line: string) => {
     /^[=_-]{3,}$/.test(candidate) ||
     candidate.startsWith("#") ||
     candidate.startsWith("- ") ||
-    /^•/.test(candidate)
+    /^[•▪■]/.test(candidate)
   ) {
     return "";
   }
@@ -419,7 +441,7 @@ const importReviewNotes = (
     resumeForge ? "Restored Resume Studio JSON metadata" : "",
     fileName.toLowerCase().endsWith(".json") && !resumeForge ? "Converted JSON Resume fields to Resume Studio Markdown" : "",
     !source.trimStart().startsWith("---") ? "Added Resume Studio frontmatter" : "",
-    /•/.test(source) ? "Converted bullet symbols to Markdown bullets" : "",
+    /[•▪■]/.test(source) ? "Converted bullet symbols to Markdown bullets" : "",
     sourceHasImportedSectionHeading(source) ? "Converted plain-text headings to Markdown sections" : "",
     sourceHasDatedJobHeader(source) ? "Marked dated experience lines as job entries" : "",
   ].filter(Boolean);
