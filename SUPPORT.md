@@ -4,17 +4,13 @@ Thanks for trying Resume Studio.
 
 ## Bugs
 
-Use GitHub Issues for non-sensitive bug reports.
+Use GitHub Issues for non-sensitive bug reports, accessibility problems, import/export issues, and documentation improvements.
 
 ## Feature Requests
 
 Use GitHub Issues for feature requests and product ideas.
 
 GitHub Discussions may be enabled later for broader community feedback. Until then, use GitHub Issues for actionable items or email labs@bractos.com for private context.
-
-## Import or Export Problems
-
-Use GitHub Issues for import/export problems, including DOCX, PDF import, Markdown import, backup restore, DOCX export, Markdown export, and Print / Save as PDF issues.
 
 ## Private Feedback
 

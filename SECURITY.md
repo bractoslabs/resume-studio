@@ -29,7 +29,11 @@ Core features are usable, but imports, exports, templates, and review tools may 
 
 Browser storage and local files are user-controlled. Clearing browser data, changing devices, or importing and exporting files can affect what data remains available.
 
-Markdown and rendered content should be sanitized before display. Import, export, backup, restore, and browser storage behavior are important parts of the app's security and privacy model.
+Markdown is rendered client-side. Markdown and limited HTML are processed with the local Markdown renderer, then sanitized before rendered content is inserted into the resume preview.
+
+The sanitizer is expected to remove unsafe script content, inline event handlers, unsafe links such as `javascript:` URLs, and other scriptable payloads. Safe Markdown formatting such as headings, lists, bold, italic, and normal `https:` links should continue to work.
+
+Import, export, backup, restore, and browser storage behavior are important parts of the app's security and privacy model.
 
 ## Recommended Repository Settings
 
