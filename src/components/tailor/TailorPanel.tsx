@@ -38,6 +38,7 @@ export const TailorPanel = ({ value, setValue, analyzed, setAnalyzed, report, on
             Analyze job description
           </Button>
           <Button
+            disabled={!value.trim()}
             onClick={() => {
               setValue("");
               setAnalyzed(false);

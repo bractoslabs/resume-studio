@@ -214,8 +214,8 @@ export const EditorWorkspace = (props: EditorWorkspaceProps) => {
   } = props;
   const previewColumnRef = React.useRef<HTMLElement | null>(null);
   const [currentPreviewPage, setCurrentPreviewPage] = React.useState(1);
-  const [measuredPreviewPageCount, setMeasuredPreviewPageCount] = React.useState(1);
-  const normalizedPageCount = Math.max(1, activePageCount, measuredPreviewPageCount);
+  const [measuredPreviewPageCount, setMeasuredPreviewPageCount] = React.useState<number | null>(null);
+  const normalizedPageCount = Math.max(1, measuredPreviewPageCount ?? activePageCount);
   const setPreviewPage = (pageNumber: number) => {
     const nextPage = Math.min(normalizedPageCount, Math.max(1, pageNumber));
     setCurrentPreviewPage(nextPage);
@@ -236,7 +236,7 @@ export const EditorWorkspace = (props: EditorWorkspaceProps) => {
   }, [normalizedPageCount]);
 
   React.useEffect(() => {
-    setMeasuredPreviewPageCount(1);
+    setMeasuredPreviewPageCount(null);
     setCurrentPreviewPage(1);
   }, [resume.id, resume.markdown, resume.pageSize, template.id]);
 
@@ -271,7 +271,7 @@ export const EditorWorkspace = (props: EditorWorkspaceProps) => {
           </span>
           <span className={`score-chip ${scoreTone(ats.scores.overall)}`}>Review {ats.scores.overall}</span>
           <span className="meta-chip">
-            {activePageCount} page{activePageCount > 1 ? "s" : ""}
+            {normalizedPageCount} page{normalizedPageCount > 1 ? "s" : ""}
           </span>
         </div>
         <div className="page-actions">
@@ -381,7 +381,7 @@ export const EditorWorkspace = (props: EditorWorkspaceProps) => {
               setAtsMode={setAtsMode}
               downloadBackup={downloadBackup}
               recordExport={recordExport}
-              activePageCount={activePageCount}
+              activePageCount={normalizedPageCount}
               reviewIssues={reviewIssues}
               applyDesignPatch={applyDesignPatch}
               setMarkdown={setMarkdown}
@@ -451,7 +451,7 @@ const NotesPanel = ({ resume, updateResume }: { resume: ResumeDocument; updateRe
     <div className="panel-heading">
       <div>
         <h2>Private notes</h2>
-        <p>Track job links, version intent, interview prep, salary notes, or follow-ups. These notes never appear in resume exports.</p>
+        <p>Keep job links, interview prep, salary notes, and follow-ups here. These notes never appear on your resume.</p>
       </div>
     </div>
     <section className="notes-card">
@@ -469,10 +469,7 @@ const NotesPanel = ({ resume, updateResume }: { resume: ResumeDocument; updateRe
           ].join("\n")}
         />
       </label>
-      <p className="muted">
-        Private notes are included only in full backups and Resume Studio JSON exports so you can restore your workspace. They are excluded
-        from PDF, DOCX, Markdown, HTML, plain text, JSON Resume, and YAML exports.
-      </p>
+      <p className="muted">Notes are saved in full backups and Resume Studio JSON exports only.</p>
     </section>
   </div>
 );
@@ -1040,7 +1037,8 @@ const ChecklistCard = ({ checklist, onSelect }: { checklist: ReturnType<typeof r
               title={helperText[item.id]}
               aria-label={`${item.done ? "Review" : "Complete"} ${item.label}`}
             >
-              {item.done ? <Check size={13} /> : <X size={13} />} <span>{item.done ? item.label : (statusText[item.id] ?? `Missing ${item.label}`)}</span>
+              {item.done ? <Check size={13} /> : <X size={13} />}{" "}
+              <span>{item.done ? item.label : (statusText[item.id] ?? `Missing ${item.label}`)}</span>
             </button>
           </li>
         ))}

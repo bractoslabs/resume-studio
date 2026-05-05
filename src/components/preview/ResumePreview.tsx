@@ -36,7 +36,9 @@ export const ResumePreview = ({
   onPageCountChange?: (pageCount: number) => void;
 }) => {
   const contentRef = React.useRef<HTMLDivElement | null>(null);
-  const contactLine = [frontmatter.email, frontmatter.phone, frontmatter.location, ...(frontmatter.links ?? [])].map(safeText).filter(Boolean);
+  const contactLine = [frontmatter.email, frontmatter.phone, frontmatter.location, ...(frontmatter.links ?? [])]
+    .map(safeText)
+    .filter(Boolean);
   const pageIndex = Math.max(0, currentPage - 1);
   const contentOffset = `calc((var(--preview-content-width) + var(--preview-column-gap)) * -${pageIndex})`;
   const pageWidthPx = pageSize === "a4" ? 8.27 * 96 : 8.5 * 96;
@@ -47,7 +49,6 @@ export const ResumePreview = ({
   const columnGap = 72;
   const contentWidth = Math.max(240, pageWidthPx - marginX * 2);
   const contentHeight = Math.max(320, pageHeightPx - marginY * 2);
-  const totalContentWidth = contentWidth * pageCount + columnGap * Math.max(0, pageCount - 1);
   const previewStyle = {
     ...pageStyle,
     "--preview-page-count": pageCount,
@@ -55,7 +56,6 @@ export const ResumePreview = ({
     "--preview-content-width": `${contentWidth}px`,
     "--preview-content-height": `${contentHeight}px`,
     "--preview-column-gap": `${columnGap}px`,
-    "--preview-total-content-width": `${totalContentWidth}px`,
   } as React.CSSProperties;
   React.useLayoutEffect(() => {
     const content = contentRef.current;
@@ -65,14 +65,17 @@ export const ResumePreview = ({
       const contentWidth = parseCssLength(computed.getPropertyValue("--preview-content-width"), 1);
       const columnGap = parseCssLength(computed.getPropertyValue("--preview-column-gap"), 0);
       const pageStride = Math.max(1, contentWidth + columnGap);
-      const measured = Math.max(1, Math.ceil((content.scrollWidth + columnGap) / pageStride));
+      const measured = Math.max(1, Math.round((content.scrollWidth + columnGap) / pageStride));
       onPageCountChange(measured);
     };
-    measure();
+    const frame = window.requestAnimationFrame(measure);
     const observer = new ResizeObserver(measure);
     observer.observe(content);
-    return () => observer.disconnect();
-  }, [renderedHtml, pageSize, pageCount, onPageCountChange]);
+    return () => {
+      window.cancelAnimationFrame(frame);
+      observer.disconnect();
+    };
+  }, [renderedHtml, pageSize, pageStyle, onPageCountChange]);
   return (
     <div className="page-wrap" style={{ transform: `scale(${zoom})`, transformOrigin: "top center" }}>
       <article

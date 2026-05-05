@@ -42,11 +42,13 @@ const pageTextFromPdfItems = (items: PdfTextItem[]) => {
 
 const plainTextFromPdf = async (file: File) => {
   const pdfjs = await import("pdfjs-dist/legacy/build/pdf.mjs");
+  const documentOptions: { data: Uint8Array; standardFontDataUrl?: string } = { data: new Uint8Array(await file.arrayBuffer()) };
+  if (typeof window === "undefined") documentOptions.standardFontDataUrl = `${process.cwd()}/node_modules/pdfjs-dist/standard_fonts/`;
   pdfjs.GlobalWorkerOptions.workerSrc =
     typeof window === "undefined"
       ? new URL("../../node_modules/pdfjs-dist/legacy/build/pdf.worker.min.mjs", import.meta.url).toString()
       : new URL("pdfjs-dist/legacy/build/pdf.worker.min.mjs", import.meta.url).toString();
-  const loadingTask = pdfjs.getDocument({ data: new Uint8Array(await file.arrayBuffer()) });
+  const loadingTask = pdfjs.getDocument(documentOptions);
   const pdf = await loadingTask.promise;
   const pages: string[] = [];
 
