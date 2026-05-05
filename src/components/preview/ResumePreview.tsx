@@ -77,10 +77,10 @@ export const ResumePreview = ({
     };
   }, [renderedHtml, pageSize, pageStyle, onPageCountChange]);
   return (
-    <div className="page-wrap" style={{ transform: `scale(${zoom})`, transformOrigin: "top center" }}>
+    <div className="page-wrap" style={{ width: `${pageWidthPx * zoom}px`, height: `${pageHeightPx * zoom}px` }}>
       <article
         className={`resume-page page-${pageSize} template-${templateId} ${currentPage > 1 ? "continued-page" : ""}`}
-        style={previewStyle}
+        style={{ ...previewStyle, transform: `scale(${zoom})`, transformOrigin: "top left" }}
       >
         <div className="preview-page-sheet" aria-hidden="true">
           <span>Page {currentPage}</span>

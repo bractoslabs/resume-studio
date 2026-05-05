@@ -613,7 +613,7 @@
   }
 
   .editor-layout {
-    grid-template-columns: minmax(390px, 0.94fr) minmax(480px, 1.06fr);
+    grid-template-columns: minmax(440px, clamp(520px, 40vw, 760px)) minmax(620px, 1fr);
   }
 
   .editor-main {
@@ -621,9 +621,9 @@
   }
 
   .workflow-panel {
-    margin: clamp(14px, 2vw, 24px);
-    min-height: calc(100% - clamp(28px, 4vw, 48px));
-    padding: clamp(18px, 2.4vw, 28px);
+    margin: clamp(12px, 1.4vw, 20px);
+    min-height: calc(100% - clamp(24px, 2.8vw, 40px));
+    padding: clamp(16px, 1.8vw, 24px);
   }
 
   .panel-heading {
@@ -679,7 +679,7 @@
 
   .preview-toolbar {
     min-height: 78px;
-    margin: 0 -30px 22px;
+    margin: 0 calc(clamp(16px, 2.4vw, 30px) * -1) 22px;
     padding: 10px clamp(14px, 2vw, 20px);
     background: rgba(23, 35, 32, 0.9);
   }
@@ -706,7 +706,7 @@
   }
 
   .resume-page {
-    max-width: 100%;
+    max-width: none;
     box-shadow: 0 22px 54px rgba(17, 24, 23, 0.22);
   }
 
@@ -905,7 +905,7 @@
     align-items: center;
   }
 
-  @media (max-width: 1180px) {
+  @media (max-width: 2100px) {
     .product-shell {
       grid-template-columns: 78px minmax(0, 1fr);
     }
@@ -924,15 +924,53 @@
     .rail-brand span:not(.beta-pill),
     .app-rail > button span,
     .feedback-rail-btn span,
+    .rail-save-status span,
+    .rail-backup-btn span,
     .rail-attribution {
       display: none;
+    }
+
+    .rail-bottom-menu {
+      width: 100%;
+      padding: 0;
+      border: 0;
+      background: transparent;
+    }
+
+    .rail-save-status,
+    .rail-backup-btn,
+    .rail-icon-btn {
+      width: 44px;
+      min-width: 44px;
+      height: 44px;
+      min-height: 44px;
+      justify-content: center;
+      padding: 0;
+    }
+
+    .rail-quick-actions {
+      grid-template-columns: 1fr;
+      justify-items: center;
     }
 
     .dashboard-page,
     .content-page {
       width: min(1100px, calc(100vw - 94px));
     }
+  }
 
+  @media (max-width: 1700px) {
+    .panel-heading {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .panel-heading .segmented {
+      justify-self: start;
+    }
+  }
+
+  @media (max-width: 1180px) {
     .editor-topbar {
       grid-template-columns: minmax(220px, 1fr);
     }
