@@ -205,9 +205,9 @@ export const EditorWorkspace = (props: EditorWorkspaceProps) => {
         <div className="page-actions">
           <Button onClick={() => setDesignOpen(true)}><Palette size={16} /> Design</Button>
           <Button onClick={() => {
-            recordExport("PDF");
+            recordExport("Print / Save as PDF");
             printPdf(resume.pageSize);
-          }}><Printer size={16} /> Print</Button>
+          }} title="Opens your browser's print dialog. Choose Save as PDF and check page breaks before sending."><Printer size={16} /> Print / Save as PDF</Button>
           <Button className="primary" aria-label="Open export center" onClick={() => setTab("export")}><Download size={16} /> Export</Button>
         </div>
       </header>

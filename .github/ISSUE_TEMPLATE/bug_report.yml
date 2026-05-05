@@ -1,19 +1,19 @@
 name: Bug report
 description: Report something broken or confusing in Resume Studio.
 title: "[Bug]: "
-labels: ["bug"]
+labels: ["bug", "needs-triage"]
 body:
   - type: markdown
     attributes:
       value: |
         Thanks for helping improve Resume Studio.
 
-        Please do not include private resume content, personal contact information, or sensitive job-search details in a public issue. If the report needs private details, email labs@bractos.com instead.
+        Do not include private resume content, personal contact information, or sensitive job-search details in a public issue. If the report needs private details, email labs@bractos.com instead.
   - type: textarea
-    id: what-happened
+    id: description
     attributes:
-      label: What happened?
-      description: Describe the bug in plain language.
+      label: Description
+      description: What happened?
       placeholder: Tell us what broke, looked wrong, or behaved unexpectedly.
     validations:
       required: true
@@ -21,7 +21,6 @@ body:
     id: steps
     attributes:
       label: Steps to reproduce
-      description: List the actions that led to the issue.
       placeholder: |
         1. Go to...
         2. Click...
@@ -31,33 +30,49 @@ body:
   - type: textarea
     id: expected
     attributes:
-      label: What did you expect?
-      placeholder: Describe what should have happened instead.
+      label: Expected behavior
+      placeholder: What did you expect to happen?
     validations:
       required: true
-  - type: dropdown
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      placeholder: What happened instead?
+    validations:
+      required: true
+  - type: input
     id: browser
     attributes:
-      label: Browser
-      options:
-        - Chrome
-        - Edge
-        - Firefox
-        - Safari
-        - Other
+      label: Browser and version
+      placeholder: Chrome 126, Safari 17, Firefox 128, Edge 126
     validations:
       required: false
   - type: input
-    id: device
+    id: os
     attributes:
-      label: Device or screen size
-      placeholder: Desktop, laptop, tablet, phone, or approximate viewport size.
+      label: Operating system
+      placeholder: macOS, Windows, Linux, iOS, Android
     validations:
       required: false
   - type: textarea
-    id: notes
+    id: screenshots
     attributes:
-      label: Anything else?
-      description: Add screenshots, logs, or notes if they help. Remove private resume details first.
+      label: Screenshots
+      description: Optional. Redact private content first.
     validations:
       required: false
+  - type: input
+    id: version
+    attributes:
+      label: Resume Studio version or deployment URL
+      placeholder: v0.2.0-beta or https://resume.bractos.com/
+    validations:
+      required: false
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: Privacy confirmation
+      options:
+        - label: I confirm I have not included private resume content, personal contact information, or sensitive job-search details.
+          required: true

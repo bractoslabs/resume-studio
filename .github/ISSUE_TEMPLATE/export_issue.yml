@@ -1,67 +1,86 @@
-name: Export or PDF issue
-description: Report problems with PDF, DOCX, Markdown, HTML, JSON, YAML, or text export.
+name: Export issue
+description: Report problems with Print / Save as PDF, DOCX, Markdown, backup, or other export paths.
 title: "[Export]: "
-labels: ["bug", "export"]
+labels: ["bug", "export", "needs-triage"]
 body:
   - type: markdown
     attributes:
       value: |
         Thanks for reporting an export issue.
 
-        Please do not attach resumes with private details. Redact names, contact details, employers, and sensitive job-search information before posting. If you need to share private details, email labs@bractos.com instead.
+        Do not attach resumes with private details. Redact names, contact details, employers, and sensitive job-search information before posting. If you need to share private details, email labs@bractos.com instead.
   - type: dropdown
-    id: format
+    id: export-type
     attributes:
-      label: Export format
+      label: Export type
       options:
-        - PDF
+        - Print / Save as PDF
         - DOCX
         - Markdown
-        - Plain text
-        - HTML
-        - JSON Resume
-        - YAML
-        - Backup JSON
+        - Backup
         - Other
     validations:
       required: true
-  - type: textarea
-    id: issue
+  - type: input
+    id: browser
     attributes:
-      label: What went wrong?
+      label: Browser and version
+      placeholder: Chrome 126, Safari 17, Firefox 128, Edge 126
+    validations:
+      required: false
+  - type: input
+    id: os
+    attributes:
+      label: Operating system
+      placeholder: macOS, Windows, Linux, iOS, Android
+    validations:
+      required: false
+  - type: dropdown
+    id: page-size
+    attributes:
+      label: Page size, if PDF/print
+      options:
+        - Letter
+        - A4
+        - Other
+        - Not applicable
+    validations:
+      required: false
+  - type: textarea
+    id: happened
+    attributes:
+      label: What happened?
       placeholder: Describe the layout, download, formatting, content, or print problem.
     validations:
       required: true
   - type: textarea
     id: expected
     attributes:
-      label: What did you expect?
+      label: What you expected
       placeholder: Describe the output you expected.
     validations:
       required: true
-  - type: dropdown
-    id: browser
-    attributes:
-      label: Browser
-      options:
-        - Chrome
-        - Edge
-        - Firefox
-        - Safari
-        - Other
-    validations:
-      required: false
-  - type: input
-    id: template
-    attributes:
-      label: Resume template or page size
-      placeholder: ATS Classic, Technical Resume, Letter, A4, or other relevant settings.
-    validations:
-      required: false
   - type: textarea
-    id: notes
+    id: screenshot
     attributes:
-      label: Redacted example or screenshot
-      description: Add a redacted screenshot or minimal example if it helps.
+      label: Screenshot
+      description: Optional. Redact private content first.
     validations:
       required: false
+  - type: dropdown
+    id: sample-content
+    attributes:
+      label: Does this happen with sample resume content?
+      options:
+        - "Yes"
+        - "No"
+        - I have not tested sample content
+    validations:
+      required: false
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: Privacy confirmation
+      options:
+        - label: I confirm I have not included private resume content, personal contact information, or sensitive job-search details.
+          required: true

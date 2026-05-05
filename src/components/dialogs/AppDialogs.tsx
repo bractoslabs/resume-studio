@@ -208,7 +208,7 @@ export const NewResumeDialog = ({
           <div className="new-resume-options">
             <Button ref={firstOptionRef} className="new-resume-option" onClick={() => chooseStartMode("guided")}>
               <FileCheck2 size={20} />
-              <span><strong>Guided setup</strong><small>Start with a form-based draft, then run Review and export a PDF.</small></span>
+              <span><strong>Guided setup</strong><small>Start with a form-based draft, then run Review and use Print / Save as PDF.</small></span>
               <ArrowRight className="new-resume-option-arrow" size={18} />
             </Button>
             <Button className="new-resume-option" onClick={() => chooseStartMode("template")}>
@@ -252,7 +252,7 @@ export const NewResumeDialog = ({
                 <ol>
                   <li><strong>Complete the draft.</strong><span>{setup.startMode === "guided" ? "You will land in guided mode." : "You will land in Markdown mode."}</span></li>
                   <li><strong>Run Review.</strong><span>Fix must-fix items before sending.</span></li>
-                  <li><strong>Export PDF.</strong><span>Use Export when the review looks ready.</span></li>
+                  <li><strong>Print / Save as PDF.</strong><span>Open the browser print dialog when the review looks ready.</span></li>
                 </ol>
               </aside>
             </div>

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Archive, Clipboard, Copy, Download, FileDown, Minimize2, Printer } from "lucide-react";
+import { Archive, Clipboard, Copy, Download, FileDown, Minimize2 } from "lucide-react";
 import type { ResumeDocument, ResumeTemplate } from "../../lib/types";
 import type { ResumeReviewIssue } from "../../lib/resume-review";
 import { parseFrontmatter, renderMarkdown } from "../../lib/markdown";
@@ -32,7 +32,9 @@ export const ExportCenter = ({ resume, renderedHtml, style, template, atsMode, s
     try {
       await action();
       if (shouldRecord) recordExport?.(label);
-      setStatus(shouldRecord ? `${label} ready. If your browser blocked a download, allow downloads for this site and retry.` : `${label} applied.`);
+      setStatus(label === "Print / Save as PDF"
+        ? "Print dialog opened. Choose Save as PDF, then check page size, margins, and page breaks before sending."
+        : shouldRecord ? `${label} ready. If your browser blocked a download, allow downloads for this site and retry.` : `${label} applied.`);
     } catch (error) {
       setStatus(`${label} failed: ${error instanceof Error ? error.message : "Unknown export error"}`);
     }
@@ -41,12 +43,12 @@ export const ExportCenter = ({ resume, renderedHtml, style, template, atsMode, s
     <div className="workflow-panel export-panel">
       <section className="recommended-export">
         <div>
-          <h2>Recommended export</h2>
-          <p>Use PDF for most applications. Browser print CSS keeps text selectable and links clickable.</p>
+          <h2>Print / Save as PDF</h2>
+          <p>This opens your browser's print dialog. Choose "Save as PDF," then check page size, margins, and page breaks before sending.</p>
+          <p className="muted">Browser output may vary slightly between Chrome, Safari, Edge, and Firefox.</p>
         </div>
         <div className="inline-actions">
-          <Button className="primary" onClick={() => runExport("PDF", () => printPdf(resume.pageSize))}><FileDown size={16} /> Export PDF</Button>
-          <Button onClick={() => runExport("Print", () => printPdf(resume.pageSize))}><Printer size={16} /> Print</Button>
+          <Button className="primary" onClick={() => runExport("Print / Save as PDF", () => printPdf(resume.pageSize))}><FileDown size={16} /> Print / Save as PDF</Button>
         </div>
       </section>
       {status && <p className="status-note" role="status">{status}</p>}

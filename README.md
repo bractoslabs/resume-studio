@@ -1,12 +1,42 @@
 # Resume Studio
 
-Resume Studio is an open-source resume builder for people who want a clean, fast, local-first way to write, edit, preview, and export resumes without fighting a bloated template tool.
+[![CI](https://github.com/bractoslabs/resume-studio/actions/workflows/ci.yml/badge.svg)](https://github.com/bractoslabs/resume-studio/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Status: Public Beta](https://img.shields.io/badge/status-public%20beta-436a6b.svg)](https://resume.bractos.com)
+[![No account required](https://img.shields.io/badge/no%20account-required-436a6b.svg)](https://resume.bractos.com)
 
-It supports Markdown editing, live resume preview, sample-based starting points, version history, local browser storage, PDF-friendly print output, and a keyword fit check to help compare a resume against a job description. 
+Free, private, Markdown-first resume builder from Bractos Labs.
 
-The goal is simple: give users more control over their resume while keeping the experience lightweight, readable, and easy to extend.
+[Try the app](https://resume.bractos.com) · [Report a bug](https://github.com/bractoslabs/resume-studio/issues/new?template=bug_report.yml) · [Request a feature](https://github.com/bractoslabs/resume-studio/issues/new?template=feature_request.yml)
+
+Resume Studio helps you write, review, tailor, and export resumes without creating an account. It is built for people who want control over their resume source, a clean live preview, and local-first privacy.
+
+![Resume Studio app screenshot](./public/screenshots/resume-studio-editor.png)
+
+## Public Beta Note
+
+Resume Studio is in public beta. Your resume data is saved locally in your browser, not synced to an account. Download a backup before clearing browser data, switching devices, or relying on the app for active applications.
 
 ## What It Does
+
+- Write resumes in Markdown with a live preview
+- Start from guided setup or sample resumes
+- Run Resume Review and Keyword & Fit Check
+- Import common resume formats where browser parsing allows
+- Export Markdown, DOCX, backups, and browser Print / Save as PDF
+- Keep work local in the browser by default
+
+## What It Is Not
+
+- Not a hiring guarantee
+- Not an ATS ranking predictor
+- Not a cloud resume database
+- Not a replacement for reviewing your resume before sending
+- Not currently an AI resume writer unless that feature is explicitly added later
+
+Resume Studio does not guarantee ATS results, employer ranking, interviews, or job offers.
+
+## More Features
 
 - Markdown is the source of truth.
 - Structured guided editing syncs back to Markdown.
@@ -15,7 +45,7 @@ The goal is simple: give users more control over their resume while keeping the 
 - ATS scanner explains parseability, formatting, contact, section, bullet, keyword, and length issues.
 - Job description matcher extracts skills/tools/keywords and creates job-specific versions.
 - Version history supports named/autosaved versions, restore, duplicate, and Markdown diff.
-- Exports Markdown, HTML, plain text, JSON Resume, YAML, DOCX, backup JSON, and browser-print PDF with selectable text.
+- Exports Markdown, HTML, plain text, JSON Resume, YAML, DOCX, backup JSON, and browser-based Print / Save as PDF with selectable text.
 - Guest mode stores data locally in this browser using IndexedDB, with a localStorage fallback for older/unavailable browser storage; no analytics or account is required.
 
 ## Setup
@@ -35,6 +65,12 @@ npm run build    # type-check and build production assets
 npm run test     # run unit tests
 npm run preview  # preview built assets
 ```
+
+## Contributing
+
+Contributions are welcome. Resume Studio is in public beta, so maintainers may be selective while the product direction settles. Please read [CONTRIBUTING.md](CONTRIBUTING.md) before opening a pull request.
+
+Never include private resume content or sensitive job-search details in public issues, PRs, screenshots, or fixtures.
 
 ## Environment Variables
 
@@ -81,7 +117,7 @@ Tables render, but the ATS scanner warns because many parsers read tables and co
 
 ## Export Limitations
 
-PDF export uses browser print CSS in this pass. This preserves selectable text and clickable links, but browser print engines may differ slightly in page breaking. A backend Playwright/Puppeteer export route is a future improvement for exact server-side PDF output.
+Resume Studio supports browser-based Print / Save as PDF. It opens your browser's print dialog so you can choose "Save as PDF." Browser print engines can vary, so check page size, margins, and page breaks before sending.
 
 DOCX export produces a clean text document from Markdown source. Rich template-perfect DOCX styling is a roadmap item.
 

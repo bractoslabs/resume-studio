@@ -313,7 +313,7 @@ function App() {
     setTab("edit");
     setEditMode(kind === "wizard" || setup?.startMode === "guided" ? "guided" : "markdown");
     if (kind === "wizard" || setup?.startMode === "guided") setStructured(parseStructuredResume(resume.markdown));
-    setToast("Resume created. Complete the draft, run Review, then export a PDF.");
+    setToast("Resume created. Complete the draft, run Review, then use Print / Save as PDF.");
   };
 
   const deleteResume = (id: string) => {
@@ -416,7 +416,7 @@ function App() {
       checklist: [
         "Review important missing terms",
         "Add skills or claims only if they are true",
-        "Export a clean PDF when ready",
+        "Use Print / Save as PDF when ready",
       ],
     };
     const version: ResumeVersion = {
@@ -543,7 +543,7 @@ function App() {
                 <Button className="primary large" onClick={() => setView("dashboard")}>Start building</Button>
               </div>
               <div className="benefits">
-                {["Free to use", "No account required", "Markdown and guided editing", "Live preview", "Resume Review", "Keyword & Fit Check", "PDF, DOCX, Markdown, and plain text exports", "Local-first privacy"].map((benefit) => (
+                {["Free to use", "No account required", "Markdown and guided editing", "Live preview", "Resume Review", "Keyword & Fit Check", "Print / Save as PDF, DOCX, Markdown, and plain text exports", "Local-first privacy"].map((benefit) => (
                   <span key={benefit}><Check size={14} /> {benefit}</span>
                 ))}
               </div>

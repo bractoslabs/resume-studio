@@ -3,3 +3,6 @@ contact_links:
   - name: Email Bractos Labs privately
     url: mailto:labs@bractos.com?subject=Resume%20Studio%20Feedback
     about: Use email instead of a public issue if your feedback includes private resume details or sensitive job-search information.
+  - name: Report a security vulnerability
+    url: mailto:labs@bractos.com?subject=Resume%20Studio%20Security%20Report
+    about: Please do not file public GitHub issues for security vulnerabilities.

@@ -77,7 +77,7 @@ export const Dashboard = ({
         ["1", "Build or import", "Start from a structured template or bring in an existing resume."],
         ["2", "Choose design", "Pick an ATS-friendly layout and adjust spacing only when needed."],
         ["3", "Review content", "Check structure, readability, bullets, sections, and missing details."],
-        ["4", "Export PDF", "Save a clean PDF with selectable text and working links."],
+        ["4", "Print / Save as PDF", "Open the browser print dialog, choose Save as PDF, and check page breaks."],
       ].map(([step, title, body]) => (
         <article key={step}>
           <span>{step}</span>

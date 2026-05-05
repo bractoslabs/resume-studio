@@ -1,13 +1,14 @@
 {
   "name": "resume-studio",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.2.0",
   "type": "module",
   "scripts": {
     "dev": "vite --host 127.0.0.1",
     "build": "tsc -b && vite build",
     "preview": "vite preview --host 127.0.0.1",
-    "test": "vitest run"
+    "test": "vitest run",
+    "screenshots": "node scripts/generate-screenshots.mjs"
   },
   "dependencies": {
     "@vitejs/plugin-react": "^5.0.4",
@@ -30,6 +31,7 @@
     "@types/node": "^24.0.0",
     "@types/react": "^19.1.10",
     "@types/react-dom": "^19.1.7",
+    "playwright": "^1.59.1",
     "vitest": "^3.2.4"
   }
 }

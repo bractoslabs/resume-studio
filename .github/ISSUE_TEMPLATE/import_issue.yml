@@ -1,61 +1,81 @@
 name: Import issue
 description: Report problems importing an existing resume.
 title: "[Import]: "
-labels: ["bug", "import"]
+labels: ["bug", "import", "needs-triage"]
 body:
   - type: markdown
     attributes:
       value: |
         Thanks for reporting an import issue.
 
-        Please do not attach resumes with private details. Redact names, contact details, employers, and sensitive job-search information before posting. If you need to share private details, email labs@bractos.com instead.
+        Do not attach resumes with private details. Redact names, contact details, employers, and sensitive job-search information before posting. If you need to share private details, email labs@bractos.com instead.
   - type: dropdown
-    id: source-format
+    id: import-type
     attributes:
-      label: Import source
+      label: Import type
       options:
-        - Pasted text
+        - DOCX
+        - PDF
         - Markdown
         - TXT
-        - PDF
-        - DOCX
-        - JSON Resume
+        - JSON
         - YAML
-        - Resume Studio JSON
         - Other
     validations:
       required: true
-  - type: textarea
-    id: issue
+  - type: input
+    id: browser
     attributes:
-      label: What went wrong?
+      label: Browser and version
+      placeholder: Chrome 126, Safari 17, Firefox 128, Edge 126
+    validations:
+      required: false
+  - type: input
+    id: os
+    attributes:
+      label: Operating system
+      placeholder: macOS, Windows, Linux, iOS, Android
+    validations:
+      required: false
+  - type: dropdown
+    id: pdf-text
+    attributes:
+      label: If PDF, is the file scanned/image-based or selectable text?
+      options:
+        - Selectable text
+        - Scanned or image-based
+        - Not sure
+        - Not applicable
+    validations:
+      required: false
+  - type: textarea
+    id: happened
+    attributes:
+      label: What happened?
       placeholder: Describe what was missing, parsed incorrectly, or confusing in the import review.
     validations:
       required: true
   - type: textarea
     id: expected
     attributes:
-      label: What did you expect?
+      label: What you expected
       placeholder: Describe how the resume should have imported.
     validations:
       required: true
-  - type: textarea
-    id: redacted-example
-    attributes:
-      label: Redacted sample
-      description: Add the smallest redacted sample that shows the problem, if you can.
-      placeholder: Remove names, contact details, employers, and sensitive content before posting.
-    validations:
-      required: false
   - type: dropdown
-    id: browser
+    id: sample-file
     attributes:
-      label: Browser
+      label: Does this happen with a sanitized/sample file?
       options:
-        - Chrome
-        - Edge
-        - Firefox
-        - Safari
-        - Other
+        - "Yes"
+        - "No"
+        - I have not tested a sanitized/sample file
     validations:
       required: false
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: Privacy confirmation
+      options:
+        - label: I confirm I have not included private resume content, personal contact information, or sensitive job-search details.
+          required: true

@@ -7,7 +7,7 @@ export const LandingSections = ({ setView }: { setView: (view: View) => void }) 
     <section className="landing-section how-it-works">
       <h2>How it works</h2>
       <div className="landing-grid four">
-        {["Create a resume in Markdown or guided mode.", "Run Resume Review for quality and readability issues.", "Use Keyword & Fit Check without fabricating facts.", "Export PDF, DOCX, Markdown, plain text, HTML, JSON Resume, or experimental YAML."].map((item, index) => <article key={item}><span>{index + 1}</span><p>{item}</p></article>)}
+        {["Create a resume in Markdown or guided mode.", "Run Resume Review for quality and readability issues.", "Use Keyword & Fit Check without fabricating facts.", "Use Print / Save as PDF, DOCX, Markdown, plain text, HTML, JSON Resume, or experimental YAML."].map((item, index) => <article key={item}><span>{index + 1}</span><p>{item}</p></article>)}
       </div>
     </section>
     <section className="landing-section">
@@ -18,7 +18,7 @@ export const LandingSections = ({ setView }: { setView: (view: View) => void }) 
     </section>
     <section className="landing-section split">
       <div><h2>Privacy-first design</h2><p>Guest mode stores resumes in your browser. Resume Studio does not require accounts, does not add analytics by default, and does not upload resume content in this static beta.</p><Button onClick={() => setView("privacy")}>Read privacy notes</Button></div>
-      <div><h2>Export formats</h2><p>PDF keeps text selectable through browser print CSS. Plain text helps with job portals. Markdown is ideal for editing and backups. JSON Resume supports portability.</p><Button onClick={() => setView("dashboard")}>Start free</Button></div>
+      <div><h2>Export formats</h2><p>Print / Save as PDF opens your browser print dialog and keeps text selectable through print CSS. Plain text helps with job portals. Markdown is ideal for editing and backups. JSON Resume supports portability.</p><Button onClick={() => setView("dashboard")}>Start free</Button></div>
     </section>
     <section className="landing-section faq">
       <h2>FAQ</h2>

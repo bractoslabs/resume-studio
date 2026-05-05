@@ -35,7 +35,7 @@ Public roadmap for improving Resume Studio's usability, usefulness, UI/UX, and l
 20. Show empty keyword coverage categories as "Not detected" instead of 100% coverage.
 21. Persist job-tailoring decisions such as important, not relevant, I have this, and I do not have this with each saved job target.
 22. Add a diff preview before creating or applying a job-specific resume copy.
-23. Add next-step actions after saving a job target, such as track application, generate cover letter, or export tailored PDF.
+23. Add next-step actions after saving a job target, such as track application, generate cover letter, or Print / Save as PDF for a tailored resume.
 
 ## Career Tools and Job Tracking
 
@@ -50,7 +50,7 @@ Public roadmap for improving Resume Studio's usability, usefulness, UI/UX, and l
 29. Add undo or before-and-after preview for design changes made in the Design drawer.
 30. Add a visual page layout manager for non-ATS templates with page-level placement, sidebar width, and full-width section controls.
 31. Add advanced scoped custom CSS controls with safe starter snippets for headings, dividers, dense skills, and link styling.
-32. Improve PDF export guidance for browser print settings and expected output checks.
+32. Improve Print / Save as PDF guidance for browser print settings and expected output checks.
 33. Improve DOCX export styling parity with the selected resume template.
 34. Add server-side or deterministic browser-based PDF export after backend architecture is ready.
 
