@@ -28,7 +28,8 @@ export const TailorPanel = ({ value, setValue, analyzed, setAnalyzed, report, on
         <div>
           <h2>Keyword & Fit Check</h2>
           <p>Paste a job description, review what the app finds, then create a truthful job-specific resume version.</p>
-          <p className="muted">No AI. No external upload. This runs locally. Use this as a guide, not a hiring prediction.</p>
+          <p className="beta-inline-note">Guidance only. Resume Studio does not guarantee ATS results, interviews, or job offers.</p>
+          <p className="muted">No AI. No external upload. This runs locally. Use this as a guide, not a hiring outcome signal.</p>
         </div>
         <div className="inline-actions">
           <Button className="primary" disabled={!value.trim()} onClick={() => setAnalyzed(true)}>Analyze job description</Button>

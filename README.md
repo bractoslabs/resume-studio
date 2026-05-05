@@ -15,7 +15,7 @@ Resume Studio helps you write, review, tailor, and export resumes without creati
 
 ## Public Beta Note
 
-Resume Studio is in public beta. Your resume data is saved locally in your browser, not synced to an account. Download a backup before clearing browser data, switching devices, or relying on the app for active applications.
+Resume Studio is in public beta. Core features are usable, but imports, exports, templates, and review tools may continue to change. Your resume data is saved locally in your browser, not synced to an account. Download a backup before clearing browser data, switching devices, or relying on the app for active applications.
 
 ## What It Does
 
@@ -29,12 +29,14 @@ Resume Studio is in public beta. Your resume data is saved locally in your brows
 ## What It Is Not
 
 - Not a hiring guarantee
-- Not an ATS ranking predictor
+- Not a signal of employer or ATS decisions
 - Not a cloud resume database
 - Not a replacement for reviewing your resume before sending
 - Not currently an AI resume writer unless that feature is explicitly added later
 
 Resume Studio does not guarantee ATS results, employer ranking, interviews, or job offers.
+
+The review tools are local, rule-based checks for formatting, readability, keyword overlap, and export readiness.
 
 ## More Features
 
@@ -70,7 +72,7 @@ npm run preview  # preview built assets
 
 Contributions are welcome. Resume Studio is in public beta, so maintainers may be selective while the product direction settles. Please read [CONTRIBUTING.md](CONTRIBUTING.md) before opening a pull request.
 
-Never include private resume content or sensitive job-search details in public issues, PRs, screenshots, or fixtures.
+Never include private resume content, personal contact information, job application details, or other sensitive data in public issues, PRs, screenshots, or fixtures.
 
 ## Environment Variables
 
@@ -122,6 +124,33 @@ Resume Studio supports browser-based Print / Save as PDF. It opens your browser'
 DOCX export produces a clean text document from Markdown source. Rich template-perfect DOCX styling is a roadmap item.
 
 ZIP export is represented as a portable package JSON in this static pass.
+
+## Known Limitations
+
+- Browser storage only. There is no cloud sync or account backup in the current public beta.
+- Clearing browser data may remove saved resumes.
+- Print / Save as PDF depends on browser print behavior.
+- DOCX export may not perfectly match visual templates.
+- Scanned or image-only PDFs are not supported unless selectable text is available.
+- Import results may need cleanup, especially complex PDFs and DOCX files.
+- Resume Review and Keyword & Fit Check are guidance only.
+- Resume Studio does not guarantee ATS results, employer ranking, interviews, job offers, or hiring outcomes.
+- No AI or cloud rewriting is included in the current static beta unless added later and disclosed.
+- Mobile editing is limited compared to desktop.
+
+## Browser Support
+
+Best tested on current Chrome, Edge, and Safari desktop. Firefox should work, but browser Print / Save as PDF output may vary. Mobile works for review and light edits, but full resume editing is best on desktop.
+
+Browser storage is per browser and device. Work saved in one browser profile may not appear in another browser, profile, or device.
+
+## Markdown Security
+
+Markdown is rendered client-side. Resume Studio allows Markdown and limited HTML, then sanitizes rendered HTML and links before inserting content into the preview.
+
+Do not paste untrusted complex HTML unless you understand the risk. Review resume content before export, and report security issues privately to labs@bractos.com.
+
+See [docs/security-model.md](docs/security-model.md) for more detail.
 
 ## Privacy and Storage
 

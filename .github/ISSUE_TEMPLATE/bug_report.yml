@@ -8,7 +8,7 @@ body:
       value: |
         Thanks for helping improve Resume Studio.
 
-        Do not include private resume content, personal contact information, or sensitive job-search details in a public issue. If the report needs private details, email labs@bractos.com instead.
+        Do not include private resume content, personal contact information, job application details, or other sensitive data in a public issue. If the report needs private details, email labs@bractos.com instead.
   - type: textarea
     id: description
     attributes:
@@ -74,5 +74,5 @@ body:
     attributes:
       label: Privacy confirmation
       options:
-        - label: I confirm I have not included private resume content, personal contact information, or sensitive job-search details.
+        - label: I confirm I have not included private resume content, personal contact information, job application details, or other sensitive data.
           required: true

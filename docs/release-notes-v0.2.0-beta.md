@@ -10,11 +10,17 @@ Resume Studio is a free, private, Markdown-first resume builder from Bractos Lab
 - Import support for common resume formats where browser parsing allows
 - Export options including Markdown, DOCX, and browser Print / Save as PDF
 - Public beta privacy and local-storage warnings
+- Plainspoken Terms and Security pages
+- Known limitations and no-guarantee guidance for review, keyword, and export tools
+- Markdown/HTML sanitization coverage and security model docs
+- Dependabot and dependency review automation
 - Open-source release under the MIT License
 
 ## Public beta notes
 
-Resume Studio is in beta. Browser storage is local to your device/browser, so download backups before clearing browser data, switching devices, or relying on the app for active applications.
+Resume Studio is in public beta. Core features are usable, but imports, exports, templates, and review tools may continue to change.
+
+Browser storage is local to your device/browser, so download backups before clearing browser data, switching devices, or relying on the app for active applications.
 
 Print / Save as PDF uses your browser's print dialog. Check page size, margins, and page breaks before sending.
 

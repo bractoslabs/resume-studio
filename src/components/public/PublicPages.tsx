@@ -20,6 +20,13 @@ export const LandingSections = ({ setView }: { setView: (view: View) => void }) 
       <div><h2>Privacy-first design</h2><p>Guest mode stores resumes in your browser. Resume Studio does not require accounts, does not add analytics by default, and does not upload resume content in this static beta.</p><Button onClick={() => setView("privacy")}>Read privacy notes</Button></div>
       <div><h2>Export formats</h2><p>Print / Save as PDF opens your browser print dialog and keeps text selectable through print CSS. Plain text helps with job portals. Markdown is ideal for editing and backups. JSON Resume supports portability.</p><Button onClick={() => setView("dashboard")}>Start free</Button></div>
     </section>
+    <section className="landing-section beta-note-section">
+      <article className="beta-note-card">
+        <strong>Public beta</strong>
+        <p>Resume Studio is in public beta. Core features are usable, but imports, exports, templates, and review tools may continue to change.</p>
+        <p>Please keep a backup of important resumes and review exported files before sending them.</p>
+      </article>
+    </section>
     <section className="landing-section faq">
       <h2>FAQ</h2>
       {[
@@ -27,6 +34,8 @@ export const LandingSections = ({ setView }: { setView: (view: View) => void }) 
         ["Does it use an LLM?", "No. Review, Keyword & Fit Check, and helper drafts are local rule-based suggestions."],
         ["Where is my data stored?", "In this browser until you export, copy, download, or delete it."],
         ["Can I import an existing resume?", "Yes. Paste text or upload Markdown, TXT, JSON Resume, YAML, and text-extracted formats when available."],
+        ["Which browsers work best?", "Best tested on current Chrome, Edge, and Safari desktop. Firefox should work, but Print / Save as PDF output may vary. Mobile works for review and light edits, but full resume editing is best on desktop."],
+        ["What are the current beta limitations?", "Resume Studio saves data locally in your browser, not to an account. Print / Save as PDF uses your browser's print dialog, DOCX export may not match visual templates perfectly, scanned PDFs may not import, and review tools are guidance only. Resume Studio does not guarantee ATS results, interviews, or job offers."],
       ].map(([q, a]) => <details key={q}><summary>{q}</summary><p>{a}</p></details>)}
     </section>
     <PublicFooter setView={setView} />
@@ -136,10 +145,133 @@ const PrivacyPolicyPage = () => (
   </section>
 );
 
+const termsSections = [
+  {
+    title: "Public Beta",
+    body: [
+      "Resume Studio is in public beta. Features may change, and imports, exports, templates, and review tools may continue to evolve.",
+      "Some behavior may vary by browser. Keep backups of important resumes before clearing browser data, switching devices, or relying on the app for active applications.",
+    ],
+  },
+  {
+    title: "No Hiring or ATS Guarantee",
+    body: [
+      "Resume Studio does not guarantee ATS results, employer ranking, interviews, job offers, or hiring outcomes.",
+      "The app can help check formatting, readability, keyword overlap, and export readiness, but employers and applicant tracking systems make their own decisions.",
+    ],
+  },
+  {
+    title: "Review Tools Are Guidance Only",
+    body: [
+      "Resume Review and Keyword & Fit Check are local, rule-based guidance tools. They are not legal, career, hiring, or recruiting advice.",
+      "You are responsible for deciding what to include before sending resume materials.",
+    ],
+  },
+  {
+    title: "User Content",
+    body: [
+      "You own your resume content. The MIT License applies to Resume Studio source code, not to the resume content you create with the app.",
+      "You are responsible for making sure your resume content is accurate, lawful, and yours to use. Do not include content you do not have the right to use.",
+    ],
+  },
+  {
+    title: "Local Storage and Backups",
+    body: [
+      "In the current public beta, Resume Studio stores work locally in your browser. It is not cloud backup and it does not sync to an account.",
+      "Clearing browser data, changing devices, switching browsers, or using private browsing may remove saved work. You are responsible for downloading backups.",
+    ],
+  },
+  {
+    title: "Public GitHub Issues",
+    body: [
+      "GitHub Issues are public. Do not post private resume content, personal contact information, job application details, or sensitive data in public issues.",
+      "Send private feedback to labs@bractos.com.",
+    ],
+  },
+  {
+    title: "Open-Source License",
+    body: [
+      "Resume Studio source code is available under the MIT License.",
+    ],
+    link: { href: "https://github.com/bractoslabs/resume-studio/blob/main/LICENSE", label: "Read the MIT License" },
+  },
+  {
+    title: "Limitation of Liability",
+    body: [
+      "Resume Studio is provided as-is in public beta. You are responsible for how you use the app, your resume content, your backups, and the files you send to employers or other people.",
+    ],
+  },
+  {
+    title: "Changes",
+    body: [
+      "These terms may be updated as Resume Studio evolves, especially if accounts, cloud sync, hosted services, analytics, or optional AI features are added later.",
+    ],
+  },
+];
+
+const securitySections = [
+  {
+    title: "Current Security Model",
+    body: [
+      "Resume Studio is currently a static, local-first public beta. Resume content is intended to remain in your browser.",
+      "The current beta does not require an account and does not include cloud sync or cloud resume storage.",
+    ],
+  },
+  {
+    title: "Markdown and Content Rendering",
+    body: [
+      "Markdown is rendered in the browser, and rendered HTML is sanitized before display.",
+      "If you find a way for unsafe HTML, JavaScript URLs, inline event handlers, or script execution to survive rendering, report it privately.",
+    ],
+  },
+  {
+    title: "File Imports",
+    body: [
+      "File imports are processed in the browser where possible. Complex documents, scanned PDFs, and unusual file contents may not import cleanly.",
+      "Review imported content before saving or exporting it.",
+    ],
+  },
+  {
+    title: "Public Issues",
+    body: [
+      "Do not post private resume content, personal contact information, job application details, or sensitive data in public GitHub Issues.",
+    ],
+  },
+  {
+    title: "Report Vulnerabilities",
+    body: [
+      "Email security reports to labs@bractos.com. Do not open a public GitHub issue for security vulnerabilities.",
+      "Include a description, steps to reproduce, browser and operating system if relevant, potential impact, and proof-of-concept details if safe to share privately.",
+    ],
+  },
+];
+
+const SectionedPublicPage = ({ title, intro, sections, effectiveDate }: {
+  title: string;
+  intro: string;
+  effectiveDate?: string;
+  sections: Array<{ title: string; body: string[]; link?: { href: string; label: string } }>;
+}) => (
+  <section className="public-copy privacy-policy">
+    {effectiveDate && <p className="policy-kicker">Effective date: {effectiveDate}</p>}
+    <h1>{title}</h1>
+    <p className="policy-intro">{intro}</p>
+    {sections.map((section) => (
+      <article className="policy-section" key={section.title}>
+        <h2>{section.title}</h2>
+        {section.body.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+        {section.link && <p><a href={section.link.href} target="_blank" rel="noopener noreferrer">{section.link.label}</a></p>}
+      </article>
+    ))}
+    <article className="policy-section">
+      <h2>Contact</h2>
+      <p>Questions or private feedback can be sent to <a href="mailto:labs@bractos.com">labs@bractos.com</a>.</p>
+    </article>
+  </section>
+);
+
 export const PublicInfoPage = ({ view, setView, openFeedback }: { view: View; setView: (view: View) => void; openFeedback: () => void }) => {
   const content: Record<string, { title: string; body: string[] }> = {
-    terms: { title: "Terms", body: ["Resume Studio is provided as a free public beta resume tool.", "You are responsible for verifying resume content before sending it to employers.", "Local suggestions are guidance only and should not be treated as legal, hiring, or career guarantees."] },
-    security: { title: "Security", body: ["Resume content is processed locally in the browser in this static beta.", "Rendered Markdown is sanitized to reduce script execution risk.", "Future cloud sync or review links would need backend security controls before launch."] },
     about: { title: "About", body: ["Resume Studio helps serious job seekers create, review, tailor, and export resumes without accounts or paywalls.", "The product is Markdown-first, privacy-conscious, and designed to avoid fabricated achievements."] },
     feedback: { title: "Feedback", body: ["Resume Studio is in public beta. GitHub Issues are the best place to report bugs, request features, or share export/import problems.", "If your feedback includes private resume details, email Bractos Labs instead of posting publicly."] },
     free: { title: "Resume Studio is free", body: ["There are no paywalls, no hidden export gates, and no account gates.", "The goal is a trustworthy free public beta for creating serious resumes."] },
@@ -147,9 +279,22 @@ export const PublicInfoPage = ({ view, setView, openFeedback }: { view: View; se
   const page = content[view] ?? content.about;
   return (
     <main className="public-page">
-      <nav className="topbar clean-topbar"><button className="brand" onClick={() => setView("landing")}><FileText size={22} /> Resume Studio</button><Button className="primary" onClick={() => setView("dashboard")}>Start building</Button></nav>
+      <nav className="topbar clean-topbar"><button className="brand" onClick={() => setView("landing")}><FileText size={22} /> Resume Studio <small className="beta-pill">Public beta</small></button><Button className="primary" onClick={() => setView("dashboard")}>Start building</Button></nav>
       {view === "privacy" ? (
         <PrivacyPolicyPage />
+      ) : view === "terms" ? (
+        <SectionedPublicPage
+          title="Terms of Use"
+          effectiveDate="May 2026"
+          intro="Resume Studio is a free public beta provided by Bractos Labs. By using the app, you are responsible for reviewing your resume content, exports, backups, and application materials before sending them."
+          sections={termsSections}
+        />
+      ) : view === "security" ? (
+        <SectionedPublicPage
+          title="Security"
+          intro="Resume Studio is designed as a local-first static app in the current public beta. This page explains the current security model and how to report vulnerabilities."
+          sections={securitySections}
+        />
       ) : (
         <section className="public-copy">
           <h1>{page.title}</h1>

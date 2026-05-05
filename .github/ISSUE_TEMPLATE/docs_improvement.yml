@@ -1,0 +1,46 @@
+name: Documentation improvement
+description: Suggest a fix or improvement for docs, README, help text, or public pages.
+title: "[Docs]: "
+labels: ["documentation", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping improve the docs.
+
+        Do not include private resume content, personal contact information, job application details, or other sensitive data in a public issue. If the context is private, email labs@bractos.com instead.
+  - type: input
+    id: docs-area
+    attributes:
+      label: What docs/page needs improvement?
+      placeholder: README, Privacy page, Terms page, Export copy, etc.
+    validations:
+      required: true
+  - type: textarea
+    id: confusing-or-missing
+    attributes:
+      label: What is confusing or missing?
+      placeholder: Describe the unclear, missing, stale, or incorrect docs.
+    validations:
+      required: true
+  - type: textarea
+    id: suggested-change
+    attributes:
+      label: Suggested change
+      placeholder: Share wording or a direction if you have one.
+    validations:
+      required: false
+  - type: textarea
+    id: links-screenshots
+    attributes:
+      label: Links/screenshots
+      description: Optional. Redact private content first.
+    validations:
+      required: false
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: Privacy confirmation
+      options:
+        - label: I confirm I have not included private resume content, personal contact information, job application details, or other sensitive data.
+          required: true

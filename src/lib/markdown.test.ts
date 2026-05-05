@@ -35,4 +35,52 @@ describe("markdown engine", () => {
     expect(result.html).not.toContain("javascript:");
     expect(result.html).not.toContain("data:text");
   });
+
+  it("removes dangerous inline HTML and event handlers", () => {
+    const result = renderMarkdown([
+      "<script>alert(1)</script>",
+      "<img src=x onerror=alert(1)>",
+      "<button onclick=\"alert(1)\">bad</button>",
+      "<svg onload=\"alert(1)\"><circle /></svg>",
+    ].join("\n"));
+
+    expect(result.html).not.toContain("<script");
+    expect(result.html).not.toContain("onerror");
+    expect(result.html).not.toContain("onclick");
+    expect(result.html).not.toContain("onload");
+    expect(result.html).not.toContain("<svg");
+  });
+
+  it("strips unsafe href values from raw html links", () => {
+    const result = renderMarkdown('<a href="javascript:alert(1)">bad</a>\n<a href="data:text/html,boom">data</a>');
+
+    expect(result.html).not.toContain("javascript:");
+    expect(result.html).not.toContain("data:text/html");
+    expect(result.html).toContain(">bad</a>");
+    expect(result.html).toContain(">data</a>");
+  });
+
+  it("handles malformed html without preserving scriptable attributes", () => {
+    const result = renderMarkdown('<div><img src="x" onerror="alert(1)"><span>Still visible');
+
+    expect(result.html).toContain("Still visible");
+    expect(result.html).not.toContain("onerror");
+  });
+
+  it("keeps safe markdown links and formatting", () => {
+    const result = renderMarkdown("## Experience\n\n- Built **safe** _tools_ with [GitHub](https://github.com/bractoslabs/resume-studio).");
+
+    expect(result.html).toContain("<h2>Experience</h2>");
+    expect(result.html).toContain("<strong>safe</strong>");
+    expect(result.html).toContain("<em>tools</em>");
+    expect(result.html).toMatch(/href="https:\/\/github\.com\/bractoslabs\/resume-studio"/i);
+  });
+
+  it("keeps safe html tags while stripping unsafe attributes", () => {
+    const result = renderMarkdown('<span class="resume-highlight" onclick="alert(1)">Safe label</span>');
+
+    expect(result.html).toContain('class="resume-highlight"');
+    expect(result.html).toContain("Safe label");
+    expect(result.html).not.toContain("onclick");
+  });
 });

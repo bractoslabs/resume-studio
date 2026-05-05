@@ -38,6 +38,26 @@
   font-weight: 780;
 }
 
+.beta-pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 22px;
+  padding: 0 8px;
+  border: 1px solid color-mix(in srgb, var(--accent-ui) 34%, var(--line));
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--accent-ui) 10%, var(--panel));
+  color: var(--accent-ui);
+  font-size: 11px;
+  font-weight: 750;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.brand .beta-pill,
+.rail-brand .beta-pill {
+  margin-left: 2px;
+}
+
 .app-rail > button.active,
 .app-rail > button:hover {
   color: var(--ink);
@@ -77,6 +97,13 @@
   margin: 0;
   color: var(--muted);
   line-height: 1.55;
+}
+
+p.beta-inline-note {
+  margin: 8px 0 0;
+  color: color-mix(in srgb, var(--ink) 76%, var(--muted));
+  font-size: 13px;
+  line-height: 1.45;
 }
 
 .page-actions {

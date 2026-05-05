@@ -77,10 +77,11 @@ const sanitizeHtml = (html: string) => {
   }
   return html
     .replace(/<script[\s\S]*?>[\s\S]*?<\/script>/gi, "")
+    .replace(/<svg[\s\S]*?>[\s\S]*?<\/svg>/gi, "")
+    .replace(/<svg[\s\S]*?>/gi, "")
     .replace(/&lt;script[\s\S]*?&lt;\/script&gt;/gi, "")
-    .replace(/\son\w+="[^"]*"/gi, "")
-    .replace(/\son\w+='[^']*'/gi, "")
-    .replace(/\s(?:href|src)=["'](?:javascript|data|vbscript):[^"']*["']/gi, "")
+    .replace(/\son\w+=(?:"[^"]*"|'[^']*'|[^\s>]+)/gi, "")
+    .replace(/\s(?:href|src)=(?:"(?:javascript|data|vbscript):[^"]*"|'(?:javascript|data|vbscript):[^']*'|(?:javascript|data|vbscript):[^\s>]+)/gi, "")
     .replace(/javascript:/gi, "");
 };
 

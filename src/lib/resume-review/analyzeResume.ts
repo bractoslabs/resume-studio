@@ -58,7 +58,7 @@ export const analyzeResume = (context: ResumeReviewContext): ResumeReviewResult 
     sectionReviews,
     achievementAudit,
     scoringExplanation: [
-      "Scores are deterministic and local. They are not a guarantee that an employer's ATS will rank or pass the resume.",
+      "Scores are deterministic and local. They are not an ATS ranking or hiring outcome signal.",
       "Critical issues have the largest impact, warnings have moderate impact, and nice-to-have items have small impact.",
       "Keyword Match only reflects the pasted job description. Add missing terms only when they are truthful.",
       "Safe auto-fixes are limited to mechanical Markdown cleanup, heading normalization, whitespace, and bullet/date formatting.",

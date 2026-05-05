@@ -86,7 +86,8 @@ export const ReviewPanel = ({ review, issues, markdown, setMarkdown, createSyste
           <span className={`score-chip large ${scoreTone(review.overallScore)}`}>{review.overallScore}</span>
           <h2>Resume Review</h2>
           <p>{verdict}</p>
-          <p>{modeIntro[mode]} This is a deterministic local review, not a guarantee that any employer system will rank or pass the resume.</p>
+          <p className="beta-inline-note">Guidance only. Resume Studio does not guarantee ATS results, interviews, or job offers.</p>
+          <p>{modeIntro[mode]} This is a deterministic local review, not an ATS ranking or hiring outcome signal.</p>
         </div>
         <details className="score-details">
           <summary>How scoring works <ChevronDown size={15} /></summary>

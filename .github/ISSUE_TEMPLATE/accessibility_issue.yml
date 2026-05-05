@@ -1,0 +1,63 @@
+name: Accessibility issue
+description: Report an accessibility problem in Resume Studio.
+title: "[Accessibility]: "
+labels: ["accessibility", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting an accessibility issue.
+
+        Do not include private resume content, personal contact information, job application details, or other sensitive data in a public issue. If the context is private, email labs@bractos.com instead.
+  - type: input
+    id: app-area
+    attributes:
+      label: Area of the app
+      placeholder: Dashboard, editor, review, import modal, export area, public pages, etc.
+    validations:
+      required: true
+  - type: textarea
+    id: issue
+    attributes:
+      label: Accessibility issue
+      placeholder: Describe what is hard to use, missing, confusing, or inaccessible.
+    validations:
+      required: true
+  - type: input
+    id: assistive-tech
+    attributes:
+      label: Assistive technology/browser if relevant
+      placeholder: VoiceOver + Safari, NVDA + Firefox, keyboard only + Chrome, etc.
+    validations:
+      required: false
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Go to...
+        2. Press...
+        3. Notice...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      placeholder: What should happen instead?
+    validations:
+      required: true
+  - type: textarea
+    id: screenshots-recordings
+    attributes:
+      label: Screenshots or recordings
+      description: Optional. Only include them if they are safe and do not reveal private content.
+    validations:
+      required: false
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: Privacy confirmation
+      options:
+        - label: I confirm I have not included private resume content, personal contact information, job application details, or other sensitive data.
+          required: true

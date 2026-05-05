@@ -8,7 +8,7 @@ body:
       value: |
         Thanks for reporting an export issue.
 
-        Do not attach resumes with private details. Redact names, contact details, employers, and sensitive job-search information before posting. If you need to share private details, email labs@bractos.com instead.
+        Do not attach resumes with private details. Redact names, contact details, employers, job application details, and other sensitive data before posting. If you need to share private details, email labs@bractos.com instead.
   - type: dropdown
     id: export-type
     attributes:
@@ -82,5 +82,5 @@ body:
     attributes:
       label: Privacy confirmation
       options:
-        - label: I confirm I have not included private resume content, personal contact information, or sensitive job-search details.
+        - label: I confirm I have not included private resume content, personal contact information, job application details, or other sensitive data.
           required: true

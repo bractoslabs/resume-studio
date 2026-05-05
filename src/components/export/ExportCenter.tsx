@@ -45,6 +45,8 @@ export const ExportCenter = ({ resume, renderedHtml, style, template, atsMode, s
         <div>
           <h2>Print / Save as PDF</h2>
           <p>This opens your browser's print dialog. Choose "Save as PDF," then check page size, margins, and page breaks before sending.</p>
+          <p className="beta-inline-note">Public beta note: check page breaks, margins, and formatting before sending exported files.</p>
+          <p className="beta-inline-note">Guidance only. Resume Studio does not guarantee ATS results, interviews, or job offers.</p>
           <p className="muted">Browser output may vary slightly between Chrome, Safari, Edge, and Firefox.</p>
         </div>
         <div className="inline-actions">

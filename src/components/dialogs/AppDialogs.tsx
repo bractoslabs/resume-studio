@@ -21,7 +21,7 @@ export const FeedbackModal = ({ onClose, setToast }: { onClose: () => void; setT
         <header>
           <div>
             <h2>Send feedback</h2>
-            <p>Resume Studio is in public beta. GitHub Issues are the best place to report bugs, request features, or share export/import problems. If your feedback includes private resume details, email us instead.</p>
+            <p>Resume Studio is in public beta, so bug reports and feature requests are especially helpful. GitHub Issues are best for public feedback. If your feedback includes private resume details, email us instead.</p>
           </div>
           <button className="icon-btn" onClick={onClose} aria-label="Close feedback"><X size={18} /></button>
         </header>
@@ -33,7 +33,7 @@ export const FeedbackModal = ({ onClose, setToast }: { onClose: () => void; setT
           ))}
           <a className="btn" href="mailto:labs@bractos.com?subject=Resume%20Studio%20Feedback" onClick={() => setToast("Feedback email opened")}>Email Bractos Labs</a>
         </div>
-        <p className="feedback-privacy-note">Please do not post private resume content, personal contact information, or sensitive job-search details in a public GitHub issue.</p>
+        <p className="feedback-privacy-note">Please do not post private resume content, personal contact information, job application details, or other sensitive data in a public GitHub issue.</p>
         <div className="inline-actions"><Button onClick={onClose}>Close</Button></div>
       </section>
     </div>
@@ -80,6 +80,7 @@ export const ImportModal = ({ draft, error, setDraft, setError, onCreate, onClos
           </div>
           <button className="icon-btn" onClick={onClose} aria-label="Close import"><X size={18} /></button>
         </header>
+        <p className="beta-inline-note">Public beta note: imports may need cleanup, especially PDFs and complex DOCX files.</p>
         <div className="import-grid">
           <section className="import-choice-card">
             <h3>Paste</h3>
@@ -96,7 +97,7 @@ export const ImportModal = ({ draft, error, setDraft, setError, onCreate, onClos
             }} /></label>
           </section>
         </div>
-        <p className="import-note">PDF import works best with selectable text. Scanned PDFs may need OCR first.</p>
+        <p className="import-note">PDF import works best with selectable text. Scanned PDFs may need OCR first. Review imported content before saving or exporting it.</p>
         {error && <p className="status-note error">{error}</p>}
         {draft && (
           <section className="import-review">

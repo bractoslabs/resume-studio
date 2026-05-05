@@ -482,7 +482,7 @@ function App() {
   const shell = (children: React.ReactNode) => (
     <main className="product-shell">
       <aside className="app-rail" aria-label="Primary navigation">
-        <button className="rail-brand" onClick={() => setView("dashboard")}><FileText size={18} /> Resume Studio</button>
+        <button className="rail-brand" onClick={() => setView("dashboard")}><FileText size={18} /> Resume Studio <small className="beta-pill">Public beta</small></button>
         {([
           ["dashboard", "Dashboard", Home],
           ["jobs", "Job Targets", BriefcaseBusiness],
@@ -527,7 +527,7 @@ function App() {
       {view === "landing" && (
         <main className="landing">
           <nav className="topbar clean-topbar">
-            <button className="brand" onClick={() => setView("dashboard")}><FileText size={22} /> Resume Studio</button>
+            <button className="brand" onClick={() => setView("dashboard")}><FileText size={22} /> Resume Studio <small className="beta-pill">Public beta</small></button>
             <div className="topbar-actions">
               <Button onClick={() => setState((current) => ({ ...current, themeMode: current.themeMode === "dark" ? "light" : "dark" }))}>
                 {state.themeMode === "dark" ? <Sun size={16} /> : <Moon size={16} />} Theme
