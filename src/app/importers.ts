@@ -10,8 +10,22 @@ const extensionFor = (fileName: string) => {
 };
 
 type PdfTextItem = { str: string; transform: number[]; width: number; height: number };
+type DocxInput = { arrayBuffer: ArrayBuffer } | { buffer: Buffer };
 
 const textItemLineKey = (item: PdfTextItem) => Math.round(item.transform[5] / 2) * 2;
+
+const normalizeDocxMarkdown = (markdown: string) => {
+  const unescaped = [...markdown].reduce((output, character, index, characters) => {
+    if (character === "\\" && /[\\`*_{}[\]()#+\-.!|]/.test(characters[index + 1] ?? "")) return output;
+    return `${output}${character}`;
+  }, "");
+  return unescaped
+    .split("\n")
+    .map((line) => line.trim())
+    .join("\n")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+};
 
 const pageTextFromPdfItems = (items: PdfTextItem[]) => {
   const lines = new Map<number, PdfTextItem[]>();
@@ -69,7 +83,13 @@ const plainTextFromPdf = async (file: File) => {
 const plainTextFromDocx = async (file: File) => {
   const mammoth = await import("mammoth");
   const arrayBuffer = await file.arrayBuffer();
-  const input = typeof Buffer === "undefined" ? { arrayBuffer } : { buffer: Buffer.from(arrayBuffer) };
+  const input: DocxInput = typeof Buffer === "undefined" ? { arrayBuffer } : { buffer: Buffer.from(arrayBuffer) };
+  const markdownConverter = mammoth as unknown as typeof mammoth & {
+    convertToMarkdown: (input: DocxInput) => Promise<{ value: string }>;
+  };
+  const markdownResult = await markdownConverter.convertToMarkdown(input);
+  const markdown = normalizeDocxMarkdown(markdownResult.value);
+  if (markdown) return markdown;
   const result = await mammoth.extractRawText(input);
   return result.value.trim();
 };
