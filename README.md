@@ -36,14 +36,6 @@ npm run preview  # preview built assets
 
 No environment variables are required for the current static local-first app.
 
-Future AI/server routes should use:
-
-```bash
-OPENAI_API_KEY=...
-```
-
-AI features must preserve facts, show before/after changes, ask for missing metrics, and never invent employers, dates, credentials, or achievements.
-
 ## Architecture
 
 - `src/App.tsx` contains the main product shell and workflows.
@@ -110,4 +102,4 @@ Resume Studio defaults to guest/local-first mode:
 - Optional encrypted local backup through WebCrypto.
 - Drag-and-drop section and bullet ordering.
 - DOCX/PDF import parsing with confidence review.
-- Optional AI assistant route when `OPENAI_API_KEY` is configured.
+- Optional AI assistant route
