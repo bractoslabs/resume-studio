@@ -1,0 +1,63 @@
+name: Bug report
+description: Report something broken or confusing in Resume Studio.
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping improve Resume Studio.
+
+        Please do not include private resume content, personal contact information, or sensitive job-search details in a public issue. If the report needs private details, email labs@bractos.com instead.
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Describe the bug in plain language.
+      placeholder: Tell us what broke, looked wrong, or behaved unexpectedly.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: List the actions that led to the issue.
+      placeholder: |
+        1. Go to...
+        2. Click...
+        3. See...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect?
+      placeholder: Describe what should have happened instead.
+    validations:
+      required: true
+  - type: dropdown
+    id: browser
+    attributes:
+      label: Browser
+      options:
+        - Chrome
+        - Edge
+        - Firefox
+        - Safari
+        - Other
+    validations:
+      required: false
+  - type: input
+    id: device
+    attributes:
+      label: Device or screen size
+      placeholder: Desktop, laptop, tablet, phone, or approximate viewport size.
+    validations:
+      required: false
+  - type: textarea
+    id: notes
+    attributes:
+      label: Anything else?
+      description: Add screenshots, logs, or notes if they help. Remove private resume details first.
+    validations:
+      required: false

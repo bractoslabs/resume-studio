@@ -66,6 +66,41 @@
   color: var(--muted);
 }
 
+.feedback-modal-card {
+  width: min(620px, 100%);
+}
+
+.feedback-modal-card header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.feedback-modal-card h2 {
+  margin: 0;
+}
+
+.feedback-modal-card header p,
+.feedback-privacy-note {
+  margin: 6px 0 0;
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.feedback-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.feedback-actions .btn {
+  min-height: 44px;
+  text-align: center;
+  text-decoration: none;
+}
+
 .modal-card form,
 .modal-card label {
   display: grid;
@@ -387,6 +422,7 @@
   }
 
   .public-footer,
+  .feedback-actions,
   .import-grid,
   .import-review-grid,
   .setup-grid {

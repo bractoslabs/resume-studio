@@ -1,0 +1,67 @@
+name: Export or PDF issue
+description: Report problems with PDF, DOCX, Markdown, HTML, JSON, YAML, or text export.
+title: "[Export]: "
+labels: ["bug", "export"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting an export issue.
+
+        Please do not attach resumes with private details. Redact names, contact details, employers, and sensitive job-search information before posting. If you need to share private details, email labs@bractos.com instead.
+  - type: dropdown
+    id: format
+    attributes:
+      label: Export format
+      options:
+        - PDF
+        - DOCX
+        - Markdown
+        - Plain text
+        - HTML
+        - JSON Resume
+        - YAML
+        - Backup JSON
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: issue
+    attributes:
+      label: What went wrong?
+      placeholder: Describe the layout, download, formatting, content, or print problem.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect?
+      placeholder: Describe the output you expected.
+    validations:
+      required: true
+  - type: dropdown
+    id: browser
+    attributes:
+      label: Browser
+      options:
+        - Chrome
+        - Edge
+        - Firefox
+        - Safari
+        - Other
+    validations:
+      required: false
+  - type: input
+    id: template
+    attributes:
+      label: Resume template or page size
+      placeholder: ATS Classic, Technical Resume, Letter, A4, or other relevant settings.
+    validations:
+      required: false
+  - type: textarea
+    id: notes
+    attributes:
+      label: Redacted example or screenshot
+      description: Add a redacted screenshot or minimal example if it helps.
+    validations:
+      required: false

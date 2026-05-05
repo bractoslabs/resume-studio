@@ -1,4 +1,3 @@
-import type { FeedbackRecord } from "../lib/types";
 import type { ResumeDocument } from "../lib/types";
 import type { RestorePreview } from "../lib/storage";
 
@@ -12,7 +11,6 @@ export type ImportDraftReview = {
   repairedFields: string[];
 };
 export type ImportDraft = { fileName: string; source: string; markdown: string; confidence: number; sections: string[]; review: ImportDraftReview; resumePatch?: Partial<ResumeDocument> };
-export type FeedbackType = FeedbackRecord["type"];
 export type RestoreDraft = { json: string; preview: RestorePreview; mode: "merge" | "replace" };
 export type RenameDraft = { id: string; title: string };
 export type DeleteDraft = { id: string; title: string };

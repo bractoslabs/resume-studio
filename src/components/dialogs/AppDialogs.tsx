@@ -1,34 +1,40 @@
 import { useEffect, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight, CheckCircle2, Download, FileCheck2, FileDown, LayoutTemplate, Upload, X } from "lucide-react";
-import type { FeedbackRecord } from "../../lib/types";
-import type { FeedbackType, ImportDraft, NewResumeSetup, RenameDraft, RestoreDraft, SaveVersionDraft } from "../../app/types";
-import { nowIso, uid, formatDate } from "../../lib/utils";
+import type { ImportDraft, NewResumeSetup, RenameDraft, RestoreDraft, SaveVersionDraft } from "../../app/types";
+import { formatDate } from "../../lib/utils";
 import { validateBackup } from "../../lib/storage";
 import { buildImportDraft } from "../../app/resumeTransforms";
 import { buildImportDraftFromFile } from "../../app/importers";
 import { Button } from "../common/Button";
 
+const feedbackDestinations = [
+  { label: "Report a bug", href: "https://github.com/bractoslabs/resume-studio/issues/new?template=bug_report.yml", primary: true },
+  { label: "Request a feature", href: "https://github.com/bractoslabs/resume-studio/issues/new?template=feature_request.yml" },
+  { label: "Report an export/PDF issue", href: "https://github.com/bractoslabs/resume-studio/issues/new?template=export_issue.yml" },
+  { label: "Report an import issue", href: "https://github.com/bractoslabs/resume-studio/issues/new?template=import_issue.yml" },
+];
+
 export const FeedbackModal = ({ onClose, setToast }: { onClose: () => void; setToast: (value: string) => void }) => {
-  const [type, setType] = useState<FeedbackType>("bug");
-  const [message, setMessage] = useState("");
-  const [email, setEmail] = useState("");
-  const submit = () => {
-    const record: FeedbackRecord = { id: uid("feedback"), type, message, email: email || undefined, createdAt: nowIso(), source: "mailto" };
-    const subject = encodeURIComponent(`Resume Studio feedback: ${type}`);
-    const body = encodeURIComponent(`${message}\n\nOptional email: ${email || "not provided"}\n\nLocal record:\n${JSON.stringify(record, null, 2)}`);
-    window.location.href = `mailto:feedback@example.com?subject=${subject}&body=${body}`;
-    setToast("Feedback email opened");
-    onClose();
-  };
   return (
     <div className="modal-backdrop" role="dialog" aria-modal="true" aria-label="Send feedback">
-      <section className="modal-card">
-        <header><h2>Send feedback</h2><button className="icon-btn" onClick={onClose} aria-label="Close feedback"><X size={18} /></button></header>
-        <label>Type<select value={type} onChange={(event) => setType(event.target.value as FeedbackType)}><option value="bug">Bug</option><option value="feature">Feature request</option><option value="confusing-ux">Confusing UX</option><option value="export-issue">Export issue</option><option value="other">Other</option></select></label>
-        <label>What happened?<textarea value={message} onChange={(event) => setMessage(event.target.value)} placeholder="Tell us what felt broken, confusing, or useful." /></label>
-        <label>Optional email<input value={email} onChange={(event) => setEmail(event.target.value)} placeholder="you@example.com" /></label>
-        <p className="muted">No account required. This static beta opens your email client instead of sending data to a backend.</p>
-        <div className="inline-actions"><Button onClick={onClose}>Cancel</Button><Button className="primary" disabled={!message.trim()} onClick={submit}>Open email draft</Button></div>
+      <section className="modal-card feedback-modal-card">
+        <header>
+          <div>
+            <h2>Send feedback</h2>
+            <p>Resume Studio is in public beta. GitHub Issues are the best place to report bugs, request features, or share export/import problems. If your feedback includes private resume details, email us instead.</p>
+          </div>
+          <button className="icon-btn" onClick={onClose} aria-label="Close feedback"><X size={18} /></button>
+        </header>
+        <div className="feedback-actions">
+          {feedbackDestinations.map((destination) => (
+            <a key={destination.href} className={`btn ${destination.primary ? "primary" : ""}`} href={destination.href} target="_blank" rel="noopener noreferrer">
+              {destination.label}
+            </a>
+          ))}
+          <a className="btn" href="mailto:labs@bractos.com?subject=Resume%20Studio%20Feedback" onClick={() => setToast("Feedback email opened")}>Email Bractos Labs</a>
+        </div>
+        <p className="feedback-privacy-note">Please do not post private resume content, personal contact information, or sensitive job-search details in a public GitHub issue.</p>
+        <div className="inline-actions"><Button onClick={onClose}>Close</Button></div>
       </section>
     </div>
   );

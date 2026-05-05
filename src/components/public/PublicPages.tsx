@@ -47,7 +47,7 @@ export const PublicInfoPage = ({ view, setView, openFeedback }: { view: View; se
     terms: { title: "Terms", body: ["Resume Studio is provided as a free public beta resume tool.", "You are responsible for verifying resume content before sending it to employers.", "Local suggestions are guidance only and should not be treated as legal, hiring, or career guarantees."] },
     security: { title: "Security", body: ["Resume content is processed locally in the browser in this static beta.", "Rendered Markdown is sanitized to reduce script execution risk.", "Future cloud sync or review links would need backend security controls before launch."] },
     about: { title: "About", body: ["Resume Studio helps serious job seekers create, review, tailor, and export resumes without accounts or paywalls.", "The product is Markdown-first, privacy-conscious, and designed to avoid fabricated achievements."] },
-    feedback: { title: "Feedback", body: ["Found a bug, confusing workflow, or export issue? Send feedback without creating an account.", "Feedback uses a mailto fallback in this static beta."] },
+    feedback: { title: "Feedback", body: ["Resume Studio is in public beta. GitHub Issues are the best place to report bugs, request features, or share export/import problems.", "If your feedback includes private resume details, email Bractos Labs instead of posting publicly."] },
     free: { title: "Resume Studio is free", body: ["There are no paywalls, no hidden export gates, and no account gates.", "The goal is a trustworthy free public beta for creating serious resumes."] },
   };
   const page = content[view] ?? content.about;
