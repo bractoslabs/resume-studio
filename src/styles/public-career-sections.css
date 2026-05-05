@@ -108,6 +108,49 @@
   line-height: 1.7;
 }
 
+.privacy-policy {
+  gap: 20px;
+}
+
+.privacy-policy h1 {
+  margin: 0;
+  color: var(--text);
+}
+
+.policy-kicker {
+  margin: 0;
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.policy-intro {
+  margin: 0;
+  color: var(--text);
+  font-size: 1.05rem;
+}
+
+.policy-section {
+  display: grid;
+  gap: 8px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border);
+}
+
+.policy-section h2 {
+  margin: 0;
+  color: var(--text);
+  font-size: 1.15rem;
+}
+
+.policy-section p {
+  margin: 0;
+}
+
+.policy-section a {
+  color: var(--accent);
+  font-weight: 700;
+}
+
 .helper-grid {
   align-items: start;
 }
