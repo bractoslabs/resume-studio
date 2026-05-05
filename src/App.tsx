@@ -6,6 +6,7 @@ import {
   FileText,
   History,
   Home,
+  MessageCircle,
   Moon,
   Plus,
   Printer,
@@ -49,9 +50,6 @@ import {
   LandingSections,
   NewResumeDialog,
   PublicInfoPage,
-  RenameResumeDialog,
-  BackupReminderBanner,
-  LocalStorageWarningBanner,
   ResumePreview,
   RestoreBackupDialog,
   SaveVersionDialog,
@@ -62,7 +60,6 @@ import type {
   EditMode,
   ImportDraft,
   NewResumeSetup,
-  RenameDraft,
   RestoreDraft,
   SaveVersionDraft,
   TermReviewState,
@@ -87,6 +84,10 @@ import { buildImportDraftFromFile } from "./app/importers";
 
 function App() {
   const [state, setState] = useState<AppState>(() => loadState());
+  const [resolvedTheme, setResolvedTheme] = useState<"light" | "dark">(() => {
+    if (typeof window === "undefined") return "light";
+    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  });
   const [view, setViewState] = useState<View>(() => publicPathToView(window.location.pathname));
   const [tab, setTab] = useState<WorkflowTab>("edit");
   const [editMode, setEditMode] = useState<EditMode>("markdown");
@@ -112,7 +113,6 @@ function App() {
   const [importError, setImportError] = useState("");
   const [confirmClearOpen, setConfirmClearOpen] = useState(false);
   const [restoreDraft, setRestoreDraft] = useState<RestoreDraft | null>(null);
-  const [renameDraft, setRenameDraft] = useState<RenameDraft | null>(null);
   const [deleteDraft, setDeleteDraft] = useState<DeleteDraft | null>(null);
   const [saveVersionDraft, setSaveVersionDraft] = useState<SaveVersionDraft | null>(null);
   const [restoreVersionDraft, setRestoreVersionDraft] = useState<ResumeVersion | null>(null);
@@ -254,9 +254,16 @@ function App() {
   }, [activeResume?.id, activeResume?.markdown]);
 
   useEffect(() => {
-    const root = document.documentElement;
-    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    root.dataset.theme = state.themeMode === "system" ? (prefersDark ? "dark" : "light") : state.themeMode;
+    const media = window.matchMedia("(prefers-color-scheme: dark)");
+    const applyTheme = () => {
+      const nextTheme = state.themeMode === "system" ? (media.matches ? "dark" : "light") : state.themeMode;
+      document.documentElement.dataset.theme = nextTheme;
+      setResolvedTheme(nextTheme);
+    };
+
+    applyTheme();
+    media.addEventListener("change", applyTheme);
+    return () => media.removeEventListener("change", applyTheme);
   }, [state.themeMode]);
 
   useEffect(() => {
@@ -320,14 +327,6 @@ function App() {
     setState((current) => ({ ...current, activeResumeId: id }));
     setView("editor");
     setTab("edit");
-  };
-
-  const reviewResume = (id: string) => {
-    const nextResume = state.resumes.find((resume) => resume.id === id);
-    lastSnapshotMarkdownRef.current = nextResume?.markdown ?? "";
-    setState((current) => ({ ...current, activeResumeId: id }));
-    setView("editor");
-    setTab("review");
   };
 
   const addResume = (kind: "blank" | "wizard" | "template" | "import" | "duplicate", source?: ResumeDocument, setup?: NewResumeSetup) => {
@@ -504,86 +503,79 @@ function App() {
     "--bullet-gap": template.bulletSpacing === "compact" ? "1px" : template.bulletSpacing === "airy" ? "5px" : "3px",
   } as React.CSSProperties;
 
-  const hasMeaningfulBackupWork = state.resumes.some(
-    (resume) =>
-      resume.updatedAt !== resume.createdAt ||
-      resume.versions.length > 1 ||
-      Boolean(resume.lastExportedAt || resume.importedSource) ||
-      resume.jobTargets.length > 0 ||
-      resume.applications.length > 0,
-  );
-  const backupRecommended =
-    Boolean(state.storageMeta?.significantChangesSinceBackup) || (!state.storageMeta?.lastBackupAt && hasMeaningfulBackupWork);
-
-  const shouldShowBackupReminder = (() => {
-    const meta = state.storageMeta;
-    if (meta?.backupReminderDisabled) return false;
-    if (!state.resumes.length) return false;
-    const dismissedAt = meta?.lastBackupReminderDismissedAt ? +new Date(meta.lastBackupReminderDismissedAt) : 0;
-    if (dismissedAt && Date.now() - dismissedAt < 24 * 60 * 60 * 1000) return false;
-    if (!meta?.lastBackupAt && hasMeaningfulBackupWork) return true;
-    if (meta?.lastBackupAt && meta.significantChangesSinceBackup && Date.now() - +new Date(meta.lastBackupAt) > 7 * 24 * 60 * 60 * 1000)
-      return true;
-    return false;
-  })();
-  const shouldShowLocalStorageWarning = state.resumes.length > 0 && !state.storageMeta?.localStorageWarningDismissedAt;
-  const dismissLocalStorageWarning = () => {
-    setState((current) => ({ ...current, storageMeta: { ...current.storageMeta, localStorageWarningDismissedAt: nowIso() } }));
+  const toggleTheme = () => {
+    setState((current) => ({ ...current, themeMode: resolvedTheme === "dark" ? "light" : "dark" }));
   };
+  const themeToggle = (
+    <Button
+      className="theme-toggle rail-icon-btn"
+      onClick={toggleTheme}
+      aria-label={`Switch to ${resolvedTheme === "dark" ? "light" : "dark"} theme`}
+      title={`Switch to ${resolvedTheme === "dark" ? "light" : "dark"} theme`}
+    >
+      {resolvedTheme === "dark" ? <Sun size={16} /> : <Moon size={16} />}
+    </Button>
+  );
+  const compactSaveText = saveFailed
+    ? "Save failed"
+    : lastSavedAt
+        ? `Saved locally at ${timeOnly(lastSavedAt)}`
+        : "Saved locally";
 
   const shell = (children: React.ReactNode) => (
     <main className="product-shell">
       <aside className="app-rail" aria-label="Primary navigation">
         <button className="rail-brand" onClick={() => setView("dashboard")}>
-          <FileText size={18} /> Resume Studio <small className="beta-pill">Public beta</small>
+          <FileText size={18} /> <span className="rail-brand-name">Resume Studio</span> <small className="beta-pill">Public beta</small>
         </button>
         {(
           [
             ["dashboard", "Dashboard", Home],
             ["jobs", "Job Targets", BriefcaseBusiness],
             ["helpers", "Resume Tools", Sparkles],
-            ["settings", "Settings", Settings],
           ] satisfies Array<[View, string, typeof Home]>
         ).map(([key, label, Icon]) => (
           <button key={key} className={view === key ? "active" : ""} aria-label={label} onClick={() => setView(key)}>
             <Icon size={18} /> <span>{label}</span>
           </button>
         ))}
-        <Button className="feedback-rail-btn" onClick={() => setFeedbackOpen(true)}>
-          Feedback
-        </Button>
+        <div className="rail-bottom-menu" aria-label="Workspace controls">
+          <div className={`rail-save-status ${saveFailed ? "failed" : ""}`} title={compactSaveText} aria-label={compactSaveText}>
+            <Save size={15} />
+            <span>{compactSaveText}</span>
+          </div>
+          <Button className="rail-backup-btn" onClick={() => downloadBackup()} disabled={!state.resumes.length}>
+            <Download size={15} /> <span>Manual Backup</span>
+          </Button>
+          <div className="rail-quick-actions">
+            {themeToggle}
+            <button
+              className={`rail-icon-btn ${view === "settings" ? "active" : ""}`}
+              onClick={() => setView("settings")}
+              aria-label="Settings"
+              title="Settings"
+            >
+              <Settings size={16} />
+            </button>
+            <button className="rail-icon-btn" onClick={() => setFeedbackOpen(true)} aria-label="Feedback" title="Feedback">
+              <MessageCircle size={16} />
+            </button>
+          </div>
+        </div>
         <p className="rail-attribution">
           Built by{" "}
           <a href="https://bractos.com" target="_blank" rel="noopener noreferrer">
             Bractos Labs
           </a>
-          .{" "}
+          .
+          <br />
           <a href="https://github.com/bractoslabs/resume-studio" target="_blank" rel="noopener noreferrer">
-            MIT open source
+            MIT Open source
           </a>
           .
         </p>
       </aside>
       <section className="product-main">
-        {shouldShowLocalStorageWarning ? (
-          <LocalStorageWarningBanner
-            onBackup={() => {
-              downloadBackup();
-              dismissLocalStorageWarning();
-            }}
-            onDismiss={dismissLocalStorageWarning}
-            onLearnMore={() => setView("privacy")}
-          />
-        ) : (
-          shouldShowBackupReminder && (
-            <BackupReminderBanner
-              onBackup={() => downloadBackup()}
-              onLater={() =>
-                setState((current) => ({ ...current, storageMeta: { ...current.storageMeta, lastBackupReminderDismissedAt: nowIso() } }))
-              }
-            />
-          )
-        )}
         {children}
       </section>
     </main>
@@ -604,9 +596,7 @@ function App() {
               <FileText size={22} /> Resume Studio <small className="beta-pill">Public beta</small>
             </button>
             <div className="topbar-actions">
-              <Button onClick={() => setState((current) => ({ ...current, themeMode: current.themeMode === "dark" ? "light" : "dark" }))}>
-                {state.themeMode === "dark" ? <Sun size={16} /> : <Moon size={16} />} Theme
-              </Button>
+              {themeToggle}
               <Button className="primary" onClick={() => setView("dashboard")}>
                 Start building
               </Button>
@@ -665,16 +655,11 @@ function App() {
             sort={sort}
             setSort={setSort}
             totalResumeCount={state.resumes.length}
-            lastBackupAt={state.storageMeta?.lastBackupAt}
-            backupRecommended={backupRecommended}
             selectResume={selectResume}
-            reviewResume={reviewResume}
             deleteResume={(resume) => setDeleteDraft({ id: resume.id, title: resume.title })}
             duplicateResume={(resume) => addResume("duplicate", resume)}
-            renameResume={(resume) => setRenameDraft({ id: resume.id, title: resume.title })}
+            renameResume={(resume, title) => updateResume(resume.id, { title })}
             openNewResume={() => setNewResumeOpen(true)}
-            downloadBackup={downloadBackup}
-            openRestorePreview={openRestorePreview}
           />,
         )}
 
@@ -771,7 +756,7 @@ function App() {
           />,
         )}
       {["privacy", "terms", "security", "feedback", "about", "free"].includes(view) && (
-        <PublicInfoPage view={view} setView={setView} openFeedback={() => setFeedbackOpen(true)} />
+        <PublicInfoPage view={view} setView={setView} openFeedback={() => setFeedbackOpen(true)} themeToggle={themeToggle} />
       )}
 
       {commandOpen && (
@@ -840,17 +825,6 @@ function App() {
             setState(restored);
             setRestoreDraft(null);
             setToast("Backup restored. Your resumes are now saved locally in this browser.");
-          }}
-        />
-      )}
-      {renameDraft && (
-        <RenameResumeDialog
-          draft={renameDraft}
-          setDraft={setRenameDraft}
-          onCancel={() => setRenameDraft(null)}
-          onSave={() => {
-            if (renameDraft.title.trim()) updateResume(renameDraft.id, { title: renameDraft.title.trim() });
-            setRenameDraft(null);
           }}
         />
       )}
