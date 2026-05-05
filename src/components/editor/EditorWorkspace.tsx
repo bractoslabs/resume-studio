@@ -219,11 +219,6 @@ export const EditorWorkspace = (props: EditorWorkspaceProps) => {
           >
             <Save size={14} /> {saveStateText || (lastSavedAt ? `Saved locally at ${timeOnly(lastSavedAt)}` : "Saved locally")}
           </span>
-          {state.storageMeta?.significantChangesSinceBackup && (
-            <button className="backup-chip" onClick={downloadBackup}>
-              Backup recommended
-            </button>
-          )}
           <span className={`score-chip ${scoreTone(ats.scores.overall)}`}>Review {ats.scores.overall}</span>
           <span className="meta-chip">
             {activePageCount} page{activePageCount > 1 ? "s" : ""}

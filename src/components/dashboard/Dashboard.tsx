@@ -1,12 +1,12 @@
-import { Copy, Download, FileCheck2, FileDown, MoreHorizontal, Pencil, Plus, Save, Search, Trash2, Upload } from "lucide-react";
+import { Check, Copy, FolderOpen, Pencil, Plus, Search, Trash2, X } from "lucide-react";
+import { useState } from "react";
 import type { ResumeDocument } from "../../lib/types";
 import { analyzeAts } from "../../lib/ats";
 import { getTemplate } from "../../lib/templates";
 import { formatDate } from "../../lib/utils";
 import { renderMarkdown } from "../../lib/markdown";
-import { exportMarkdown } from "../../lib/exporters";
 import { Button } from "../common/Button";
-import { pageCountEstimate, resumeChecklist, scoreTone, timeOnly } from "../../app/resumeTransforms";
+import { pageCountEstimate, resumeChecklist, scoreTone } from "../../app/resumeTransforms";
 
 export const Dashboard = ({
   resumes,
@@ -15,16 +15,11 @@ export const Dashboard = ({
   sort,
   setSort,
   totalResumeCount,
-  lastBackupAt,
-  backupRecommended,
   selectResume,
-  reviewResume,
   deleteResume,
   duplicateResume,
   renameResume,
   openNewResume,
-  downloadBackup,
-  openRestorePreview,
 }: {
   resumes: ResumeDocument[];
   query: string;
@@ -32,19 +27,30 @@ export const Dashboard = ({
   sort: string;
   setSort: (value: string) => void;
   totalResumeCount: number;
-  lastBackupAt?: string;
-  backupRecommended: boolean;
   selectResume: (id: string) => void;
-  reviewResume: (id: string) => void;
   deleteResume: (resume: ResumeDocument) => void;
   duplicateResume: (resume: ResumeDocument) => void;
-  renameResume: (resume: ResumeDocument) => void;
+  renameResume: (resume: ResumeDocument, title: string) => void;
   openNewResume: () => void;
-  downloadBackup: () => void;
-  openRestorePreview: (file: File) => Promise<void>;
 }) => {
   const userResumes = resumes;
   const hasResumes = totalResumeCount > 0;
+  const [editingResumeId, setEditingResumeId] = useState("");
+  const [draftTitle, setDraftTitle] = useState("");
+  const beginRename = (resume: ResumeDocument) => {
+    setEditingResumeId(resume.id);
+    setDraftTitle(resume.title);
+  };
+  const cancelRename = () => {
+    setEditingResumeId("");
+    setDraftTitle("");
+  };
+  const saveRename = (resume: ResumeDocument) => {
+    const title = draftTitle.trim();
+    if (title && title !== resume.title) renameResume(resume, title);
+    cancelRename();
+  };
+
   return (
     <div className="dashboard-page">
       <header className="page-header">
@@ -59,44 +65,12 @@ export const Dashboard = ({
         </div>
       </header>
 
-      <section className="local-save-strip" aria-label="Local save and backup status">
-        <div>
-          <p>
-            <Save size={15} />{" "}
-            {lastBackupAt
-              ? `Saved locally · Last backup: ${formatDate(lastBackupAt)} at ${timeOnly(lastBackupAt)}`
-              : backupRecommended
-                ? "Saved locally · Backup recommended"
-                : "Saved locally"}
-          </p>
-          <span>Your resumes are saved in this browser. Download a backup before switching devices or clearing browser data.</span>
-        </div>
-        <div className="local-save-actions">
-          <Button onClick={() => downloadBackup()} disabled={!hasResumes}>
-            <Download size={15} /> Download backup
-          </Button>
-          <label className="btn quiet-btn">
-            <Upload size={15} /> Restore
-            <input
-              type="file"
-              accept="application/json"
-              hidden
-              onChange={async (event) => {
-                const file = event.target.files?.[0];
-                if (!file) return;
-                await openRestorePreview(file);
-              }}
-            />
-          </label>
-        </div>
-      </section>
-
       <section className="onboarding-card" aria-label="Resume workflow">
         {[
-          ["1", "Build or import", "Start from a structured template or bring in an existing resume."],
-          ["2", "Choose design", "Pick an ATS-friendly layout and adjust spacing only when needed."],
-          ["3", "Review content", "Check structure, readability, bullets, sections, and missing details."],
-          ["4", "Print / Save as PDF", "Open the browser print dialog, choose Save as PDF, and check page breaks."],
+          ["1", "Create your resume", "Start a new resume or continue one you already saved."],
+          ["2", "Add your details", "Write your experience, skills, education, and projects in the format you prefer."],
+          ["3", "Improve the content", "Check structure, keywords, readability, and fit for the roles you want."],
+          ["4", "Save and send", "Download a backup, then export your resume or save it as a PDF."],
         ].map(([step, title, body]) => (
           <article key={step}>
             <span>{step}</span>
@@ -150,15 +124,47 @@ export const Dashboard = ({
                   <div className="resume-card-head">
                     <div>
                       <div className="resume-title-row">
-                        <h2>{resume.title}</h2>
-                        <button
-                          className="icon-btn subtle-icon-btn"
-                          onClick={() => renameResume(resume)}
-                          aria-label={`Rename ${resume.title}`}
-                          title="Rename resume"
-                        >
-                          <Pencil size={15} />
-                        </button>
+                        {editingResumeId === resume.id ? (
+                          <form
+                            className="resume-title-edit"
+                            onSubmit={(event) => {
+                              event.preventDefault();
+                              saveRename(resume);
+                            }}
+                          >
+                            <input
+                              value={draftTitle}
+                              onChange={(event) => setDraftTitle(event.target.value)}
+                              onKeyDown={(event) => {
+                                if (event.key === "Enter") {
+                                  event.preventDefault();
+                                  saveRename(resume);
+                                }
+                                if (event.key === "Escape") cancelRename();
+                              }}
+                              aria-label={`New title for ${resume.title}`}
+                              autoFocus
+                            />
+                            <button className="icon-btn" type="submit" aria-label="Save resume title" title="Save title">
+                              <Check size={15} />
+                            </button>
+                            <button className="icon-btn" type="button" onClick={cancelRename} aria-label="Cancel rename" title="Cancel">
+                              <X size={15} />
+                            </button>
+                          </form>
+                        ) : (
+                          <>
+                            <h2>{resume.title}</h2>
+                            <button
+                              className="icon-btn subtle-icon-btn"
+                              onClick={() => beginRename(resume)}
+                              aria-label={`Rename ${resume.title}`}
+                              title="Rename resume"
+                            >
+                              <Pencil size={15} />
+                            </button>
+                          </>
+                        )}
                       </div>
                       <p>{resume.targetRole || "No target role set"}</p>
                     </div>
@@ -190,33 +196,14 @@ export const Dashboard = ({
                   </div>
                   <div className="card-actions resume-card-actions">
                     <Button className="primary" onClick={() => selectResume(resume.id)}>
-                      Open
+                      <FolderOpen size={16} /> Open
                     </Button>
-                    <Button onClick={() => reviewResume(resume.id)}>
-                      <FileCheck2 size={16} /> Review
+                    <Button onClick={() => duplicateResume(resume)}>
+                      <Copy size={16} /> Duplicate
                     </Button>
-                    <Button onClick={() => exportMarkdown(resume)}>
-                      <FileDown size={16} /> Export
+                    <Button className="danger" onClick={() => deleteResume(resume)}>
+                      <Trash2 size={16} /> Delete
                     </Button>
-                    <details className="resume-more-menu">
-                      <summary aria-label={`More actions for ${resume.title}`} title="More actions">
-                        <MoreHorizontal size={18} />
-                      </summary>
-                      <div>
-                        <button onClick={() => renameResume(resume)}>
-                          <Pencil size={15} /> Rename
-                        </button>
-                        <button onClick={() => duplicateResume(resume)}>
-                          <Copy size={15} /> Duplicate
-                        </button>
-                        <button onClick={() => exportMarkdown(resume)}>
-                          <FileDown size={15} /> Export copy
-                        </button>
-                        <button className="danger" onClick={() => deleteResume(resume)}>
-                          <Trash2 size={15} /> Delete
-                        </button>
-                      </div>
-                    </details>
                   </div>
                 </article>
               );

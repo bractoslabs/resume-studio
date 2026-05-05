@@ -65,7 +65,7 @@
 }
 
 .rail-attribution {
-  margin: 0 12px 14px;
+  margin: 8px 12px 14px;
   color: var(--muted);
   font-size: 12px;
   line-height: 1.45;
@@ -84,6 +84,81 @@
 .product-main {
   min-width: 0;
   min-height: 100vh;
+}
+
+.rail-bottom-menu {
+  margin-top: auto;
+  display: grid;
+  gap: 8px;
+  padding: 10px 8px;
+  border: 1px solid color-mix(in srgb, var(--line) 76%, transparent);
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--panel-soft) 62%, transparent);
+}
+
+.rail-save-status,
+.rail-backup-btn {
+  min-height: 34px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.rail-save-status {
+  padding: 0 8px;
+  color: color-mix(in srgb, var(--ink) 86%, var(--muted));
+  font-size: 12px;
+  font-weight: 720;
+}
+
+.rail-save-status.failed {
+  color: var(--danger);
+}
+
+.rail-save-status span,
+.rail-backup-btn span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rail-quick-actions {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.rail-icon-btn {
+  width: 100%;
+  min-width: 0;
+  min-height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid color-mix(in srgb, var(--line) 82%, transparent);
+  border-radius: var(--radius);
+  background: var(--panel);
+  color: var(--ink);
+  cursor: pointer;
+  padding: 0;
+}
+
+.rail-icon-btn.active,
+.rail-icon-btn:hover {
+  border-color: color-mix(in srgb, var(--accent-ui) 42%, var(--line));
+  background: color-mix(in srgb, var(--accent-ui) 12%, var(--panel));
+}
+
+.theme-toggle {
+  width: 40px;
+  min-width: 40px;
+  flex: 0 0 40px;
+}
+
+.rail-quick-actions .theme-toggle {
+  width: 100%;
+  min-width: 0;
+  flex: 1 1 auto;
 }
 
 .dashboard-page,

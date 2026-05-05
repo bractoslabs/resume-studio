@@ -113,7 +113,7 @@
 .refined-grid {
   max-width: none;
   padding: 0;
-  grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 360px), 1fr));
   gap: 18px;
 }
 
@@ -205,6 +205,20 @@
   min-width: 0;
 }
 
+.resume-title-edit {
+  width: min(100%, 520px);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 30px 30px;
+  align-items: center;
+  gap: 6px;
+}
+
+.resume-title-edit input {
+  height: 34px;
+  padding: 0 10px;
+  font-weight: 760;
+}
+
 .resume-title-row .icon-btn {
   flex: 0 0 30px;
   width: 30px;
@@ -224,6 +238,11 @@
 .resume-card-actions {
   margin-top: auto;
   align-items: center;
+}
+
+.resume-card-actions .btn {
+  overflow-wrap: normal;
+  white-space: nowrap;
 }
 
 .resume-more-menu {

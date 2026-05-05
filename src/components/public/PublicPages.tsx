@@ -1,4 +1,5 @@
 import { Check, FileText } from "lucide-react";
+import type { ReactNode } from "react";
 import type { View } from "../../app/types";
 import { Button } from "../common/Button";
 
@@ -367,10 +368,12 @@ export const PublicInfoPage = ({
   view,
   setView,
   openFeedback,
+  themeToggle,
 }: {
   view: View;
   setView: (view: View) => void;
   openFeedback: () => void;
+  themeToggle?: ReactNode;
 }) => {
   const content: Record<string, { title: string; body: string[] }> = {
     about: {
@@ -402,9 +405,12 @@ export const PublicInfoPage = ({
         <button className="brand" onClick={() => setView("landing")}>
           <FileText size={22} /> Resume Studio <small className="beta-pill">Public beta</small>
         </button>
-        <Button className="primary" onClick={() => setView("dashboard")}>
-          Start building
-        </Button>
+        <div className="topbar-actions">
+          {themeToggle}
+          <Button className="primary" onClick={() => setView("dashboard")}>
+            Start building
+          </Button>
+        </div>
       </nav>
       {view === "privacy" ? (
         <PrivacyPolicyPage />
