@@ -2,10 +2,10 @@ import type { AtsIssue, JobTarget, ResumeDocument, ResumeVersion } from "../lib/
 import { analyzeAts, improveBulletLocal } from "../lib/ats";
 import { defaultResumeMarkdown } from "../lib/defaultDraft";
 import { compareResumeToJob } from "../lib/jobMatcher";
-import { ensureMarkdownFrontmatter, parseFrontmatter, renderMarkdown } from "../lib/markdown";
+import { ensureMarkdownFrontmatter, parseFrontmatter, renderMarkdown, updateMarkdownFrontmatter } from "../lib/markdown";
 import { parseResumeForgeResumeFile } from "../lib/resumeForgeSchema";
 import { nowIso, uid } from "../lib/utils";
-import type { ImportDraft } from "./types";
+import type { ImportDraft, NewResumeSetup } from "./types";
 
 interface JsonResumeProfile {
   network?: string;
@@ -266,21 +266,33 @@ export const buildImportDraft = (fileName: string, source: string): ImportDraft 
   };
 };
 
-export const createResume = (kind: "blank" | "wizard" | "template" | "import" | "duplicate", source?: ResumeDocument): ResumeDocument => {
+export const createResume = (kind: "blank" | "wizard" | "template" | "import" | "duplicate", source?: ResumeDocument, setup?: NewResumeSetup): ResumeDocument => {
   const timestamp = nowIso();
-  const markdown =
+  const baseMarkdown =
     kind === "duplicate" && source
       ? source.markdown
-      : kind === "template"
+      : kind === "template" || setup?.templateId === "technical"
         ? defaultResumeMarkdown.replace("template: ats-classic", "template: technical")
         : defaultResumeMarkdown;
+  const setupPatch = setup ? {
+    name: setup.name || "Your Name",
+    title: setup.targetRole || "Target Role",
+    email: setup.email,
+    phone: setup.phone,
+    location: setup.location || "City, State",
+    targetRole: setup.targetRole || "Target Role",
+    template: setup.templateId,
+  } : undefined;
+  const markdown = setupPatch ? updateMarkdownFrontmatter(baseMarkdown, setupPatch) : baseMarkdown;
+  const title = setup?.resumeTitle.trim() || setup?.name.trim() || (kind === "duplicate" && source ? `${source.title} Copy` : kind === "wizard" ? "Guided Resume" : kind === "import" ? "Imported Resume" : "Untitled Resume");
+  const targetRole = setup?.targetRole.trim() || (kind === "duplicate" ? source?.targetRole : "Target Role");
   return {
     id: uid("resume"),
-    title: kind === "duplicate" && source ? `${source.title} Copy` : kind === "wizard" ? "Guided Resume" : kind === "import" ? "Imported Resume" : "Untitled Resume",
-    targetRole: kind === "duplicate" ? source?.targetRole : "Target Role",
-    tags: kind === "wizard" ? ["guided"] : [],
+    title,
+    targetRole,
+    tags: kind === "wizard" || setup?.startMode === "guided" ? ["guided"] : [],
     markdown,
-    templateId: kind === "template" ? "technical" : "ats-classic",
+    templateId: setup?.templateId ?? (kind === "template" ? "technical" : "ats-classic"),
     pageSize: "letter",
     createdAt: timestamp,
     updatedAt: timestamp,

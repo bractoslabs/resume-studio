@@ -4,7 +4,7 @@ Public roadmap for improving Resume Studio's usability, usefulness, UI/UX, and l
 
 ## Product Flow and Onboarding
 
-1. Add a first-run setup flow that guides users through contact details, target role, import or template selection, review, and first export.
+1. ~~Add a first-run setup flow that guides users through contact details, target role, import or template selection, review, and first export.~~
 2. Make the existing job seeker checklist actionable by linking each checklist item to the relevant screen or section.
 3. Delay backup reminders until meaningful edits or first export so new users are not interrupted immediately after creating a draft.
 4. Add placeholder detection for starter content such as "Your Name", "Target Role", and "[add metric]" and group those issues into a clear pre-export warning.

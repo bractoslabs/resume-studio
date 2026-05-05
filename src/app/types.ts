@@ -13,3 +13,13 @@ export type DeleteDraft = { id: string; title: string };
 export type SaveVersionDraft = { name: string; notes: string };
 export type TermReviewDecision = "important" | "not-relevant" | "have" | "do-not-have";
 export type TermReviewState = Record<string, TermReviewDecision>;
+export type NewResumeSetup = {
+  startMode: "guided" | "template";
+  resumeTitle: string;
+  name: string;
+  targetRole: string;
+  email: string;
+  phone: string;
+  location: string;
+  templateId: "ats-classic" | "technical";
+};

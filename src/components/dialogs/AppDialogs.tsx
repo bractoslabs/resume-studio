@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
-import { ArrowRight, Download, LayoutTemplate, Upload, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, CheckCircle2, Download, FileCheck2, FileDown, LayoutTemplate, Upload, X } from "lucide-react";
 import type { FeedbackRecord } from "../../lib/types";
-import type { FeedbackType, ImportDraft, RenameDraft, RestoreDraft, SaveVersionDraft } from "../../app/types";
+import type { FeedbackType, ImportDraft, NewResumeSetup, RenameDraft, RestoreDraft, SaveVersionDraft } from "../../app/types";
 import { nowIso, uid, formatDate } from "../../lib/utils";
 import { validateBackup } from "../../lib/storage";
 import { buildImportDraft } from "../../app/resumeTransforms";
@@ -117,12 +117,29 @@ export const NewResumeDialog = ({
   onImport,
   onClose,
 }: {
-  onTemplate: () => void;
+  onTemplate: (setup: NewResumeSetup) => void;
   onImport: () => void;
   onClose: () => void;
 }) => {
+  const [step, setStep] = useState<"start" | "details">("start");
+  const [setup, setSetup] = useState<NewResumeSetup>({
+    startMode: "guided",
+    resumeTitle: "",
+    name: "",
+    targetRole: "",
+    email: "",
+    phone: "",
+    location: "",
+    templateId: "ats-classic",
+  });
   const firstOptionRef = useRef<HTMLButtonElement>(null);
   const previouslyFocusedRef = useRef<HTMLElement | null>(null);
+  const canCreate = Boolean(setup.name.trim() || setup.resumeTitle.trim() || setup.targetRole.trim());
+  const updateSetup = (patch: Partial<NewResumeSetup>) => setSetup((current) => ({ ...current, ...patch }));
+  const chooseStartMode = (startMode: NewResumeSetup["startMode"]) => {
+    updateSetup({ startMode, templateId: startMode === "template" ? "technical" : setup.templateId });
+    setStep("details");
+  };
 
   useEffect(() => {
     previouslyFocusedRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
@@ -142,23 +159,69 @@ export const NewResumeDialog = ({
       <section className="modal-card new-resume-card">
         <header>
           <div>
-            <h2>New resume</h2>
-            <p>Choose the fastest way to begin.</p>
+            <h2>{step === "start" ? "New resume" : "Set up your resume"}</h2>
+            <p>{step === "start" ? "Choose the fastest way to begin." : "Add the basics now so Review and Export have a stronger starting point."}</p>
           </div>
           <button className="icon-btn" onClick={onClose} aria-label="Close new resume"><X size={18} /></button>
         </header>
-        <div className="new-resume-options">
-          <Button ref={firstOptionRef} className="new-resume-option" onClick={onTemplate}>
-            <LayoutTemplate size={20} />
-            <span><strong>Start from a template</strong><small>Use a structured, editable resume with the core sections already in place.</small></span>
-            <ArrowRight className="new-resume-option-arrow" size={18} />
-          </Button>
-          <Button className="new-resume-option" onClick={onImport}>
-            <Upload size={18} />
-            <span><strong>Import existing resume</strong><small>Paste your resume or upload a file. Supports DOCX, PDF, Markdown, TXT, JSON, and YAML.</small></span>
-            <ArrowRight className="new-resume-option-arrow" size={18} />
-          </Button>
-        </div>
+        {step === "start" ? (
+          <div className="new-resume-options">
+            <Button ref={firstOptionRef} className="new-resume-option" onClick={() => chooseStartMode("guided")}>
+              <FileCheck2 size={20} />
+              <span><strong>Guided setup</strong><small>Start with a form-based draft, then run Review and export a PDF.</small></span>
+              <ArrowRight className="new-resume-option-arrow" size={18} />
+            </Button>
+            <Button className="new-resume-option" onClick={() => chooseStartMode("template")}>
+              <LayoutTemplate size={20} />
+              <span><strong>Markdown template</strong><small>Use a structured Markdown resume with the core sections already in place.</small></span>
+              <ArrowRight className="new-resume-option-arrow" size={18} />
+            </Button>
+            <Button className="new-resume-option" onClick={onImport}>
+              <Upload size={18} />
+              <span><strong>Import existing resume</strong><small>Paste your resume or upload a file. Supports DOCX, PDF, Markdown, TXT, JSON, and YAML.</small></span>
+              <ArrowRight className="new-resume-option-arrow" size={18} />
+            </Button>
+          </div>
+        ) : (
+          <div className="setup-flow">
+            <div className="setup-progress" aria-label="Setup path">
+              <span className="done"><CheckCircle2 size={14} /> Start</span>
+              <span className="active">Basics</span>
+              <span>Review</span>
+              <span>Export</span>
+            </div>
+            <div className="setup-grid">
+              <section className="setup-fields">
+                <label>Resume name<input autoFocus value={setup.resumeTitle} onChange={(event) => updateSetup({ resumeTitle: event.target.value })} placeholder="Product Manager Resume" /></label>
+                <div className="form-grid two">
+                  <label>Your name<input value={setup.name} onChange={(event) => updateSetup({ name: event.target.value })} placeholder="Jordan Lee" /></label>
+                  <label>Target role<input value={setup.targetRole} onChange={(event) => updateSetup({ targetRole: event.target.value })} placeholder="Senior Product Manager" /></label>
+                </div>
+                <div className="form-grid two">
+                  <label>Email<input value={setup.email} onChange={(event) => updateSetup({ email: event.target.value })} placeholder="you@example.com" /></label>
+                  <label>Phone<input value={setup.phone} onChange={(event) => updateSetup({ phone: event.target.value })} placeholder="(555) 123-4567" /></label>
+                </div>
+                <label>Location<input value={setup.location} onChange={(event) => updateSetup({ location: event.target.value })} placeholder="City, State" /></label>
+                <label>Starting template<select value={setup.templateId} onChange={(event) => updateSetup({ templateId: event.target.value as NewResumeSetup["templateId"] })}>
+                  <option value="ats-classic">ATS Classic</option>
+                  <option value="technical">Technical Resume</option>
+                </select></label>
+              </section>
+              <aside className="setup-next-steps">
+                <h3>After this</h3>
+                <ol>
+                  <li><strong>Complete the draft.</strong><span>{setup.startMode === "guided" ? "You will land in guided mode." : "You will land in Markdown mode."}</span></li>
+                  <li><strong>Run Review.</strong><span>Fix must-fix items before sending.</span></li>
+                  <li><strong>Export PDF.</strong><span>Use Export when the review looks ready.</span></li>
+                </ol>
+              </aside>
+            </div>
+            <div className="modal-actions">
+              <Button onClick={() => setStep("start")}><ArrowLeft size={15} /> Back</Button>
+              <Button className="primary" disabled={!canCreate} onClick={() => onTemplate(setup)}><FileDown size={15} /> Create resume</Button>
+            </div>
+          </div>
+        )}
       </section>
     </div>
   );

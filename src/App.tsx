@@ -68,7 +68,7 @@ import {
   SaveVersionDialog,
   SettingsPage,
 } from "./components/AppSections";
-import type { DeleteDraft, EditMode, ImportDraft, RenameDraft, RestoreDraft, SaveVersionDraft, TermReviewState, View, WorkflowTab } from "./app/types";
+import type { DeleteDraft, EditMode, ImportDraft, NewResumeSetup, RenameDraft, RestoreDraft, SaveVersionDraft, TermReviewState, View, WorkflowTab } from "./app/types";
 import { snippets } from "./app/constants";
 import { publicPathToView, viewToPath } from "./app/viewRouting";
 import { Button } from "./components/common/Button";
@@ -298,14 +298,15 @@ function App() {
     setTab("review");
   };
 
-  const addResume = (kind: "blank" | "wizard" | "template" | "import" | "duplicate", source?: ResumeDocument) => {
-    const resume = createResume(kind, source);
+  const addResume = (kind: "blank" | "wizard" | "template" | "import" | "duplicate", source?: ResumeDocument, setup?: NewResumeSetup) => {
+    const resume = createResume(kind, source, setup);
     setState((current) => ({ ...current, storageMeta: { ...current.storageMeta, significantChangesSinceBackup: true }, resumes: [resume, ...current.resumes], activeResumeId: resume.id }));
     setNewResumeOpen(false);
     setView("editor");
     setTab("edit");
-    setEditMode(kind === "wizard" ? "guided" : "markdown");
-    if (kind === "wizard") setStructured(parseStructuredResume(resume.markdown));
+    setEditMode(kind === "wizard" || setup?.startMode === "guided" ? "guided" : "markdown");
+    if (kind === "wizard" || setup?.startMode === "guided") setStructured(parseStructuredResume(resume.markdown));
+    setToast("Resume created. Complete the draft, run Review, then export a PDF.");
   };
 
   const deleteResume = (id: string) => {
@@ -625,7 +626,7 @@ function App() {
       {feedbackOpen && <FeedbackModal onClose={() => setFeedbackOpen(false)} setToast={setToast} />}
       {newResumeOpen && (
         <NewResumeDialog
-          onTemplate={() => addResume("template")}
+          onTemplate={(setup) => addResume(setup.startMode === "guided" ? "wizard" : "template", undefined, setup)}
           onImport={openImport}
           onClose={() => setNewResumeOpen(false)}
         />

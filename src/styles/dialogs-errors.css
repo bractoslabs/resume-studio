@@ -45,7 +45,7 @@
 }
 
 .new-resume-card {
-  width: min(640px, 100%);
+  width: min(820px, 100%);
   background: var(--panel);
 }
 
@@ -226,6 +226,85 @@
   opacity: .78;
 }
 
+.setup-flow {
+  display: grid;
+  gap: 16px;
+}
+
+.setup-progress {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.setup-progress span {
+  min-height: 30px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--muted);
+  font-size: .84rem;
+}
+
+.setup-progress .active,
+.setup-progress .done {
+  color: var(--ink);
+  border-color: color-mix(in srgb, var(--accent-ui) 48%, var(--line));
+  background: color-mix(in srgb, var(--accent-ui) 12%, var(--panel-soft));
+}
+
+.setup-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(220px, .65fr);
+  gap: 14px;
+}
+
+.setup-fields,
+.setup-next-steps {
+  display: grid;
+  align-content: start;
+  gap: 13px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--panel-soft) 72%, var(--panel));
+}
+
+.setup-fields input,
+.setup-fields select {
+  min-height: 40px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  color: var(--ink);
+  padding: 9px 11px;
+}
+
+.setup-next-steps h3 {
+  margin: 0;
+}
+
+.setup-next-steps ol {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding-left: 20px;
+}
+
+.setup-next-steps li {
+  color: var(--ink);
+}
+
+.setup-next-steps span {
+  display: block;
+  margin-top: 3px;
+  color: var(--muted);
+  line-height: 1.35;
+}
+
 .error-boundary {
   min-height: 100vh;
   display: grid;
@@ -254,7 +333,8 @@
   }
 
   .public-footer,
-  .import-grid {
+  .import-grid,
+  .setup-grid {
     grid-template-columns: 1fr;
     display: grid;
   }
