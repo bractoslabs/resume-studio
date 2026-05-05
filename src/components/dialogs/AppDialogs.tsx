@@ -345,7 +345,7 @@ export const NewResumeDialog = ({
               <FileCheck2 size={20} />
               <span>
                 <strong>Guided setup</strong>
-                <small>Start with a form-based draft, then run Review and use Print / Save as PDF.</small>
+                <small>Start with a form-based draft, then run Review and export a PDF.</small>
               </span>
               <ArrowRight className="new-resume-option-arrow" size={18} />
             </Button>
@@ -450,8 +450,8 @@ export const NewResumeDialog = ({
                     <span>Fix must-fix items before sending.</span>
                   </li>
                   <li>
-                    <strong>Print / Save as PDF.</strong>
-                    <span>Open the browser print dialog when the review looks ready.</span>
+                    <strong>Export PDF.</strong>
+                    <span>Download a PDF when the review looks ready.</span>
                   </li>
                 </ol>
               </aside>

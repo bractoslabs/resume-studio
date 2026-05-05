@@ -658,9 +658,18 @@
     width: 100%;
     min-height: clamp(420px, calc(100dvh - 330px), 760px);
     padding: 16px;
-    background: #fbfdfc;
-    color: #111817;
+    background:
+      linear-gradient(90deg, color-mix(in srgb, var(--panel-soft) 22%, transparent) 0 1px, transparent 1px 100%) 0 0 / 3.1rem 100%,
+      color-mix(in srgb, var(--panel) 86%, #050807);
+    color: var(--ink);
     box-shadow: inset 0 1px 0 rgba(17, 24, 23, 0.03);
+  }
+
+  :root[data-theme="light"] .refined-editor {
+    background:
+      linear-gradient(90deg, #edf3f0 0 1px, transparent 1px 100%) 0 0 / 3.1rem 100%,
+      #fbfdfc;
+    color: #111817;
   }
 
   .preview-column {
@@ -669,7 +678,7 @@
   }
 
   .preview-toolbar {
-    min-height: 60px;
+    min-height: 78px;
     margin: 0 -30px 22px;
     padding: 10px clamp(14px, 2vw, 20px);
     background: rgba(23, 35, 32, 0.9);
@@ -683,8 +692,12 @@
 
   .preview-controls button,
   .preview-controls select {
-    min-height: 34px;
-    max-width: 160px;
+    min-height: 36px;
+    max-width: 180px;
+  }
+
+  .preview-controls {
+    justify-content: center;
   }
 
   .page-wrap {

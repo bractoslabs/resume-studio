@@ -9,7 +9,6 @@ import {
   MessageCircle,
   Moon,
   Plus,
-  Printer,
   Save,
   Settings,
   Sparkles,
@@ -36,7 +35,7 @@ import { downloadBlob, nowIso, uid } from "./lib/utils";
 import { compareResumeToJob, extractJobTarget } from "./lib/jobMatcher";
 import { analyzeResume } from "./lib/resume-review";
 import { parseFrontmatter, parseStructuredResume, renderMarkdown, structuredToMarkdown, updateMarkdownFrontmatter } from "./lib/markdown";
-import { printPdf } from "./lib/exporters";
+import { exportPdf } from "./lib/pdfExport";
 import {
   ClearLocalDataDialog,
   ConfirmDialog,
@@ -280,7 +279,7 @@ function App() {
       }
       if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "p") {
         event.preventDefault();
-        printPdf(activeResume?.pageSize ?? "letter");
+        if (activeResume) void exportPdf(activeResume);
       }
       if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
         event.preventDefault();
@@ -346,7 +345,7 @@ function App() {
     setTab("edit");
     setEditMode(kind === "wizard" || setup?.startMode === "guided" ? "guided" : "markdown");
     if (kind === "wizard" || setup?.startMode === "guided") setStructured(parseStructuredResume(resume.markdown));
-    setToast("Resume created. Complete the draft, run Review, then use Print / Save as PDF.");
+    setToast("Resume created. Complete the draft, run Review, then export a PDF.");
   };
 
   const deleteResume = (id: string) => {
@@ -461,7 +460,7 @@ function App() {
       ...target,
       status: createVersion ? "tailoring" : "interested",
       termDecisions,
-      checklist: ["Review important missing terms", "Add skills or claims only if they are true", "Use Print / Save as PDF when ready"],
+      checklist: ["Review important missing terms", "Add skills or claims only if they are true", "Export a PDF when ready"],
     };
     const version: ResumeVersion = {
       id: uid("version"),
@@ -622,7 +621,7 @@ function App() {
                   "Live preview",
                   "Resume Review",
                   "Keyword & Fit Check",
-                  "Print / Save as PDF, DOCX, Markdown, and plain text exports",
+                  "PDF, DOCX, Markdown, and plain text exports",
                   "Local-first privacy",
                 ].map((benefit) => (
                   <span key={benefit}>
@@ -634,11 +633,14 @@ function App() {
             <div className="hero-preview">
               <ResumePreview
                 renderedHtml={landingRendered.html}
+                frontmatter={landingRendered.frontmatter}
                 pageStyle={pageStyle}
                 templateId="technical"
                 pageSize="letter"
                 zoom={0.62}
                 warnings={0}
+                pageCount={1}
+                currentPage={1}
               />
             </div>
           </section>

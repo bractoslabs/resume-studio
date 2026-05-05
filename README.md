@@ -23,7 +23,7 @@ Resume Studio is in public beta. Core features are usable, but imports, exports,
 - Start from guided setup or Markdown templates
 - Run Resume Review and Keyword & Fit Check
 - Import common resume formats where browser parsing allows
-- Export Markdown, DOCX, backups, and browser Print / Save as PDF
+- Export PDF, DOCX, Markdown, plain text, HTML, JSON Resume, YAML, and backups
 - Keep work local in the browser by default
 
 ## What It Is Not
@@ -42,12 +42,12 @@ The review tools are local, rule-based checks for formatting, readability, keywo
 
 - Markdown is the source of truth.
 - Structured guided editing syncs back to Markdown.
-- Live preview renders sanitized Markdown with page boundaries, print CSS, page breaks, and ATS-safe preview mode.
+- Live preview renders sanitized Markdown with page boundaries, visible page breaks, and ATS-safe preview mode.
 - Dashboard supports create, duplicate, rename, delete, search, tags, sorting, quick exports, backup, and restore.
 - ATS scanner explains parseability, formatting, contact, section, bullet, keyword, and length issues.
 - Job description matcher extracts skills/tools/keywords and creates job-specific versions.
 - Version history supports named/autosaved versions, restore, duplicate, and Markdown diff.
-- Exports Markdown, HTML, plain text, JSON Resume, YAML, DOCX, backup JSON, and browser-based Print / Save as PDF with selectable text.
+- Exports PDF, Markdown, HTML, plain text, JSON Resume, YAML, DOCX, and backup JSON.
 - Guest mode stores data locally in this browser using IndexedDB, with a localStorage fallback for older/unavailable browser storage; no analytics or account is required.
 
 ## Setup
@@ -91,7 +91,8 @@ No environment variables are required for the current static local-first app.
 - `src/lib/templates.ts` defines ATS-safe and visual templates.
 - `src/lib/ats.ts` implements explainable local ATS scoring and bullet quality checks.
 - `src/lib/jobMatcher.ts` extracts job description signals and compares them to resume text.
-- `src/lib/exporters.ts` handles Markdown, HTML, text, JSON Resume, YAML, DOCX, backup, and print export helpers.
+- `src/lib/pdfExport.tsx` generates PDF files from parsed resume data using `@react-pdf/renderer`.
+- `src/lib/exporters.ts` handles Markdown, HTML, text, JSON Resume, YAML, DOCX, and backup export helpers.
 - `src/lib/storage.ts` provides local-first persistence and backup/restore.
 - `src/lib/defaultDraft.ts` provides the default draft content used when a user creates a resume.
 
@@ -123,9 +124,9 @@ Directives:
 
 Tables render, but the ATS scanner warns because many parsers read tables and columns poorly.
 
-## Export Limitations
+## Export Notes
 
-Resume Studio supports browser-based Print / Save as PDF. It opens your browser's print dialog so you can choose "Save as PDF." Browser print engines can vary, so check page size, margins, and page breaks before sending.
+Resume Studio generates PDF files directly from your resume data using the selected page size and current design settings. Always review the downloaded PDF for page breaks, margins, and formatting before sending.
 
 DOCX export produces a clean text document from Markdown source. Rich template-perfect DOCX styling is a roadmap item.
 
@@ -141,7 +142,7 @@ Import results may need cleanup, especially complex PDFs and DOCX files. Review 
 
 - Browser storage only. There is no cloud sync or account backup in the current public beta.
 - Clearing browser data may remove saved resumes.
-- Print / Save as PDF depends on browser print behavior.
+- PDF export is generated from resume data and may not match the live browser preview pixel-for-pixel.
 - DOCX export may not perfectly match visual templates.
 - Scanned or image-only PDFs are not supported unless selectable text is available.
 - Import results may need cleanup, especially complex PDFs and DOCX files.
@@ -152,7 +153,7 @@ Import results may need cleanup, especially complex PDFs and DOCX files. Review 
 
 ## Browser Support
 
-Best tested on current Chrome, Edge, and Safari desktop. Firefox should work, but browser Print / Save as PDF output may vary. Mobile works for review and light edits, but full resume editing is best on desktop.
+Best tested on current Chrome, Edge, and Safari desktop. Firefox should work, though download behavior may vary by browser settings. Mobile works for review and light edits, but full resume editing is best on desktop.
 
 Browser storage is per browser and device. Work saved in one browser profile may not appear in another browser, profile, or device.
 

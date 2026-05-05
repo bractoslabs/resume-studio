@@ -11,57 +11,166 @@
   line-height: 1.55;
 }
 
-.checklist-card {
+.checklist-card,
+.readiness-card {
   display: grid;
-  gap: 12px;
-  padding: 18px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  background: color-mix(in srgb, var(--panel) 92%, var(--panel-soft));
-  box-shadow: var(--shadow);
+  gap: 10px;
+  margin-bottom: 12px;
+  padding: 12px;
+  border: 1px solid color-mix(in srgb, var(--line) 84%, transparent);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--panel) 86%, var(--panel-soft));
 }
 
-.checklist-card ul {
+.readiness-main {
   display: grid;
-  gap: 8px;
+  grid-template-columns: minmax(0, 1fr) minmax(150px, 0.9fr);
+  grid-template-areas:
+    "copy next"
+    "meter next";
+  gap: 7px 12px;
+  align-items: center;
+}
+
+.readiness-meter {
+  grid-area: meter;
+  height: 8px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--muted) 22%, transparent);
+}
+
+.readiness-meter span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--accent-ui), color-mix(in srgb, var(--accent-ui) 72%, #f8fafc));
+}
+
+.readiness-copy {
+  grid-area: copy;
+  display: grid;
+  gap: 2px;
+}
+
+.readiness-copy strong {
+  font-size: 13px;
+}
+
+.readiness-copy span,
+.readiness-next span,
+.readiness-next small {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.readiness-next {
+  grid-area: next;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 2px 7px;
+  align-items: baseline;
+  border: 1px solid color-mix(in srgb, var(--accent-ui) 34%, var(--line));
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--accent-ui) 10%, transparent);
+  color: var(--ink);
+  padding: 8px 10px;
+  cursor: pointer;
+  text-align: left;
+}
+
+.readiness-next strong,
+.readiness-next small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.readiness-next small {
+  grid-column: 1 / -1;
+}
+
+.readiness-next:hover,
+.readiness-next:focus-visible {
+  outline: none;
+  border-color: color-mix(in srgb, var(--accent-ui) 62%, var(--line));
+  background: color-mix(in srgb, var(--accent-ui) 16%, transparent);
+}
+
+.readiness-steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(128px, 1fr));
+  gap: 6px;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.checklist-card li button {
+.readiness-steps li {
+  color: var(--muted);
+  min-width: 0;
+}
+
+.readiness-steps li.done {
+  color: var(--ink);
+}
+
+.readiness-steps li.missing {
+  color: #d97706;
+}
+
+.readiness-steps li button {
   width: 100%;
-  display: flex;
+  min-height: 28px;
+  display: inline-flex;
   align-items: center;
-  gap: 8px;
-  border: 0;
-  border-radius: 7px;
-  background: transparent;
+  gap: 5px;
+  border: 1px solid color-mix(in srgb, var(--line) 82%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--panel-soft) 72%, transparent);
   color: inherit;
-  padding: 2px 0;
+  padding: 0 9px;
   cursor: pointer;
   text-align: left;
 }
 
-.checklist-card li button:hover,
-.checklist-card li button:focus-visible {
+.readiness-steps li.done button {
+  border-color: color-mix(in srgb, var(--accent-ui) 36%, var(--line));
+  background: color-mix(in srgb, var(--accent-ui) 10%, transparent);
+}
+
+.readiness-steps li.missing button {
+  border-color: color-mix(in srgb, #f59e0b 45%, var(--line));
+  background: color-mix(in srgb, #f59e0b 12%, transparent);
+}
+
+.readiness-steps li.missing.step-contact,
+.readiness-steps li.missing.step-summary,
+.readiness-steps li.missing.step-experience,
+.readiness-steps li.missing.step-skills {
+  color: #ef4444;
+}
+
+.readiness-steps li.missing.step-contact button,
+.readiness-steps li.missing.step-summary button,
+.readiness-steps li.missing.step-experience button,
+.readiness-steps li.missing.step-skills button {
+  border-color: color-mix(in srgb, #ef4444 46%, var(--line));
+  background: color-mix(in srgb, #ef4444 10%, transparent);
+}
+
+.readiness-steps li button span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  line-height: 1.18;
+}
+
+.readiness-steps li button:hover,
+.readiness-steps li button:focus-visible {
   color: var(--ink);
   outline: none;
-}
-
-.checklist-card li button:focus-visible span {
-  text-decoration: underline;
-}
-
-.checklist-card li {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: var(--muted);
-}
-
-.checklist-card li.done {
-  color: var(--ink);
+  border-color: color-mix(in srgb, var(--accent-ui) 54%, var(--line));
 }
 
 .mini-progress {

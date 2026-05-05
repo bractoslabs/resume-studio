@@ -12,7 +12,7 @@ export const LandingSections = ({ setView }: { setView: (view: View) => void }) 
           "Create a resume in Markdown or guided mode.",
           "Run Resume Review for quality and readability issues.",
           "Use Keyword & Fit Check without fabricating facts.",
-          "Use Print / Save as PDF, DOCX, Markdown, plain text, HTML, JSON Resume, or experimental YAML.",
+          "Export a PDF, DOCX, Markdown, plain text, HTML, JSON Resume, or experimental YAML.",
         ].map((item, index) => (
           <article key={item}>
             <span>{index + 1}</span>
@@ -51,8 +51,8 @@ export const LandingSections = ({ setView }: { setView: (view: View) => void }) 
       <div>
         <h2>Export formats</h2>
         <p>
-          Print / Save as PDF opens your browser print dialog and keeps text selectable through print CSS. Plain text helps with job
-          portals. Markdown is ideal for editing and backups. JSON Resume supports portability.
+          PDF export creates a downloadable file from your resume data. Plain text helps with job portals. Markdown is ideal for editing and
+          backups. JSON Resume supports portability.
         </p>
         <Button onClick={() => setView("dashboard")}>Start free</Button>
       </div>
@@ -79,11 +79,11 @@ export const LandingSections = ({ setView }: { setView: (view: View) => void }) 
         ],
         [
           "Which browsers work best?",
-          "Best tested on current Chrome, Edge, and Safari desktop. Firefox should work, but Print / Save as PDF output may vary. Mobile works for review and light edits, but full resume editing is best on desktop.",
+          "Best tested on current Chrome, Edge, and Safari desktop. Firefox should work, but PDF download behavior may vary. Mobile works for review and light edits, but full resume editing is best on desktop.",
         ],
         [
           "What are the current beta limitations?",
-          "Resume Studio saves data locally in your browser, not to an account. Print / Save as PDF uses your browser's print dialog, DOCX export may not match visual templates perfectly, scanned PDFs may not import, and review tools are guidance only. Resume Studio does not guarantee ATS results, interviews, or job offers.",
+          "Resume Studio saves data locally in your browser, not to an account. PDF and DOCX exports may not match visual templates perfectly, scanned PDFs may not import, and review tools are guidance only. Resume Studio does not guarantee ATS results, interviews, or job offers.",
         ],
       ].map(([q, a]) => (
         <details key={q}>

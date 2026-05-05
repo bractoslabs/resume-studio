@@ -200,10 +200,11 @@
   position: sticky;
   top: 0;
   z-index: 2;
-  min-height: 56px;
-  display: flex;
+  min-height: 78px;
+  display: grid;
+  grid-template-columns: minmax(220px, 0.8fr) minmax(0, 1.2fr);
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   gap: 12px;
   margin: 0 -28px 22px;
   padding: 10px 18px;
@@ -219,27 +220,110 @@
   flex-wrap: wrap;
 }
 
+.preview-summary {
+  min-width: 0;
+  flex-direction: column;
+  align-items: flex-start !important;
+  gap: 3px !important;
+}
+
+.preview-summary strong {
+  font-size: 14px;
+}
+
+.preview-summary span {
+  line-height: 1.35;
+}
+
 .preview-toolbar span {
   font-size: 12px;
   color: #bfd0ca;
 }
 
-.preview-controls button,
-.preview-controls select {
-  min-height: 32px;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: 7px;
-  background: rgba(255, 255, 255, 0.09);
-  color: #fff;
-  padding: 0 9px;
+.preview-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-width: 0;
 }
 
-.preview-controls label {
+.toolbar-group {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
+  gap: 0;
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.page-stepper span,
+.zoom-controls span {
+  min-width: 84px;
+  padding: 0 10px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.zoom-controls span {
+  min-width: 54px;
+}
+
+.preview-controls button,
+.preview-controls select {
+  min-height: 36px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.09);
+  color: #fff;
+  padding: 0 11px;
+  cursor: pointer;
+}
+
+.toolbar-group button {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.toolbar-group button + span,
+.toolbar-group span + button,
+.toolbar-group button + button {
+  border-left: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.preview-controls button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   gap: 5px;
-  color: #dbe7e2;
-  font-size: 12px;
+}
+
+.design-center-button {
+  margin-left: auto;
+}
+
+.design-center-button {
+  white-space: nowrap;
+}
+
+.page-stepper button,
+.zoom-controls button[aria-label]:not(.fit-width-control) {
+  width: 36px;
+  padding: 0;
+}
+
+.fit-width-control {
+  width: 36px;
+  padding: 0;
+}
+
+.preview-controls button:disabled {
+  cursor: not-allowed;
+  opacity: 0.42;
 }
 
 .page-wrap {
