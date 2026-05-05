@@ -227,8 +227,10 @@ export const EditorWorkspace = (props: EditorWorkspaceProps) => {
       return;
     }
     const pageWidth = resume.pageSize === "a4" ? 8.27 * 96 : 8.5 * 96;
-    const availableWidth = Math.max(320, column.clientWidth - 64);
-    setZoom(Math.min(1.15, Math.max(0.45, availableWidth / pageWidth)));
+    const styles = window.getComputedStyle(column);
+    const horizontalPadding = Number.parseFloat(styles.paddingLeft) + Number.parseFloat(styles.paddingRight);
+    const availableWidth = Math.max(280, column.clientWidth - horizontalPadding - 24);
+    setZoom(Math.min(1, Math.max(0.45, availableWidth / pageWidth)));
   }, [resume.pageSize, setZoom]);
 
   React.useEffect(() => {
@@ -241,8 +243,18 @@ export const EditorWorkspace = (props: EditorWorkspaceProps) => {
   }, [resume.id, resume.markdown, resume.pageSize, template.id]);
 
   React.useLayoutEffect(() => {
-    const frame = window.requestAnimationFrame(fitPreviewWidth);
-    return () => window.cancelAnimationFrame(frame);
+    const column = previewColumnRef.current;
+    let frame = window.requestAnimationFrame(fitPreviewWidth);
+    if (!column) return () => window.cancelAnimationFrame(frame);
+    const observer = new ResizeObserver(() => {
+      window.cancelAnimationFrame(frame);
+      frame = window.requestAnimationFrame(fitPreviewWidth);
+    });
+    observer.observe(column);
+    return () => {
+      window.cancelAnimationFrame(frame);
+      observer.disconnect();
+    };
   }, [fitPreviewWidth, resume.id, template.id]);
 
   return (
@@ -1002,11 +1014,18 @@ const ChecklistCard = ({ checklist, onSelect }: { checklist: ReturnType<typeof r
     job: "Add job target",
   };
   const statusText: Record<string, string> = {
-    contact: "Missing contact",
-    summary: "Missing summary",
-    experience: "Missing experience",
-    skills: "Missing skills",
-    job: "No job target",
+    contact: "Contact missing",
+    summary: "Summary missing",
+    experience: "Experience missing",
+    skills: "Skills missing",
+    job: "Job missing",
+  };
+  const doneText: Record<string, string> = {
+    contact: "Contact done",
+    summary: "Summary done",
+    experience: "Experience done",
+    skills: "Skills done",
+    job: "Job ready",
   };
   return (
     <section className="checklist-card readiness-card" aria-label="Resume readiness">
@@ -1031,14 +1050,9 @@ const ChecklistCard = ({ checklist, onSelect }: { checklist: ReturnType<typeof r
       <ul className="readiness-steps" aria-label="Readiness steps">
         {checklist.map((item) => (
           <li key={item.id} className={`${item.done ? "done" : "missing"} step-${item.id}`}>
-            <button
-              type="button"
-              onClick={() => onSelect(item.id)}
-              title={helperText[item.id]}
-              aria-label={`${item.done ? "Review" : "Complete"} ${item.label}`}
-            >
+            <button type="button" onClick={() => onSelect(item.id)} aria-label={`${item.done ? "Review" : "Complete"} ${item.label}`}>
               {item.done ? <Check size={13} /> : <X size={13} />}{" "}
-              <span>{item.done ? item.label : (statusText[item.id] ?? `Missing ${item.label}`)}</span>
+              <span>{item.done ? (doneText[item.id] ?? item.label) : (statusText[item.id] ?? `Missing ${item.label}`)}</span>
             </button>
           </li>
         ))}
