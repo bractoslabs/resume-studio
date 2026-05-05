@@ -91,6 +91,54 @@ describe("resume app transforms", () => {
     expect(draft.markdown).toContain("### Contoso, Austin, TX | 2020 - 2023");
   });
 
+  it("keeps sidebar PDF labels out of imported contact fields", () => {
+    const draft = buildImportDraft(
+      "sidebar.pdf",
+      [
+        "CONTACT",
+        "Daniel Cho",
+        "Plano, TX<br/>(555) 010-1002<br/",
+        ">daniel.cho@example.com<br/>e",
+        "IT Support Specialist",
+        "xample.com/daniel-cho",
+        "SKILLS",
+        "PROFILE",
+        "Support specialist with experience across Microsoft 365.",
+        "EXPERIENCE",
+        "IT Support Specialist | BrightPath Logistics | Plano, TX | Apr 2022 - Present",
+        "- Resolved 45 to 60 tickets per week.",
+      ].join("\n"),
+    );
+    expect(draft.review.contact.name).toBe("Daniel Cho");
+    expect(draft.review.contact.title).toBe("IT Support Specialist");
+    expect(draft.review.contact.email).toBe("daniel.cho@example.com");
+    expect(draft.review.contact.phone).toBe("(555) 010-1002");
+    expect(draft.review.contact.location).toBe("Plano, TX");
+  });
+
+  it("extracts contact details from visual PDF contact rows", () => {
+    const draft = buildImportDraft(
+      "visual.pdf",
+      [
+        "Marcus Reed (555) 010-1004 | marcus.reed@example.com",
+        "Memphis, TN | example.com/marcus-reed",
+        "Warehouse Reliability Lead",
+        "PROFILE",
+        "Warehouse reliability lead who bridges operations, maintenance, and IT.",
+        "SKILLS PROJECTS",
+        "Floor Systems: RF scanners, Label printers",
+        "EXPERIENCE",
+        "Warehouse Reliability Lead | Riverbend Distribution 2020 - Present",
+        "- Owned first-response troubleshooting.",
+      ].join("\n"),
+    );
+    expect(draft.review.contact.name).toBe("Marcus Reed");
+    expect(draft.review.contact.title).toBe("Warehouse Reliability Lead");
+    expect(draft.review.contact.email).toBe("marcus.reed@example.com");
+    expect(draft.review.contact.phone).toBe("(555) 010-1004");
+    expect(draft.review.contact.location).toBe("Memphis, TN");
+  });
+
   it("builds import drafts from uploaded markdown files", async () => {
     const file = new File(["Avery Chen\n\n## Experience\n- Built tools"], "avery.md", { type: "text/markdown" });
     const draft = await buildImportDraftFromFile(file);

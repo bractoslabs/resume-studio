@@ -515,11 +515,7 @@ function App() {
       {resolvedTheme === "dark" ? <Sun size={16} /> : <Moon size={16} />}
     </Button>
   );
-  const compactSaveText = saveFailed
-    ? "Save failed"
-    : lastSavedAt
-        ? `Saved locally at ${timeOnly(lastSavedAt)}`
-        : "Saved locally";
+  const compactSaveText = saveFailed ? "Save failed" : lastSavedAt ? `Saved locally at ${timeOnly(lastSavedAt)}` : "Saved locally";
 
   const shell = (children: React.ReactNode) => (
     <main className="product-shell">
@@ -574,9 +570,7 @@ function App() {
           .
         </p>
       </aside>
-      <section className="product-main">
-        {children}
-      </section>
+      <section className="product-main">{children}</section>
     </main>
   );
 

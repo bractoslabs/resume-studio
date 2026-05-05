@@ -27,7 +27,7 @@ export const HistoryPanel = ({
     <div className="panel-heading">
       <div>
         <h2>History</h2>
-        <p>Named versions and recent autosaved snapshots are stored locally in this browser.</p>
+        <p>Save named versions, compare changes, or restore an earlier resume when you need to go back.</p>
       </div>
       <Button className="primary" onClick={openSaveVersion}>
         <History size={16} /> Save named version

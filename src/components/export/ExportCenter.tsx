@@ -70,12 +70,8 @@ export const ExportCenter = ({
       <section className="recommended-export">
         <div>
           <h2>Export PDF</h2>
-          <p>
-            Generate and download a PDF directly from your resume data. Check page breaks, margins, and formatting before sending.
-          </p>
-          <p className="beta-inline-note">Public beta note: check page breaks, margins, and formatting before sending exported files.</p>
-          <p className="beta-inline-note">Guidance only. Resume Studio does not guarantee ATS results, interviews, or job offers.</p>
-          <p className="muted">PDF export uses your resume content, page size, and current design settings.</p>
+          <p>Download a PDF using the resume content, page size, and design settings shown in the preview.</p>
+          <p className="muted">Check page breaks, margins, and formatting before sending.</p>
         </div>
         <div className="inline-actions">
           <Button className="primary" onClick={() => runExport("PDF", () => exportPdf(resume))}>

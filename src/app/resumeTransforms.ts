@@ -79,6 +79,10 @@ const monthPattern =
   "(?:jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|jun(?:e)?|jul(?:y)?|aug(?:ust)?|sep(?:t(?:ember)?)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)";
 const datePointPattern = `(?:(?:${monthPattern})\\s+)?(?:19|20)\\d{2}|present|current|now`;
 const dateRangePattern = new RegExp(`\\b(?:${datePointPattern})\\s*(?:-|–|—|to)\\s*(?:${datePointPattern})\\b`, "i");
+const emailPattern = /[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i;
+const phonePattern = /(?:\+?1[\s.-]?)?(?:\(\d{3}\)|\d{3})[\s.-]?\d{3}[\s.-]?\d{4}/;
+const loosePhonePattern = /(?:\+?1[\s.-]?)?(?:\(\d{3}\)|\d{3})[\s.-]*\d{3}[\s.-]*\d[\s.-]*\d{3}/;
+const locationPattern = /\b[A-Z][A-Za-z .'-]+,\s*[A-Z]{2}\b/;
 
 const isImportedSectionHeading = (line: string) => /^[A-Z][A-Z0-9&/.,'() -]{2,}$/.test(line) && /[A-Z]/.test(line) && line.length < 70;
 
@@ -120,9 +124,65 @@ const formatImportedBodyLines = (lines: string[]) => {
     .trim();
 };
 
-const importedMarkdownFromText = (fileName: string, source: string) => {
-  const rawLines = source
+const importLayoutLabels = /^(contact|profile|summary|skills?|tools?|certs?|certifications?|education|experience|projects?)$/i;
+const roleWords =
+  /\b(manager|specialist|technician|analyst|engineer|coordinator|assistant|developer|director|officer|lead|support|success|planner|operations?|marketing|service|network|cloud|cybersecurity|financial|clinic|warehouse|product|project|supply|chain|data|hr)\b/i;
+
+const normalizeImportedSource = (source: string) =>
+  source
     .replace(/\r\n?/g, "\n")
+    .replace(/<\s*br\s*\/?\s*\n?\s*>/gi, "\n")
+    .replace(/<\/?[^>\n]+>/g, " ");
+
+const contactStartIndex = (line: string) => {
+  const indexes = [
+    line.search(emailPattern),
+    line.search(phonePattern),
+    line.search(/\b(?:https?:\/\/)?(?:www\.)?[a-z0-9-]+\.[a-z]{2,}\S*/i),
+  ].filter((index) => index >= 0);
+  return indexes.length ? Math.min(...indexes) : -1;
+};
+
+const lineWithoutContactDetails = (line: string) => {
+  const contactIndex = contactStartIndex(line);
+  return (contactIndex >= 0 ? line.slice(0, contactIndex) : line).split("|")[0].trim();
+};
+
+const isContactLikeLine = (line: string) =>
+  emailPattern.test(line) || phonePattern.test(line) || /\b(?:https?:\/\/)?(?:www\.)?[a-z0-9-]+\.[a-z]{2,}\S*/i.test(line);
+
+const isLikelyImportedName = (line: string) => {
+  const candidate = lineWithoutContactDetails(line);
+  if (!candidate || importLayoutLabels.test(candidate) || isContactLikeLine(candidate) || roleWords.test(candidate)) return false;
+  const words = candidate.split(/\s+/).filter(Boolean);
+  return words.length >= 2 && words.length <= 4 && words.every((word) => /^[A-Z][A-Za-z.'-]*$/.test(word) || /^[A-Z]{2,}$/.test(word));
+};
+
+const importedNameCandidate = (line: string) => (isLikelyImportedName(line) ? lineWithoutContactDetails(line) : "");
+
+const importedRoleCandidate = (line: string) => {
+  const candidate = lineWithoutContactDetails(line);
+  if (
+    !candidate ||
+    candidate.length < 3 ||
+    phonePattern.test(candidate) ||
+    loosePhonePattern.test(candidate) ||
+    /^\(?\d/.test(candidate) ||
+    importLayoutLabels.test(candidate) ||
+    isLikelyImportedName(candidate) ||
+    locationPattern.test(candidate) ||
+    /^[=_-]{3,}$/.test(candidate) ||
+    candidate.startsWith("#") ||
+    candidate.startsWith("- ") ||
+    /^•/.test(candidate)
+  ) {
+    return "";
+  }
+  return candidate;
+};
+
+const importedMarkdownFromText = (fileName: string, source: string) => {
+  const rawLines = normalizeImportedSource(source)
     .split("\n")
     .map((line) => line.replace(/[ \t]+/g, " ").trim())
     .filter(Boolean);
@@ -136,34 +196,35 @@ const importedMarkdownFromText = (fileName: string, source: string) => {
     return merged;
   }, []);
   const firstContentLine = lines.findIndex((line) => line.length > 0);
+  const nameMatchIndex = lines.slice(0, 12).findIndex((line) => importedNameCandidate(line));
+  const nameIndex = nameMatchIndex >= 0 ? nameMatchIndex : firstContentLine;
+  const fallbackName = fileName.replace(/\.[^.]+$/, "");
   const name =
-    firstContentLine >= 0 && !/^(summary|experience|education|skills|projects|certifications?)$/i.test(lines[firstContentLine])
-      ? lines[firstContentLine]
-      : fileName.replace(/\.[^.]+$/, "");
-  const contactLine =
-    lines.slice(firstContentLine + 1, firstContentLine + 4).find((line) => /@|\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}/.test(line)) ?? "";
-  const email = contactLine.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i)?.[0] ?? "";
-  const phone = contactLine.match(/(?:\+?1[\s.-]?)?(?:\(\d{3}\)|\d{3})[\s.-]?\d{3}[\s.-]?\d{4}/)?.[0] ?? "";
-  const location =
-    contactLine
-      .split("|")
-      .map((part) => part.trim())
-      .find((part) => !part.includes("@") && !/\d{3}/.test(part)) ?? "";
+    nameIndex >= 0 && importedNameCandidate(lines[nameIndex])
+      ? importedNameCandidate(lines[nameIndex])
+      : firstContentLine >= 0 && !importLayoutLabels.test(lines[firstContentLine])
+        ? lineWithoutContactDetails(lines[firstContentLine]) || fallbackName
+        : fallbackName;
+  const contactBlock = lines.slice(0, Math.min(lines.length, 12)).join(" | ");
+  const contactBlockCompact = contactBlock.replace(/\s*\|\s*/g, " ");
+  const contactLine = lines.slice(0, Math.min(lines.length, 12)).find((line) => isContactLikeLine(line)) ?? "";
+  const email =
+    contactBlock.match(emailPattern)?.[0] ??
+    contactBlock
+      .match(/([A-Z0-9._%+-]+@[A-Z0-9.-]+)\s*\|\s*[^|]{2,60}\|\s*(\.[A-Z]{2,})/i)
+      ?.slice(1)
+      .join("") ??
+    "";
+  const phone = contactBlockCompact.match(phonePattern)?.[0] ?? contactBlockCompact.match(loosePhonePattern)?.[0] ?? "";
+  const location = contactBlock.match(locationPattern)?.[0] ?? "";
   const roleLine =
     lines
-      .slice(firstContentLine + 1, firstContentLine + 6)
-      .find(
-        (line) =>
-          line !== contactLine &&
-          line !== name &&
-          !line.startsWith("#") &&
-          !line.startsWith("- ") &&
-          !/^•/.test(line) &&
-          !/^(summary|core strengths|experience|professional experience|education|skills|projects|certifications?)$/i.test(line),
-      ) ?? "";
+      .slice(Math.max(0, nameIndex + 1), Math.max(0, nameIndex + 9))
+      .map(importedRoleCandidate)
+      .find((line) => line && line !== contactLine && line !== name) ?? "";
   const bodyLines = formatImportedBodyLines(
     lines
-      .slice(firstContentLine >= 0 && lines[firstContentLine] === name ? firstContentLine + 1 : 0)
+      .slice(nameIndex >= 0 && lineWithoutContactDetails(lines[nameIndex]) === name ? nameIndex + 1 : 0)
       .filter((line, index) => index > 2 || line !== contactLine),
   );
 

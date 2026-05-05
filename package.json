@@ -1,7 +1,7 @@
 {
   "name": "resume-studio",
   "private": true,
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Free, private, Markdown-first resume builder with live preview, local storage, Resume Review, Keyword & Fit Check, and exports.",
   "license": "MIT",
   "author": "Bractos Labs",

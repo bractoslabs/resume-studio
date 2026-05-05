@@ -82,7 +82,7 @@
 }
 
 .resume-content {
-  width: var(--preview-total-content-width);
+  width: var(--preview-content-width);
   height: var(--preview-content-height);
   column-count: var(--preview-page-count, 1);
   column-fill: auto;
