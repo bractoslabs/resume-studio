@@ -300,7 +300,13 @@ function App() {
 
   const addResume = (kind: "blank" | "wizard" | "template" | "import" | "duplicate", source?: ResumeDocument, setup?: NewResumeSetup) => {
     const resume = createResume(kind, source, setup);
-    setState((current) => ({ ...current, storageMeta: { ...current.storageMeta, significantChangesSinceBackup: true }, resumes: [resume, ...current.resumes], activeResumeId: resume.id }));
+    const shouldRecommendBackup = kind === "duplicate" || kind === "import";
+    setState((current) => ({
+      ...current,
+      storageMeta: { ...current.storageMeta, significantChangesSinceBackup: shouldRecommendBackup ? true : current.storageMeta?.significantChangesSinceBackup },
+      resumes: [resume, ...current.resumes],
+      activeResumeId: resume.id,
+    }));
     setNewResumeOpen(false);
     setView("editor");
     setTab("edit");
@@ -448,14 +454,22 @@ function App() {
     "--bullet-gap": template.bulletSpacing === "compact" ? "1px" : template.bulletSpacing === "airy" ? "5px" : "3px",
   } as React.CSSProperties;
 
+  const hasMeaningfulBackupWork = state.resumes.some((resume) => (
+    resume.updatedAt !== resume.createdAt ||
+    resume.versions.length > 1 ||
+    Boolean(resume.lastExportedAt || resume.importedSource) ||
+    resume.jobTargets.length > 0 ||
+    resume.applications.length > 0
+  ));
+  const backupRecommended = Boolean(state.storageMeta?.significantChangesSinceBackup) || (!state.storageMeta?.lastBackupAt && hasMeaningfulBackupWork);
+
   const shouldShowBackupReminder = (() => {
     const meta = state.storageMeta;
     if (meta?.backupReminderDisabled) return false;
     if (!state.resumes.length) return false;
     const dismissedAt = meta?.lastBackupReminderDismissedAt ? +new Date(meta.lastBackupReminderDismissedAt) : 0;
     if (dismissedAt && Date.now() - dismissedAt < 24 * 60 * 60 * 1000) return false;
-    if (!meta?.lastBackupAt && state.resumes.some((resume) => resume.updatedAt !== resume.createdAt || resume.versions.length > 1)) return true;
-    if (state.resumes.length >= 2 && !meta?.lastBackupAt) return true;
+    if (!meta?.lastBackupAt && hasMeaningfulBackupWork) return true;
     if (meta?.lastBackupAt && meta.significantChangesSinceBackup && Date.now() - +new Date(meta.lastBackupAt) > 7 * 24 * 60 * 60 * 1000) return true;
     return false;
   })();
@@ -537,7 +551,7 @@ function App() {
           setSort={setSort}
           totalResumeCount={state.resumes.length}
           lastBackupAt={state.storageMeta?.lastBackupAt}
-          backupRecommended={!state.storageMeta?.lastBackupAt || Boolean(state.storageMeta?.significantChangesSinceBackup)}
+          backupRecommended={backupRecommended}
           selectResume={selectResume}
           reviewResume={reviewResume}
           deleteResume={(resume) => setDeleteDraft({ id: resume.id, title: resume.title })}
