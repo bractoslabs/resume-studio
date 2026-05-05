@@ -1,0 +1,72 @@
+/* Product hardening pass: simplified Resume Studio workflow */
+:root {
+  --bg: #08100e;
+  --panel: #111a17;
+  --panel-soft: #17231f;
+  --panel-strong: #1d2a26;
+  --ink: #f2f7f4;
+  --muted: #98aaa3;
+  --line: #263632;
+  --accent-ui: #22d3c5;
+  --accent-2: #7ab8ff;
+  --danger: #fb7185;
+  --success: #7ddc77;
+  --warning: #f7c948;
+  --canvas: #c7d0cc;
+  --shadow: 0 24px 70px rgba(0, 0, 0, 0.36);
+  --radius: 8px;
+}
+
+:root[data-theme="light"] {
+  --bg: #eef4f2;
+  --panel: #ffffff;
+  --panel-soft: #f5f8f7;
+  --panel-strong: #e8f0ed;
+  --ink: #16211d;
+  --muted: #60706a;
+  --line: #d8e3df;
+  --accent-ui: #0f8f87;
+  --accent-2: #2563eb;
+  --danger: #b42318;
+  --success: #26863a;
+  --warning: #a16207;
+  --canvas: #d6dedb;
+  --shadow: 0 24px 70px rgba(23, 32, 29, 0.14);
+}
+
+body {
+  background:
+    radial-gradient(circle at 12% -10%, color-mix(in srgb, var(--accent-ui) 12%, transparent), transparent 34rem),
+    linear-gradient(180deg, color-mix(in srgb, var(--bg) 92%, #000), var(--bg));
+  font-size: 15px;
+}
+
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+summary:focus-visible {
+  outline: 2px solid var(--accent-ui);
+  outline-offset: 2px;
+}
+
+.clean-topbar {
+  height: 64px;
+  padding: 0 28px;
+}
+
+.focused-hero {
+  max-width: 1360px;
+  grid-template-columns: minmax(520px, 1.05fr) minmax(420px, .95fr);
+  gap: 56px;
+}
+
+.focused-hero h1 {
+  max-width: 760px;
+  font-size: clamp(44px, 4.6vw, 72px);
+  line-height: 1.02;
+}
+
+.focused-hero p {
+  font-size: 17px;
+}

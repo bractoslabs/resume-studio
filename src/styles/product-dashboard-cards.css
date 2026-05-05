@@ -1,0 +1,316 @@
+.onboarding-card {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 22px;
+}
+
+.local-save-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin: -4px 0 18px;
+  padding: 13px 14px;
+  border: 1px solid color-mix(in srgb, var(--line) 82%, transparent);
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--panel) 82%, transparent);
+}
+
+.local-save-strip p {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0 0 3px;
+  color: var(--ink);
+  font-weight: 760;
+}
+
+.local-save-strip p svg {
+  color: var(--accent-ui);
+}
+
+.local-save-strip span {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.local-save-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.quiet-btn {
+  color: var(--muted);
+  background: color-mix(in srgb, var(--panel) 78%, transparent);
+}
+
+.onboarding-card article,
+.empty-state,
+.settings-card,
+.job-summary-card,
+.recommended-export {
+  border: 1px solid color-mix(in srgb, var(--line) 86%, transparent);
+  background: color-mix(in srgb, var(--panel) 91%, var(--panel-soft));
+  border-radius: var(--radius);
+  padding: 18px;
+}
+
+.onboarding-card article {
+  transition: border-color .16s ease, background .16s ease, transform .16s ease;
+}
+
+.onboarding-card article:hover {
+  border-color: color-mix(in srgb, var(--accent-ui) 30%, var(--line));
+  background: color-mix(in srgb, var(--panel) 86%, var(--panel-soft));
+}
+
+.onboarding-card span {
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 12px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--accent-ui) 18%, var(--panel-soft));
+  color: var(--accent-ui);
+  font-weight: 800;
+}
+
+.onboarding-card strong {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.onboarding-card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.dashboard-tools {
+  max-width: none;
+  margin: 0 0 18px;
+  padding: 0;
+}
+
+.dashboard-tools .search {
+  flex: 1 1 420px;
+}
+
+.dashboard-tools select {
+  flex: 0 0 220px;
+}
+
+.refined-grid {
+  max-width: none;
+  padding: 0;
+  grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+  gap: 18px;
+}
+
+.refined-card {
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px;
+  transition: border-color .16s ease, background .16s ease, transform .16s ease;
+}
+
+.refined-card:hover,
+.refined-card:focus-within {
+  border-color: color-mix(in srgb, var(--accent-ui) 34%, var(--line));
+  background: color-mix(in srgb, var(--panel) 88%, var(--panel-soft));
+}
+
+.resume-card-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.resume-card-head h2 {
+  margin: 0 0 6px;
+  font-size: 20px;
+}
+
+.resume-card-head p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.score-chip,
+.meta-chip,
+.risk-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 28px;
+  border-radius: 999px;
+  padding: 0 10px;
+  font-size: 12px;
+  font-weight: 760;
+  white-space: nowrap;
+  border: 1px solid var(--line);
+  background: var(--panel-soft);
+}
+
+.score-chip.good { color: var(--success); border-color: color-mix(in srgb, var(--success) 44%, var(--line)); }
+.score-chip.warn { color: var(--warning); border-color: color-mix(in srgb, var(--warning) 44%, var(--line)); }
+.score-chip.bad { color: var(--danger); border-color: color-mix(in srgb, var(--danger) 44%, var(--line)); }
+.score-chip.large {
+  width: 74px;
+  height: 74px;
+  border-radius: 18px;
+  font-size: 30px;
+}
+
+.split-actions {
+  margin-top: auto;
+  justify-content: space-between;
+}
+
+.danger {
+  color: var(--danger);
+}
+
+.resume-title-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.resume-title-row h2 {
+  min-width: 0;
+}
+
+.resume-title-row .icon-btn {
+  flex: 0 0 30px;
+  width: 30px;
+  height: 30px;
+  margin-top: -3px;
+}
+
+.subtle-icon-btn {
+  opacity: .72;
+}
+
+.resume-card:hover .subtle-icon-btn,
+.subtle-icon-btn:focus-visible {
+  opacity: 1;
+}
+
+.resume-card-actions {
+  margin-top: auto;
+  align-items: center;
+}
+
+.resume-more-menu {
+  position: relative;
+}
+
+.resume-more-menu summary {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  cursor: pointer;
+  list-style: none;
+}
+
+.resume-more-menu summary::-webkit-details-marker {
+  display: none;
+}
+
+.resume-more-menu summary:hover,
+.resume-title-row .icon-btn:hover {
+  border-color: var(--accent-ui);
+  color: var(--accent-ui);
+}
+
+.resume-more-menu > div {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  z-index: 4;
+  width: 190px;
+  display: grid;
+  gap: 4px;
+  padding: 8px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  box-shadow: var(--shadow);
+}
+
+.resume-more-menu button {
+  min-height: 36px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--ink);
+  padding: 0 9px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.resume-more-menu button:hover {
+  background: var(--panel-soft);
+}
+
+.danger-icon-btn {
+  color: var(--danger);
+}
+
+.danger-icon-btn:hover {
+  border-color: color-mix(in srgb, var(--danger) 48%, var(--line)) !important;
+  color: var(--danger) !important;
+  background: color-mix(in srgb, var(--danger) 8%, var(--panel));
+}
+
+.dashboard-empty-state {
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+}
+
+.dashboard-empty-state p {
+  max-width: 560px;
+  margin: 0;
+}
+
+.dashboard-empty-state .inline-actions {
+  justify-content: center;
+  width: 100%;
+  margin-top: 4px;
+}
+
+@media (max-width: 980px) {
+  .local-save-strip,
+  .resume-card-actions {
+    display: grid;
+    justify-items: stretch;
+  }
+
+  .local-save-actions {
+    justify-content: flex-start;
+  }
+
+  .resume-card-actions .btn,
+  .resume-more-menu summary {
+    width: 100%;
+  }
+}

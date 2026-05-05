@@ -1,0 +1,237 @@
+.page-wrap {
+  width: var(--preview-page-width, 8.5in);
+  margin: 0 auto;
+}
+
+.resume-page {
+  position: relative;
+  width: var(--preview-page-width, 8.5in);
+  min-height: var(--preview-page-height, 11in);
+  padding: var(--resume-margin-y, .55in) var(--resume-margin-x, .55in);
+  background: white;
+  color: #111827;
+  box-shadow: var(--shadow);
+  font-family: var(--resume-font);
+  font-size: var(--resume-font-size);
+  line-height: var(--resume-line-height);
+}
+
+.page-letter {
+  --preview-page-width: 8.5in;
+  --preview-page-height: 11in;
+}
+
+.page-a4 {
+  --preview-page-width: 8.27in;
+  --preview-page-height: 11.69in;
+}
+
+.resume-content h1 {
+  margin: 0 0 4px;
+  text-align: center;
+  font-size: 22pt;
+}
+
+.resume-content h1 + p, .resume-content h1 + p + p, .resume-content h1 + p + p + p {
+  text-align: center;
+  margin: 2px 0;
+}
+
+.resume-content h2 {
+  margin: 13px 0 5px;
+  padding-bottom: 3px;
+  border-bottom: 1px solid var(--accent);
+  color: #111827;
+  font-size: 11pt;
+  text-transform: uppercase;
+  letter-spacing: 0;
+}
+
+.resume-content h3 {
+  margin: 9px 0 2px;
+  font-size: 10.5pt;
+}
+
+.resume-content p, .resume-content ul {
+  margin: var(--paragraph-spacing, 5px) 0;
+}
+
+.resume-content ul {
+  padding-left: 18px;
+}
+
+.resume-content li {
+  margin: var(--bullet-gap, 2px) 0;
+}
+
+.resume-content a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.template-ats-classic .resume-content h1 {
+  font-size: 21pt;
+  letter-spacing: 0;
+}
+
+.template-ats-classic .resume-content h2 {
+  border-bottom: 1px solid #111827;
+  color: #111827;
+}
+
+.template-technical .resume-content h1 {
+  color: #1d4ed8;
+}
+
+.template-technical .resume-content h2 {
+  border-bottom: 2px solid var(--accent);
+  color: #1e3a8a;
+}
+
+.template-technical .resume-content h3 {
+  color: #0f172a;
+}
+
+.template-executive .resume-content h1 {
+  font-size: 24pt;
+  color: #3f1f13;
+}
+
+.template-executive .resume-content h2 {
+  border-bottom: 1.5px solid #7c2d12;
+  color: #3f1f13;
+  text-transform: uppercase;
+}
+
+.template-executive .resume-content h3 {
+  font-style: italic;
+}
+
+.template-operations .resume-content h2 {
+  border-bottom-color: #166534;
+  color: #14532d;
+}
+
+.template-operations .resume-content h2::before {
+  content: "";
+  display: inline-block;
+  width: 6px;
+  height: 10px;
+  margin-right: 6px;
+  background: #166534;
+}
+
+.template-product .resume-content h1 {
+  color: #581c87;
+}
+
+.template-product .resume-content h2 {
+  padding-left: 7px;
+  border-bottom: 0;
+  border-left: 4px solid #9333ea;
+  color: #581c87;
+}
+
+.template-cybersecurity .resume-content h1 {
+  color: #881337;
+}
+
+.template-cybersecurity .resume-content h2 {
+  background: color-mix(in srgb, var(--accent) 13%, white);
+  padding: 4px 6px;
+  border: 1px solid color-mix(in srgb, var(--accent) 35%, white);
+  color: #881337;
+}
+
+.template-sales-bd .resume-content h1 {
+  color: #92400e;
+}
+
+.template-sales-bd .resume-content h2 {
+  border-bottom: 2px dotted #b45309;
+  color: #92400e;
+}
+
+.template-academic .resume-content h1 {
+  font-size: 23pt;
+  font-weight: 600;
+}
+
+.template-academic .resume-content h2 {
+  text-transform: none;
+  font-size: 12pt;
+  border-bottom: 1px solid #64748b;
+}
+
+.template-academic .resume-content li {
+  margin: 5px 0;
+}
+
+.template-minimal-one-page .resume-content h1 {
+  font-size: 20pt;
+}
+
+.template-minimal-one-page .resume-content h2 {
+  border-bottom-color: #111827;
+  text-transform: uppercase;
+  font-size: 10pt;
+  margin-top: 9px;
+}
+
+.template-minimal-one-page .resume-content p,
+.template-minimal-one-page .resume-content ul {
+  margin: 3px 0;
+}
+
+.template-modern-two-column {
+  --accent: #0f766e;
+}
+
+.template-modern-two-column .resume-content h1,
+.template-modern-two-column .resume-content h1 + p,
+.template-modern-two-column .resume-content h1 + p + p {
+  column-span: all;
+}
+
+.template-modern-two-column .resume-content {
+  column-count: 2;
+  column-gap: .34in;
+}
+
+.template-modern-two-column .resume-content h2 {
+  break-after: avoid;
+  border-bottom: 0;
+  color: #0f766e;
+}
+
+.template-modern-two-column .resume-content h3,
+.template-modern-two-column .resume-content ul {
+  break-inside: avoid;
+}
+
+.template-summary {
+  margin-top: 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 12px;
+  background: var(--panel-soft);
+}
+
+.template-summary strong,
+.template-summary span {
+  display: block;
+}
+
+.template-summary span {
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.template-summary.risk-high {
+  border-color: #f59e0b;
+}
+
+.template-summary.risk-medium {
+  border-color: color-mix(in srgb, var(--accent-ui) 45%, var(--line));
+}

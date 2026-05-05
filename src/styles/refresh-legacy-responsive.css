@@ -1,0 +1,33 @@
+@media (max-width: 1120px) {
+  .workspace {
+    grid-template-columns: 220px minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 760px) {
+  .topbar-actions .btn:not(.primary) {
+    display: none;
+  }
+
+  .hero {
+    padding: 28px 16px 46px;
+  }
+
+  .hero-preview {
+    min-height: 420px;
+  }
+
+  .dashboard-tools,
+  .create-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .panes {
+    grid-template-columns: 1fr;
+  }
+
+  .mode-tabs {
+    scrollbar-width: none;
+  }
+}

@@ -1,0 +1,131 @@
+.feedback-rail-btn {
+  margin: auto 12px 12px;
+  justify-content: center;
+}
+
+.landing-section {
+  width: min(1120px, calc(100% - 48px));
+  margin: 0 auto;
+  padding: 48px 0;
+}
+
+.landing-section header {
+  max-width: 680px;
+  margin-bottom: 22px;
+}
+
+.landing-section h2 {
+  margin: 0 0 8px;
+  color: var(--text);
+  font-size: clamp(26px, 3vw, 40px);
+}
+
+.landing-section p {
+  color: var(--muted);
+}
+
+.landing-grid,
+.helper-grid,
+.intelligence-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+}
+
+.landing-section article,
+.public-page section,
+.helper-card,
+.checklist-card,
+.import-review,
+.modal-card,
+.confirm-card {
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: rgba(15, 23, 42, .72);
+  box-shadow: 0 18px 45px rgba(0, 0, 0, .2);
+}
+
+.landing-section article,
+.helper-card,
+.checklist-card,
+.import-review {
+  padding: 18px;
+}
+
+.landing-section h3,
+.helper-card h3,
+.checklist-card h3 {
+  margin: 0 0 8px;
+  color: var(--text);
+}
+
+.public-footer {
+  width: min(1120px, calc(100% - 48px));
+  margin: 0 auto;
+  padding: 28px 0 48px;
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+}
+
+.public-footer nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.public-footer button {
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.public-footer button:hover,
+.public-footer button:focus-visible {
+  color: var(--accent);
+}
+
+.public-page {
+  min-height: 100vh;
+  padding: 34px 0 0;
+  background: var(--bg);
+}
+
+.public-page section {
+  width: min(820px, calc(100% - 48px));
+  margin: 54px auto;
+  padding: 28px;
+}
+
+.public-copy {
+  display: grid;
+  gap: 14px;
+  margin: 24px 0;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.helper-grid {
+  align-items: start;
+}
+
+.helper-card {
+  display: grid;
+  gap: 12px;
+}
+
+.helper-columns {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.helper-card textarea,
+.modal-card textarea {
+  width: 100%;
+  min-height: 120px;
+  resize: vertical;
+}

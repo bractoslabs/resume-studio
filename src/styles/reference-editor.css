@@ -1,0 +1,148 @@
+.pro-editor .editor-shell {
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr);
+  overflow: hidden;
+}
+
+.pro-editor .editor-toolbar {
+  min-height: 54px;
+  padding: 8px 12px;
+  border-bottom: 1px solid rgba(148, 163, 184, .18);
+  background: rgba(13, 24, 28, .9);
+}
+
+.pro-editor .editor-title-block .eyebrow {
+  display: none;
+}
+
+.pro-editor .title-input {
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.pro-editor .workspace-meta {
+  margin-top: 5px;
+}
+
+.pro-editor .workspace-meta span {
+  min-height: 20px;
+  padding: 0 7px;
+  border-color: rgba(148, 163, 184, .16);
+  background: rgba(15, 23, 42, .34);
+  font-size: 10px;
+}
+
+.pro-editor .toolbar-actions .btn {
+  min-height: 29px;
+  padding: 0 8px;
+  font-size: 11px;
+}
+
+.pro-editor .mode-tabs {
+  height: 42px;
+  padding: 0 10px;
+  border-bottom: 1px solid rgba(148, 163, 184, .18);
+  background: rgba(12, 22, 26, .92);
+}
+
+.pro-editor .mode-tabs button {
+  height: 42px;
+  min-height: 42px;
+  border-radius: 0;
+  background: transparent;
+}
+
+.pro-editor .mode-tabs button.active {
+  color: #22d3ee;
+  background: transparent;
+  box-shadow: inset 0 -2px 0 #22d3ee;
+}
+
+.pro-editor .panes,
+.pro-editor .panes.editor-only {
+  min-height: 0;
+  display: block;
+}
+
+.pro-editor .main-pane {
+  height: 100%;
+  border: 0;
+  background: rgba(8, 18, 20, .72);
+}
+
+.pro-editor .snippet-bar {
+  min-height: 38px;
+  padding: 6px 10px;
+  border-bottom: 1px solid rgba(148, 163, 184, .13);
+  background: rgba(10, 20, 24, .74);
+}
+
+.pro-editor .snippet-bar button {
+  min-height: 24px;
+  border-radius: 4px;
+  font-size: 10px;
+}
+
+.pro-editor .markdown-editor {
+  height: calc(100% - 38px);
+  padding: 14px 18px 26px 46px;
+  border: 0;
+  background:
+    linear-gradient(90deg, rgba(148, 163, 184, .1) 0 1px, transparent 1px 100%) 34px 0 / 1px 100%,
+    linear-gradient(90deg, rgba(148, 163, 184, .045) 0 1px, transparent 1px 100%) 0 0 / 3.2rem 100%,
+    #071115;
+  color: #d8e3df;
+  font-family: "SFMono-Regular", ui-monospace, Menlo, Consolas, monospace;
+  font-size: 12px;
+  line-height: 1.62;
+  resize: none;
+}
+
+.pro-preview-pane {
+  display: grid;
+  grid-template-rows: 58px minmax(0, 1fr) 48px;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255,255,255,.16), transparent 20rem),
+    #b5c0bc;
+  padding: 0;
+}
+
+.pro-preview-pane .preview-head {
+  margin: 0;
+  padding: 0 12px;
+  border-bottom: 1px solid rgba(15, 23, 42, .18);
+  background: rgba(21, 36, 43, .86);
+}
+
+.pro-preview-pane .page-wrap {
+  align-self: start;
+  justify-self: center;
+  margin-top: 24px;
+}
+
+.pro-preview-pane .resume-page {
+  box-shadow: 0 28px 60px rgba(15, 23, 42, .32);
+  outline: 1px solid rgba(255,255,255,.65);
+  outline-offset: 0;
+}
+
+.preview-footer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 14px;
+  color: #dfeae6;
+  background: rgba(21, 36, 43, .72);
+}
+
+.preview-footer span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 30px;
+  padding: 0 10px;
+  border-radius: 5px;
+  background: rgba(255,255,255,.08);
+  font-size: 12px;
+}

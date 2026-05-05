@@ -1,0 +1,51 @@
+@media (max-width: 1120px) {
+  .workspace {
+    grid-template-columns: 210px minmax(0, 1fr);
+  }
+  .right-rail {
+    display: none;
+  }
+  .hero {
+    grid-template-columns: 1fr;
+  }
+  .hero-preview {
+    min-height: 500px;
+  }
+}
+
+@media (max-width: 760px) {
+  .topbar, .dashboard-head {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+  .dashboard-head {
+    display: grid;
+  }
+  .benefits {
+    grid-template-columns: 1fr;
+  }
+  .workspace {
+    grid-template-columns: 1fr;
+    height: auto;
+    min-height: 100vh;
+  }
+  .left-sidebar {
+    display: none;
+  }
+  .editor-toolbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+  .panes {
+    grid-template-columns: 1fr;
+  }
+  .tracker-row {
+    grid-template-columns: 1fr;
+  }
+  .preview-pane {
+    min-height: 560px;
+  }
+  .hero h1 {
+    font-size: 42px;
+  }
+}

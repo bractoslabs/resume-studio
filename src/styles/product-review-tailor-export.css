@@ -1,0 +1,547 @@
+.review-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(240px, 0.62fr);
+  gap: 18px;
+  align-items: start;
+  margin-bottom: 18px;
+}
+
+.review-mode-tabs {
+  width: fit-content;
+  margin-bottom: 14px;
+}
+
+.review-hero > div:first-child,
+.score-details,
+.issue-card,
+.section-review-grid,
+.achievement-audit,
+.keyword-review-card,
+.fit-assistant,
+.notes-card,
+.form-card,
+.experience-card,
+.sync-card,
+.keyword-list,
+.suggestion-list,
+.format-list,
+.copy-actions,
+.export-settings,
+.timeline-row,
+.template-card,
+.job-row {
+  border: 1px solid var(--line);
+  background: color-mix(in srgb, var(--panel) 91%, var(--panel-soft));
+  border-radius: var(--radius);
+  padding: 16px;
+}
+
+.review-hero > div:first-child {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 16px;
+}
+
+.review-hero > div:first-child p {
+  grid-column: 2;
+}
+
+.score-details summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  color: var(--ink);
+}
+
+.score-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.score-row span {
+  min-height: 54px;
+  display: grid;
+  place-items: center;
+  border-radius: var(--radius);
+  background: var(--panel-soft);
+  color: var(--muted);
+  font-size: 12px;
+  text-transform: capitalize;
+}
+
+.score-row strong {
+  color: var(--ink);
+  font-size: 22px;
+}
+
+.issue-group {
+  margin-top: 22px;
+}
+
+.section-review-grid,
+.achievement-audit,
+.ats-optimization-panel {
+  display: grid;
+  gap: 14px;
+  margin: 16px 0;
+}
+
+.section-review-grid header,
+.achievement-audit header {
+  display: grid;
+  gap: 4px;
+}
+
+.section-review-grid h3,
+.achievement-audit h3,
+.keyword-review-card h3 {
+  margin: 0;
+}
+
+.section-review-grid header p,
+.achievement-audit header p,
+.keyword-review-card p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.section-review-grid > div {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 10px;
+}
+
+.section-review-card {
+  display: grid;
+  gap: 8px;
+  min-height: 178px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--panel-soft) 78%, transparent);
+}
+
+.section-review-card > span {
+  width: fit-content;
+  padding: 4px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 760;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+}
+
+.section-review-card.strong > span {
+  color: var(--success);
+  border-color: color-mix(in srgb, var(--success) 38%, var(--line));
+}
+
+.section-review-card.needs-work > span {
+  color: var(--warning);
+  border-color: color-mix(in srgb, var(--warning) 38%, var(--line));
+}
+
+.section-review-card.missing > span {
+  color: var(--danger);
+  border-color: color-mix(in srgb, var(--danger) 38%, var(--line));
+}
+
+.section-review-card strong {
+  font-size: 16px;
+}
+
+.section-review-card p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+.section-review-card .btn {
+  align-self: end;
+  justify-self: start;
+}
+
+.achievement-metrics {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.achievement-metrics span,
+.role-audit-list article,
+.achievement-opportunities article,
+.keyword-pill-group {
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--panel-soft) 74%, transparent);
+}
+
+.achievement-metrics strong {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--ink);
+  font-size: 24px;
+}
+
+.role-audit-list,
+.achievement-opportunities {
+  display: grid;
+  gap: 10px;
+}
+
+.role-audit-list article p,
+.achievement-opportunities article p {
+  margin: 5px 0 0;
+  color: var(--muted);
+}
+
+.achievement-opportunities h4,
+.keyword-pill-group h4 {
+  margin: 0;
+}
+
+.achievement-opportunities article {
+  display: grid;
+  gap: 6px;
+}
+
+.achievement-opportunities span,
+.achievement-opportunities small {
+  color: var(--muted);
+}
+
+.keyword-review-card {
+  display: grid;
+  gap: 14px;
+}
+
+.keyword-review-card > div,
+.keyword-pill-group div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.keyword-review-card > div {
+  align-items: start;
+}
+
+.keyword-pill-group {
+  flex: 1 1 190px;
+}
+
+.keyword-pill-group div {
+  margin-top: 10px;
+}
+
+.keyword-pill-group span {
+  padding: 5px 8px;
+  border: 1px solid color-mix(in srgb, var(--accent-ui) 24%, var(--line));
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--accent-ui) 9%, var(--panel-soft));
+  color: var(--ink);
+  font-size: 12px;
+}
+
+.issue-group h3,
+.format-list h3,
+.copy-actions h3,
+.export-settings h3,
+.suggestion-list h3,
+.keyword-list h3 {
+  margin: 0 0 12px;
+}
+
+.issue-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 14px;
+  margin-bottom: 10px;
+}
+
+.issue-card span {
+  color: var(--muted);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+
+.issue-card h4 {
+  margin: 5px 0 8px;
+  font-size: 17px;
+}
+
+.issue-card p {
+  margin: 6px 0;
+  color: var(--muted);
+}
+
+.issue-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: stretch;
+}
+
+.severity-critical { border-color: color-mix(in srgb, var(--danger) 48%, var(--line)); }
+.severity-warning { border-color: color-mix(in srgb, var(--warning) 42%, var(--line)); }
+
+.compact-lab {
+  margin: 16px 0;
+}
+
+.compact-lab article {
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.tailor-panel,
+.export-panel,
+.history-panel,
+.guided-builder {
+  display: grid;
+  gap: 16px;
+}
+
+.refined-job-input {
+  min-height: 230px !important;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--panel) 86%, #050807);
+  color: var(--ink);
+  padding: 14px;
+}
+
+.tailor-results {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.job-summary-card,
+.suggestion-list {
+  grid-column: 1 / -1;
+}
+
+.keyword-list div {
+  display: flex;
+  gap: 7px;
+  flex-wrap: wrap;
+}
+
+.keyword-list span,
+.tags span {
+  background: color-mix(in srgb, var(--accent-ui) 9%, var(--panel-soft));
+  border-color: color-mix(in srgb, var(--accent-ui) 24%, var(--line));
+}
+
+.suggestion-list {
+  display: grid;
+  gap: 10px;
+}
+
+.suggestion-list article {
+  border-top: 1px solid var(--line);
+  padding-top: 10px;
+}
+
+.suggestion-list code {
+  display: block;
+  white-space: normal;
+  color: var(--accent-2);
+}
+
+.recommended-export {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: center;
+}
+
+.recommended-export h2 {
+  margin: 0 0 6px;
+}
+
+.fit-assistant {
+  display: grid;
+  gap: 14px;
+}
+
+.fit-assistant h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 6px;
+}
+
+.fit-assistant p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.fit-assistant.needs-fit {
+  border-color: color-mix(in srgb, var(--warning) 38%, var(--line));
+}
+
+.fit-metrics {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.fit-metrics span {
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--panel-soft) 78%, transparent);
+  color: var(--muted);
+}
+
+.fit-metrics strong {
+  display: block;
+  color: var(--ink);
+  font-size: 22px;
+}
+
+.fit-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.notes-panel {
+  display: grid;
+  gap: 16px;
+}
+
+.notes-card {
+  display: grid;
+  gap: 12px;
+}
+
+.notes-card label {
+  display: grid;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.notes-card textarea {
+  min-height: 420px;
+  resize: vertical;
+}
+
+.export-settings {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  align-items: end;
+}
+
+.export-settings h3 {
+  grid-column: 1 / -1;
+}
+
+.export-settings label,
+.settings-card label,
+.job-row label,
+.form-card label,
+.title-field,
+.compare-select {
+  display: grid;
+  gap: 7px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.format-list,
+.copy-actions {
+  display: grid;
+  gap: 10px;
+}
+
+.format-list article {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  border-top: 1px solid var(--line);
+}
+
+.format-list p {
+  margin: 4px 0 0;
+  color: var(--muted);
+}
+
+.copy-actions {
+  grid-template-columns: repeat(3, max-content);
+  align-items: center;
+}
+
+.timeline {
+  display: grid;
+  gap: 12px;
+}
+
+.timeline-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.timeline-row span {
+  display: block;
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.diff pre {
+  margin: 0 0 14px;
+}
+
+.form-card,
+.sync-card {
+  display: grid;
+  gap: 12px;
+}
+
+.card-section-head,
+.sync-card {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+}
+
+.card-section-head h3,
+.form-card h3 {
+  margin: 0;
+}
+
+.experience-card summary {
+  cursor: pointer;
+  font-weight: 720;
+}
+
+.bullet-rows {
+  display: grid;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.bullet-rows h4 {
+  margin: 0;
+}
+
+.checkbox-label {
+  align-content: center;
+  grid-template-columns: auto 1fr !important;
+}

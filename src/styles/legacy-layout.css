@@ -1,0 +1,371 @@
+.landing {
+  min-height: 100vh;
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(320px, 0.92fr) minmax(420px, 1.08fr);
+  gap: 34px;
+  align-items: center;
+  max-width: 1340px;
+  min-height: calc(100vh - 68px);
+  margin: 0 auto;
+  padding: 48px 34px 74px;
+}
+
+.hero h1 {
+  margin: 0;
+  font-size: clamp(42px, 6vw, 82px);
+  line-height: 0.96;
+  letter-spacing: 0;
+}
+
+.hero p {
+  max-width: 720px;
+  color: var(--muted);
+  font-size: 18px;
+  line-height: 1.65;
+}
+
+.benefits {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 26px;
+}
+
+.benefits span {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  color: var(--muted);
+  min-width: 0;
+}
+
+.hero-preview {
+  min-height: 650px;
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.dashboard {
+  padding-bottom: 70px;
+}
+
+.dashboard-head {
+  max-width: 1260px;
+  margin: 0 auto;
+  padding: 44px 34px 22px;
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  align-items: flex-end;
+}
+
+.dashboard-head h1 {
+  margin: 0 0 8px;
+  font-size: 42px;
+}
+
+.dashboard-head p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.dashboard-tools {
+  max-width: 1260px;
+  margin: 0 auto 20px;
+  padding: 0 34px;
+  display: flex;
+  gap: 12px;
+}
+
+.search {
+  flex: 1;
+  min-height: 42px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 12px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.search input, .title-input, .form-grid input, .panel textarea, .panel select, .dashboard-tools select {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  outline: 0;
+}
+
+.dashboard-tools select, .panel select {
+  min-height: 42px;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  border-radius: 8px;
+  padding: 0 10px;
+}
+
+.resume-grid {
+  max-width: 1260px;
+  margin: 0 auto;
+  padding: 0 34px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+  gap: 16px;
+}
+
+.resume-card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 8px 24px rgba(23, 32, 29, .06);
+}
+
+.card-main {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  padding: 0;
+  cursor: pointer;
+}
+
+.card-main h2 {
+  margin: 0 0 6px;
+  font-size: 20px;
+}
+
+.card-main p, .card-meta, .tags, .save-state {
+  color: var(--muted);
+}
+
+.card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 14px 0;
+  font-size: 13px;
+}
+
+.tags {
+  display: flex;
+  gap: 6px;
+  min-height: 24px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.tags span, .keyword-list span {
+  background: var(--panel-soft);
+  border: 1px solid var(--line);
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+}
+
+.workspace {
+  height: 100vh;
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr) 232px;
+  overflow: hidden;
+}
+
+.left-sidebar, .right-rail {
+  border-right: 1px solid var(--line);
+  background: var(--panel);
+  overflow: auto;
+  padding: 12px;
+}
+
+.right-rail {
+  border-right: 0;
+  border-left: 1px solid var(--line);
+}
+
+.sidebar-section {
+  margin-top: 18px;
+}
+
+.sidebar-section h3, .rail-card h3 {
+  margin: 0 0 8px;
+  color: var(--muted);
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: .08em;
+}
+
+.side-row {
+  width: 100%;
+  min-height: 34px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  padding: 0 9px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.side-row span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.side-row.active, .side-row:hover {
+  background: var(--panel-soft);
+}
+
+.editor-shell {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.editor-toolbar {
+  min-height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--line);
+  background: var(--panel);
+}
+
+.title-input {
+  display: block;
+  font-size: 20px;
+  font-weight: 760;
+}
+
+.save-state {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+  font-size: 12px;
+}
+
+.mode-tabs {
+  display: flex;
+  gap: 3px;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--line);
+  background: color-mix(in srgb, var(--panel) 92%, var(--panel-soft));
+  overflow-x: auto;
+}
+
+.mode-tabs button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: 0;
+  background: transparent;
+  min-height: 34px;
+  padding: 0 10px;
+  border-radius: 8px;
+  color: var(--muted);
+  text-transform: capitalize;
+  cursor: pointer;
+}
+
+.mode-tabs button.active {
+  color: var(--ink);
+  background: var(--panel);
+  box-shadow: inset 0 0 0 1px var(--line);
+}
+
+.panes {
+  min-height: 0;
+  flex: 1;
+  display: grid;
+  grid-template-columns: minmax(420px, 1fr) minmax(360px, .86fr);
+}
+
+.panes.preview-hidden {
+  grid-template-columns: 1fr;
+}
+
+.main-pane {
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--line);
+}
+
+.snippet-bar {
+  display: flex;
+  gap: 6px;
+  padding: 8px;
+  border-bottom: 1px solid var(--line);
+  background: var(--panel);
+  overflow-x: auto;
+}
+
+.snippet-bar button {
+  white-space: nowrap;
+  min-height: 30px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel-soft);
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.markdown-editor {
+  flex: 1;
+  width: 100%;
+  resize: none;
+  border: 0;
+  outline: 0;
+  padding: 22px;
+  color: var(--ink);
+  background: color-mix(in srgb, var(--panel) 76%, var(--bg));
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  font-size: 14px;
+  line-height: 1.62;
+  tab-size: 2;
+}
+
+.preview-pane {
+  min-width: 0;
+  overflow: auto;
+  background: #aeb8b3;
+  padding: 14px 18px 80px;
+}
+
+.preview-head {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  margin: -14px -18px 14px;
+  padding: 9px 14px;
+  background: color-mix(in srgb, #111 74%, transparent);
+  color: white;
+  font-size: 12px;
+}
+
+.preview-head button {
+  margin-left: 4px;
+  border: 1px solid rgba(255,255,255,.26);
+  background: rgba(255,255,255,.12);
+  color: white;
+  border-radius: 6px;
+}

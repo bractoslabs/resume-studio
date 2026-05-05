@@ -1,0 +1,167 @@
+/* Visible product shell refresh */
+.eyebrow {
+  width: fit-content;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 12px;
+  padding: 6px 9px;
+  border: 1px solid color-mix(in srgb, var(--accent-ui) 24%, var(--line));
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--accent-ui) 10%, var(--panel));
+  color: color-mix(in srgb, var(--accent-ui) 72%, var(--ink));
+  font-size: 11px;
+  font-weight: 740;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+.hero-copy {
+  position: relative;
+  padding: 18px 0;
+}
+
+.hero-metrics,
+.dashboard-stats,
+.workspace-meta {
+  display: flex;
+  align-items: stretch;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.hero-metrics {
+  margin-top: 22px;
+}
+
+.hero-metrics span,
+.dashboard-stats article,
+.workspace-meta span {
+  border: 1px solid color-mix(in srgb, var(--line) 82%, transparent);
+  background: color-mix(in srgb, var(--panel) 86%, var(--panel-soft));
+  box-shadow: inset 0 1px 0 color-mix(in srgb, white 7%, transparent);
+}
+
+.hero-metrics span {
+  min-width: 138px;
+  padding: 12px;
+  border-radius: 10px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.hero-metrics strong {
+  display: block;
+  color: var(--ink);
+  font-size: 24px;
+  line-height: 1;
+}
+
+.dashboard-stats {
+  max-width: 1180px;
+  margin: 0 auto 18px;
+  padding: 0 34px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.dashboard-stats article {
+  min-height: 88px;
+  padding: 14px;
+  border-radius: 10px;
+}
+
+.dashboard-stats span {
+  display: block;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.dashboard-stats strong {
+  display: block;
+  margin-top: 8px;
+  color: var(--ink);
+  font-size: 30px;
+  line-height: 1;
+}
+
+.editor-title-block {
+  min-width: 0;
+}
+
+.editor-title-block .eyebrow {
+  margin-bottom: 4px;
+  padding: 4px 7px;
+  font-size: 9px;
+}
+
+.workspace-meta {
+  margin-top: 6px;
+  gap: 6px;
+}
+
+.workspace-meta span {
+  min-height: 24px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0 8px;
+  border-radius: 999px;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.preview-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: #eef6f2;
+  font-weight: 720;
+}
+
+.workspace::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(255,255,255,.035) 0 1px, transparent 1px 100%) 0 0 / 72px 72px,
+    radial-gradient(circle at 72% 6%, color-mix(in srgb, var(--accent-2) 12%, transparent), transparent 24rem);
+  opacity: .52;
+}
+
+.left-sidebar,
+.editor-shell,
+.right-rail {
+  position: relative;
+  z-index: 1;
+}
+
+.editor-shell {
+  border-inline: 1px solid color-mix(in srgb, var(--line) 74%, transparent);
+}
+
+.right-rail::before {
+  content: "Inspector";
+  display: block;
+  margin: 2px 2px 10px;
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 780;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.resume-card::before {
+  content: "";
+  display: block;
+  height: 3px;
+  margin: -16px -16px 14px;
+  border-radius: 8px 8px 0 0;
+  background: linear-gradient(90deg, var(--accent-ui), var(--accent-2));
+}
+
+.preview-pane .resume-page {
+  outline: 1px solid rgba(255,255,255,.22);
+  outline-offset: 10px;
+}

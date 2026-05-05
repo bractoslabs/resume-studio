@@ -1,0 +1,153 @@
+.nav-rail {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 18px 10px 12px;
+}
+
+.nav-rail button:not(.btn) {
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 10px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: transparent;
+  color: #aebbb7;
+  text-align: left;
+  cursor: pointer;
+}
+
+.nav-rail button.active,
+.nav-rail button:not(.btn):hover {
+  border-color: rgba(20, 184, 166, .2);
+  background: rgba(20, 184, 166, .11);
+  color: #2dd4bf;
+}
+
+.nav-storage {
+  margin-top: auto;
+  display: grid;
+  gap: 10px;
+  color: #94a3b8;
+  font-size: 11px;
+}
+
+.nav-storage span,
+.nav-storage small {
+  display: block;
+  padding: 10px;
+  border: 1px solid rgba(148, 163, 184, .18);
+  border-radius: 7px;
+  background: rgba(15, 23, 42, .45);
+}
+
+.nav-storage span {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: #b7f7d0;
+}
+
+.new-resume-cta {
+  width: 100%;
+  min-height: 44px;
+}
+
+.library-sidebar {
+  overflow: auto;
+  padding: 12px;
+}
+
+.library-sidebar .sidebar-section {
+  margin-top: 14px;
+}
+
+.library-sidebar .sidebar-section:first-child {
+  margin-top: 0;
+}
+
+.library-sidebar h3 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0;
+  color: #dce7e3;
+  font-size: 13px;
+  letter-spacing: .08em;
+}
+
+.compact-search {
+  min-height: 34px;
+  margin: 8px 0 10px;
+  border-radius: 5px;
+  background: rgba(15, 23, 42, .45);
+}
+
+.resume-list-card {
+  width: 100%;
+  min-height: 84px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 46px;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  padding: 10px;
+  border: 1px solid rgba(148, 163, 184, .2);
+  border-radius: 7px;
+  background: rgba(15, 23, 42, .36);
+  color: #e5eee9;
+  text-align: left;
+  cursor: pointer;
+}
+
+.resume-list-card.active {
+  border-color: #14b8a6;
+  box-shadow: inset 0 0 0 1px rgba(20, 184, 166, .35), 0 0 24px rgba(20, 184, 166, .12);
+}
+
+.resume-list-card strong {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12px;
+}
+
+.resume-list-card small {
+  display: block;
+  margin-top: 7px;
+  color: #a9b6b2;
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.resume-list-card .score-ring {
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  background:
+    conic-gradient(#76df24 var(--score), rgba(148, 163, 184, .18) 0),
+    rgba(15, 23, 42, .6);
+}
+
+.resume-list-card .score-ring::before {
+  inset: 5px;
+}
+
+.resume-list-card .score-ring strong {
+  font-size: 13px;
+}
+
+.resume-list-card .score-ring span {
+  display: none;
+}
+
+.pro-editor .side-row {
+  min-height: 31px;
+  border: 1px solid rgba(148, 163, 184, .13);
+  border-radius: 5px;
+  background: rgba(15, 23, 42, .28);
+  font-size: 12px;
+}

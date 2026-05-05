@@ -1,0 +1,313 @@
+.hero {
+  max-width: 1180px;
+  grid-template-columns: minmax(340px, .86fr) minmax(420px, 1fr);
+  min-height: calc(100vh - 58px);
+}
+
+.hero h1 {
+  max-width: 650px;
+  font-size: clamp(44px, 5.2vw, 72px);
+}
+
+.hero p {
+  max-width: 610px;
+  font-size: 15px;
+}
+
+.benefits {
+  max-width: 620px;
+  gap: 8px 18px;
+  font-size: 13px;
+}
+
+.dashboard-head,
+.dashboard-tools,
+.resume-grid {
+  max-width: 1180px;
+}
+
+.dashboard-head {
+  padding-top: 36px;
+  align-items: center;
+}
+
+.dashboard-head h1 {
+  font-size: 34px;
+}
+
+.dashboard-tools {
+  align-items: center;
+}
+
+.resume-card {
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--panel) 96%, white), var(--panel)),
+    var(--panel);
+  border-color: color-mix(in srgb, var(--line) 84%, transparent);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, .16);
+  transition: border-color .16s ease, transform .16s ease, box-shadow .16s ease;
+}
+
+.resume-card:hover {
+  border-color: color-mix(in srgb, var(--accent-ui) 62%, var(--line));
+  transform: translateY(-2px);
+  box-shadow: 0 20px 42px rgba(0, 0, 0, .22);
+}
+
+.card-main h2 {
+  font-size: 16px;
+}
+
+.card-main p,
+.card-meta {
+  font-size: 12px;
+}
+
+.workspace {
+  grid-template-columns: 260px minmax(0, 1fr) 220px;
+  background: var(--bg);
+}
+
+.left-sidebar,
+.right-rail {
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--panel) 93%, #020504), color-mix(in srgb, var(--panel) 82%, #020504));
+  border-color: color-mix(in srgb, var(--line) 78%, transparent);
+}
+
+.left-sidebar {
+  padding: 10px 8px;
+}
+
+.brand.compact {
+  min-height: 42px;
+  margin-bottom: 6px;
+  border-radius: 8px;
+}
+
+.sidebar-section {
+  margin-top: 14px;
+}
+
+.sidebar-section h3,
+.rail-card h3 {
+  padding: 0 8px;
+  font-size: 10px;
+  letter-spacing: .11em;
+}
+
+.side-row {
+  min-height: 32px;
+  color: color-mix(in srgb, var(--ink) 82%, var(--muted));
+}
+
+.side-row.active {
+  background: color-mix(in srgb, var(--accent-ui) 13%, var(--panel-soft));
+  color: var(--ink);
+  box-shadow: inset 3px 0 0 var(--accent-ui);
+}
+
+.side-row:hover {
+  background: color-mix(in srgb, var(--panel-soft) 82%, var(--accent-ui) 5%);
+}
+
+.editor-toolbar {
+  min-height: 58px;
+  padding: 8px 14px;
+  background: color-mix(in srgb, var(--panel) 90%, #030806);
+  border-bottom-color: color-mix(in srgb, var(--line) 82%, transparent);
+}
+
+.title-input {
+  color: var(--ink);
+  font-size: 16px;
+  letter-spacing: 0;
+}
+
+.save-state {
+  margin-top: 2px;
+  font-size: 11px;
+  color: color-mix(in srgb, var(--muted) 88%, var(--accent-ui));
+}
+
+.toolbar-actions .btn {
+  min-height: 32px;
+  padding: 0 10px;
+  font-size: 12px;
+}
+
+.mode-tabs {
+  padding: 6px 10px;
+  background: color-mix(in srgb, var(--panel) 84%, var(--bg));
+  gap: 5px;
+}
+
+.mode-tabs button {
+  min-height: 32px;
+  padding: 0 10px;
+  font-size: 12px;
+}
+
+.mode-tabs button.active {
+  color: var(--accent-ui);
+  background: color-mix(in srgb, var(--accent-ui) 10%, var(--panel));
+  box-shadow: inset 0 -2px 0 var(--accent-ui), inset 0 0 0 1px color-mix(in srgb, var(--accent-ui) 28%, var(--line));
+}
+
+.panes {
+  grid-template-columns: minmax(430px, .96fr) minmax(430px, 1fr);
+}
+
+.main-pane {
+  background: color-mix(in srgb, var(--panel) 88%, var(--bg));
+  border-right-color: color-mix(in srgb, var(--line) 82%, transparent);
+}
+
+.snippet-bar {
+  padding: 7px 10px;
+  background: color-mix(in srgb, var(--panel) 88%, var(--bg));
+}
+
+.snippet-bar button {
+  min-height: 28px;
+  background: color-mix(in srgb, var(--panel-soft) 86%, var(--bg));
+  border-color: color-mix(in srgb, var(--line) 80%, transparent);
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.markdown-editor {
+  padding: 20px 22px 28px;
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--panel-soft) 24%, transparent) 0 1px, transparent 1px 100%) 0 0 / 3.1rem 100%,
+    color-mix(in srgb, var(--panel) 84%, #020504);
+  color: #d7e2dc;
+  caret-color: var(--accent-ui);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+:root[data-theme="light"] .markdown-editor {
+  color: #17201d;
+  background:
+    linear-gradient(90deg, #edf3f0 0 1px, transparent 1px 100%) 0 0 / 3.1rem 100%,
+    #fbfdfc;
+}
+
+.preview-pane {
+  background:
+    radial-gradient(circle at center top, rgba(255,255,255,.24), transparent 26rem),
+    var(--canvas);
+  padding: 16px 20px 96px;
+}
+
+.preview-head {
+  margin: -16px -20px 16px;
+  padding: 8px 13px;
+  background: rgba(8, 16, 14, .74);
+  backdrop-filter: blur(10px);
+}
+
+.page-wrap {
+  transition: transform .18s ease;
+}
+
+.resume-page {
+  box-shadow: 0 26px 70px rgba(0, 0, 0, .28);
+}
+
+.right-rail {
+  padding: 10px;
+}
+
+.right-rail > .score-ring {
+  margin: 2px auto 4px;
+}
+
+.rail-card,
+.panel,
+.structured-card,
+.issue,
+.version-row {
+  background: color-mix(in srgb, var(--panel) 94%, #020504);
+  border-color: color-mix(in srgb, var(--line) 82%, transparent);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, white 4%, transparent);
+}
+
+.panel {
+  margin: 10px;
+  padding: 14px;
+}
+
+.panel h2 {
+  font-size: 18px;
+}
+
+.panel h3 {
+  font-size: 13px;
+}
+
+.design-controls {
+  gap: 14px;
+}
+
+.design-controls section {
+  gap: 9px;
+  padding-top: 14px;
+}
+
+.design-controls h3 {
+  font-size: 14px;
+}
+
+.design-controls select,
+.design-controls .color-input input:last-child,
+.form-grid input,
+.panel textarea,
+.panel select,
+.dashboard-tools select,
+.search {
+  background: color-mix(in srgb, var(--panel) 94%, var(--bg));
+  border-color: color-mix(in srgb, var(--line) 86%, transparent);
+}
+
+.swatches {
+  gap: 10px;
+}
+
+.swatches button {
+  width: 32px;
+  height: 32px;
+}
+
+.font-row {
+  grid-template-columns: minmax(0, 1fr) 58px;
+}
+
+.range-labels {
+  font-size: 11px;
+}
+
+.template-summary {
+  background: color-mix(in srgb, var(--accent-ui) 8%, var(--panel));
+}
+
+.score-ring {
+  width: 66px;
+}
+
+.metric-grid .score-ring {
+  min-height: 70px;
+}
+
+.issue {
+  transition: border-color .16s ease, background .16s ease;
+}
+
+.issue:hover {
+  border-color: color-mix(in srgb, var(--accent-ui) 50%, var(--line));
+}
+
+.command-box {
+  background: color-mix(in srgb, var(--panel) 96%, #020504);
+}

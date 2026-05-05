@@ -1,0 +1,98 @@
+/* Reference-matched editor shell */
+.pro-editor {
+  height: 100vh;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 28% -18%, rgba(20, 184, 166, .12), transparent 34rem),
+    #08100f;
+  color: #e7f0ec;
+}
+
+.pro-topbar {
+  height: 58px;
+  display: grid;
+  grid-template-columns: 360px minmax(0, 1fr) 390px;
+  align-items: center;
+  padding: 0 14px;
+  border-bottom: 1px solid rgba(148, 163, 184, .18);
+  background: rgba(7, 15, 18, .92);
+  backdrop-filter: blur(14px);
+}
+
+.pro-brand,
+.pro-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.pro-brand .brand.compact {
+  width: auto;
+  min-height: 38px;
+  margin: 0;
+  padding: 0 8px;
+}
+
+.workspace-switch {
+  min-height: 34px;
+  padding: 0 12px;
+  border: 0;
+  border-left: 1px solid rgba(148, 163, 184, .22);
+  background: transparent;
+  color: #c7d2cc;
+  cursor: pointer;
+}
+
+.pro-document-title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.pro-document-title strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 15px;
+}
+
+.pro-document-title span {
+  color: #70d56f;
+  font-size: 12px;
+}
+
+.pro-document-title span::before {
+  content: "";
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  margin-right: 7px;
+  border-radius: 999px;
+  background: currentColor;
+  vertical-align: middle;
+}
+
+.pro-actions {
+  justify-content: flex-end;
+}
+
+.pro-editor .workspace {
+  height: calc(100vh - 58px);
+  display: grid;
+  grid-template-columns: 170px 250px minmax(360px, .9fr) minmax(470px, 1.14fr) 320px;
+  background: transparent;
+}
+
+.nav-rail,
+.library-sidebar,
+.pro-editor .editor-shell,
+.pro-preview-pane,
+.pro-editor .right-rail {
+  min-height: 0;
+  border-right: 1px solid rgba(148, 163, 184, .18);
+  background: linear-gradient(180deg, rgba(14, 27, 31, .94), rgba(8, 18, 20, .96));
+  position: relative;
+  z-index: 1;
+}
