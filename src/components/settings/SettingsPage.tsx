@@ -22,6 +22,7 @@ export const SettingsPage = ({ state, setState, openClear, downloadBackup, openR
           <span><Download size={18} /></span>
           <div><h2>Data and backup</h2><p>Your resumes are saved in this browser. Download a backup before clearing site data or switching devices.</p></div>
         </div>
+        <p className="settings-local-note">Resume Studio does not sync your data to an account. Keep a backup if this resume matters.</p>
         <dl className="restore-preview">
           <div><dt>Save status</dt><dd>{saveFailed ? "Save failed" : "Saved locally"}</dd></div>
           <div><dt>Last local save</dt><dd>{lastSavedAt ? `${formatDate(lastSavedAt)} at ${timeOnly(lastSavedAt)}` : "Not saved yet"}</dd></div>
@@ -48,7 +49,7 @@ export const SettingsPage = ({ state, setState, openClear, downloadBackup, openR
       <article className="settings-card danger-zone">
         <div className="settings-card-header">
           <span><Trash2 size={18} /></span>
-          <div><h2>Clear local data</h2><p>Remove resumes, versions, applications, and preferences stored in this browser.</p></div>
+          <div><h2>Clear local data</h2><p>Remove resumes, versions, applications, and preferences stored in this browser. Download a backup first if you want to keep your work.</p></div>
         </div>
         <Button className="danger" onClick={openClear}><Trash2 size={16} /> Clear local data</Button>
       </article>

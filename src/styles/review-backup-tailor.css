@@ -125,7 +125,8 @@
   cursor: pointer;
 }
 
-.backup-reminder {
+.backup-reminder,
+.local-storage-warning {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -137,9 +138,20 @@
   background: rgba(8, 47, 73, .34);
 }
 
-.backup-reminder p {
+.local-storage-warning {
+  border-color: color-mix(in srgb, var(--accent-ui) 44%, var(--line));
+  background: color-mix(in srgb, var(--accent-ui) 10%, var(--panel));
+}
+
+.backup-reminder p,
+.local-storage-warning p {
   margin: 4px 0 0;
   color: var(--muted);
+}
+
+.local-storage-warning .link-button {
+  margin-top: 8px;
+  font-weight: 700;
 }
 
 .save-reassurance {

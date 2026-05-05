@@ -85,6 +85,7 @@ export const ExportCenter = ({ resume, renderedHtml, style, template, atsMode, s
       </section>
       <section className="copy-actions">
         <h3>Copy</h3>
+        <p className="export-backup-note">Before sending this resume out, consider downloading a backup. Your work is saved locally in this browser only.</p>
         <Button onClick={() => runExport("Markdown copied", () => writeClipboard(resume.markdown))}><Copy size={16} /> Copy Markdown</Button>
         <Button onClick={() => runExport("Plain text copied", () => writeClipboard(renderMarkdown(resume.markdown, true).plainText))}><Clipboard size={16} /> Copy plain text for forms</Button>
         <Button onClick={() => runExport("Backup", () => downloadBackup())}><Archive size={16} /> Download backup</Button>

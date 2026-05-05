@@ -302,7 +302,7 @@ export const RestoreBackupDialog = ({ draft, setDraft, onCancel, onSafetyBackup,
   <div className="modal-backdrop" role="dialog" aria-modal="true" aria-label="Restore backup">
     <section className="modal-card confirm-card">
       <h2>Restore from backup</h2>
-      <p>Review this backup file before restoring. Merge is safer because it keeps your current workspace and adds restored resumes as copies.</p>
+      <p>Review this backup file before restoring. Merge keeps the current workspace and adds restored resumes as copies. Replace removes the current resumes and app data saved in this browser, then loads the backup file.</p>
       <dl className="restore-preview">
         <div><dt>Resumes</dt><dd>{draft.preview.resumeCount}</dd></div>
         <div><dt>Jobs and applications</dt><dd>{draft.preview.jobCount}</dd></div>
@@ -314,7 +314,8 @@ export const RestoreBackupDialog = ({ draft, setDraft, onCancel, onSafetyBackup,
         <label><input type="radio" checked={draft.mode === "merge"} onChange={() => setDraft({ ...draft, mode: "merge" })} /> Merge with current workspace</label>
         <label><input type="radio" checked={draft.mode === "replace"} onChange={() => setDraft({ ...draft, mode: "replace" })} /> Replace current workspace</label>
       </fieldset>
-      {draft.mode === "replace" && <p className="status-note error">Replace will overwrite everything currently saved in this browser. Download the current workspace first if you may need it later.</p>}
+      {draft.mode === "merge" && <p className="status-note">Merge keeps your current local data and adds the backup contents as restored copies.</p>}
+      {draft.mode === "replace" && <p className="status-note error">Replace removes the current local workspace in this browser. Resume Studio does not have a cloud copy. Download the current workspace first if you may need it later.</p>}
       <div className="inline-actions">
         <Button onClick={onCancel}>Cancel</Button>
         <Button onClick={onSafetyBackup}><Download size={15} /> Download current workspace first</Button>
@@ -328,8 +329,7 @@ export const ClearLocalDataDialog = ({ onBackup, onCancel, onConfirm }: { onBack
   <div className="modal-backdrop" role="dialog" aria-modal="true" aria-label="Clear local data">
     <section className="modal-card confirm-card">
       <h2>Clear local data?</h2>
-      <p>Your resumes are saved in this browser. Clearing local data removes resumes, versions, jobs, and settings from this browser.</p>
-      <p>Download a backup file first if you want a copy you can restore later.</p>
+      <p>This will remove resumes and app data saved in this browser. Resume Studio does not have a cloud copy. Download a backup first if you want to keep your work.</p>
       <div className="inline-actions">
         <Button onClick={onCancel}>Cancel</Button>
         <Button onClick={onBackup}><Download size={15} /> Download backup first</Button>

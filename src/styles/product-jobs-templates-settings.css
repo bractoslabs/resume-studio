@@ -120,6 +120,13 @@
   gap: 10px;
 }
 
+.settings-local-note {
+  padding: 10px 12px;
+  border: 1px solid color-mix(in srgb, var(--accent-ui) 34%, var(--line));
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--accent-ui) 8%, var(--panel));
+}
+
 .settings-card .restore-preview {
   margin: 2px 0;
 }

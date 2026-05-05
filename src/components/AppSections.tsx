@@ -1,7 +1,7 @@
 export { Dashboard } from "./dashboard/Dashboard";
 export { EditorWorkspace } from "./editor/EditorWorkspace";
 export { ResumePreview } from "./preview/ResumePreview";
-export { BackupReminderBanner } from "./common/BackupReminderBanner";
+export { BackupReminderBanner, LocalStorageWarningBanner } from "./common/BackupReminderBanner";
 export { JobsPage } from "./jobs/JobsPage";
 export { HelpersPage } from "./career-tools/HelpersPage";
 export { LandingSections, PublicInfoPage } from "./public/PublicPages";

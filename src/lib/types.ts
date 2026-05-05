@@ -263,6 +263,7 @@ export interface StorageMeta {
   lastSavedAt?: string;
   lastBackupAt?: string;
   lastBackupReminderDismissedAt?: string;
+  localStorageWarningDismissedAt?: string;
   backupReminderDisabled?: boolean;
   significantChangesSinceBackup?: boolean;
   storageMode?: "indexeddb" | "localstorage";

@@ -63,6 +63,7 @@ import {
   PublicInfoPage,
   RenameResumeDialog,
   BackupReminderBanner,
+  LocalStorageWarningBanner,
   ResumePreview,
   RestoreBackupDialog,
   SaveVersionDialog,
@@ -473,6 +474,10 @@ function App() {
     if (meta?.lastBackupAt && meta.significantChangesSinceBackup && Date.now() - +new Date(meta.lastBackupAt) > 7 * 24 * 60 * 60 * 1000) return true;
     return false;
   })();
+  const shouldShowLocalStorageWarning = state.resumes.length > 0 && !state.storageMeta?.localStorageWarningDismissedAt;
+  const dismissLocalStorageWarning = () => {
+    setState((current) => ({ ...current, storageMeta: { ...current.storageMeta, localStorageWarningDismissedAt: nowIso() } }));
+  };
 
   const shell = (children: React.ReactNode) => (
     <main className="product-shell">
@@ -491,7 +496,16 @@ function App() {
         <Button className="feedback-rail-btn" onClick={() => setFeedbackOpen(true)}>Feedback</Button>
       </aside>
       <section className="product-main">
-        {shouldShowBackupReminder && (
+        {shouldShowLocalStorageWarning ? (
+          <LocalStorageWarningBanner
+            onBackup={() => {
+              downloadBackup();
+              dismissLocalStorageWarning();
+            }}
+            onDismiss={dismissLocalStorageWarning}
+            onLearnMore={() => setView("privacy")}
+          />
+        ) : shouldShowBackupReminder && (
           <BackupReminderBanner
             onBackup={() => downloadBackup()}
             onLater={() => setState((current) => ({ ...current, storageMeta: { ...current.storageMeta, lastBackupReminderDismissedAt: nowIso() } }))}
@@ -701,7 +715,7 @@ function App() {
       {deleteDraft && (
         <ConfirmDialog
           title="Delete resume?"
-          body={`Delete "${deleteDraft.title}" and its saved versions from this browser? Download a backup first if you may need it later.`}
+          body={`This deletes "${deleteDraft.title}" and its saved versions from this browser. Resume Studio does not have a cloud copy. Download a backup first if you may need it later.`}
           confirmLabel="Delete resume"
           onCancel={() => setDeleteDraft(null)}
           onConfirm={() => {
@@ -724,7 +738,7 @@ function App() {
       {restoreVersionDraft && (
         <ConfirmDialog
           title="Restore version?"
-          body={`Restore "${restoreVersionDraft.name}"? Your current resume will be saved as a safety snapshot first.`}
+          body={`Restore "${restoreVersionDraft.name}" in this browser? Your current resume will be saved as a local safety snapshot first, but it is still smart to download a backup before changing important work.`}
           confirmLabel="Restore version"
           onCancel={() => setRestoreVersionDraft(null)}
           onConfirm={() => {

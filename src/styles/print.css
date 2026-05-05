@@ -44,6 +44,7 @@
   .workflow-tabs,
   .toast,
   .backup-reminder,
+  .local-storage-warning,
   .drawer-backdrop,
   .modal-backdrop {
     display: none !important;

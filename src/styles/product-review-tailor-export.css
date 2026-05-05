@@ -516,6 +516,16 @@
   align-items: center;
 }
 
+.copy-actions h3,
+.export-backup-note {
+  grid-column: 1 / -1;
+}
+
+.export-backup-note {
+  margin: 0;
+  color: var(--muted);
+}
+
 .timeline {
   display: grid;
   gap: 12px;
