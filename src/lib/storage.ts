@@ -50,7 +50,15 @@ const normalizeState = (state: AppState): AppState => {
   }
   const repaired = state.resumes
     .filter((resume) => !isBundledExample(resume))
-    .map((resume) => ({ ...resume, ownerType: "user" as const, tags: resume.tags ?? [], privateNotes: resume.privateNotes ?? "", versions: resume.versions ?? [], jobTargets: resume.jobTargets ?? [], applications: resume.applications ?? [] }));
+    .map((resume) => ({
+      ...resume,
+      ownerType: "user" as const,
+      tags: resume.tags ?? [],
+      privateNotes: resume.privateNotes ?? "",
+      versions: resume.versions ?? [],
+      jobTargets: resume.jobTargets ?? [],
+      applications: resume.applications ?? [],
+    }));
   if (!repaired.length) return createInitialState();
   return {
     ...state,
@@ -191,7 +199,11 @@ export const saveState = async (state: AppState) => {
       } catch {
         // Nothing else to do; caller will show the error.
       }
-      return { ok: false as const, state: fallback, error: `${message} Browser storage may be full. Download a backup file before closing.` };
+      return {
+        ok: false as const,
+        state: fallback,
+        error: `${message} Browser storage may be full. Download a backup file before closing.`,
+      };
     }
   }
 };
@@ -259,17 +271,45 @@ export const validateBackup = (json: string): RestorePreview => {
           : Array.isArray(parsed?.resumes)
             ? { appName: "Resume Studio", schemaVersion: 1, exportedAt: nowIso(), data: parsed as AppState }
             : Array.isArray(parsed)
-              ? { appName: "Resume Studio", schemaVersion: 1, exportedAt: nowIso(), data: { ...createInitialState(), resumes: parsed as ResumeDocument[], activeResumeId: parsed[0]?.id ?? "" } }
+              ? {
+                  appName: "Resume Studio",
+                  schemaVersion: 1,
+                  exportedAt: nowIso(),
+                  data: { ...createInitialState(), resumes: parsed as ResumeDocument[], activeResumeId: parsed[0]?.id ?? "" },
+                }
               : parsed;
     if ((backup.appName !== "Resume Studio" && backup.appName !== "Resume Forge") || !backup.data || !Array.isArray(backup.data.resumes)) {
-      return { valid: false, resumeCount: 0, jobCount: 0, versionCount: 0, error: "We couldn't recognize this as a Resume Studio backup file." };
+      return {
+        valid: false,
+        resumeCount: 0,
+        jobCount: 0,
+        versionCount: 0,
+        error: "We couldn't recognize this as a Resume Studio backup file.",
+      };
     }
     const data = normalizeState(backup.data);
     const versionCount = data.resumes.reduce((count, resume) => count + (resume.versions?.length ?? 0), 0);
-    const jobCount = data.resumes.reduce((count, resume) => count + (resume.jobTargets?.length ?? 0) + (resume.applications?.length ?? 0), 0);
-    return { valid: true, backup: { ...backup, data }, resumeCount: data.resumes.length, jobCount, versionCount, exportedAt: backup.exportedAt, schemaVersion: backup.schemaVersion };
+    const jobCount = data.resumes.reduce(
+      (count, resume) => count + (resume.jobTargets?.length ?? 0) + (resume.applications?.length ?? 0),
+      0,
+    );
+    return {
+      valid: true,
+      backup: { ...backup, data },
+      resumeCount: data.resumes.length,
+      jobCount,
+      versionCount,
+      exportedAt: backup.exportedAt,
+      schemaVersion: backup.schemaVersion,
+    };
   } catch {
-    return { valid: false, resumeCount: 0, jobCount: 0, versionCount: 0, error: "We couldn't restore this backup file. Make sure it came from Resume Studio and has not been edited." };
+    return {
+      valid: false,
+      resumeCount: 0,
+      jobCount: 0,
+      versionCount: 0,
+      error: "We couldn't restore this backup file. Make sure it came from Resume Studio and has not been edited.",
+    };
   }
 };
 
@@ -289,7 +329,11 @@ const cloneResumeForMerge = (resume: ResumeDocument, existingTitles: Set<string>
 export const mergeBackupState = (current: AppState, incoming: AppState): AppState => {
   const existingIds = new Set(current.resumes.map((resume) => resume.id));
   const existingTitles = new Set(current.resumes.map((resume) => resume.title));
-  const restored = incoming.resumes.map((resume) => existingIds.has(resume.id) ? cloneResumeForMerge(resume, existingTitles) : cloneResumeForMerge({ ...resume, id: uid("resume") }, existingTitles));
+  const restored = incoming.resumes.map((resume) =>
+    existingIds.has(resume.id)
+      ? cloneResumeForMerge(resume, existingTitles)
+      : cloneResumeForMerge({ ...resume, id: uid("resume") }, existingTitles),
+  );
   return normalizeState({
     ...current,
     resumes: [...current.resumes, ...restored],
@@ -304,7 +348,12 @@ export const restoreBackup = (json: string, current?: AppState, mode: "merge" | 
   return mode === "merge" && current ? mergeBackupState(current, preview.backup.data) : normalizeState(preview.backup.data);
 };
 
-export const createSnapshotVersion = (markdown: string, name: string, notes = "", kind: ResumeVersion["kind"] = "autosave"): ResumeVersion => ({
+export const createSnapshotVersion = (
+  markdown: string,
+  name: string,
+  notes = "",
+  kind: ResumeVersion["kind"] = "autosave",
+): ResumeVersion => ({
   id: uid("version"),
   name,
   markdown,

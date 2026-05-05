@@ -7,6 +7,8 @@ Use this checklist before each public Resume Studio release.
 - [ ] Package version matches the intended release.
 - [ ] CHANGELOG and release notes are updated.
 - [ ] `npm test` passes.
+- [ ] `npm run lint` passes.
+- [ ] `npm run format:check` passes.
 - [ ] `npm run build` passes.
 - [ ] CI passes on GitHub.
 - [ ] README links checked.
@@ -38,6 +40,7 @@ Use this checklist before each public Resume Studio release.
 - [ ] Import JSON.
 - [ ] Import YAML.
 - [ ] Scanned or image-only PDF gives a helpful limitation message.
+- [ ] Import copy says best results are Markdown, TXT, and DOCX.
 - [ ] Import errors do not crash the app.
 
 ## Review Flows
@@ -87,6 +90,7 @@ Use this checklist before each public Resume Studio release.
 
 - [ ] Landing page.
 - [ ] Editor layout does not break.
+- [ ] Editor mobile note is visible and not noisy.
 - [ ] Export guidance readable.
 - [ ] Modals usable.
 

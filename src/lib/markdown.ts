@@ -52,14 +52,20 @@ const techTerms: Record<string, string> = {
 };
 
 export const normalizeTechTerms = (text: string) =>
-  text.replace(/\b(github|javascript|typescript|postgres|postgresql|nodejs|node\.js|reactjs|kubernetes|aws|azure|gcp|cicd)\b/gi, (match) => {
-    const key = match.toLowerCase();
-    return techTerms[key] ?? match;
-  });
+  text.replace(
+    /\b(github|javascript|typescript|postgres|postgresql|nodejs|node\.js|reactjs|kubernetes|aws|azure|gcp|cicd)\b/gi,
+    (match) => {
+      const key = match.toLowerCase();
+      return techTerms[key] ?? match;
+    },
+  );
 
 const stripHtml = (html: string) => {
   if (typeof document === "undefined") {
-    return html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+    return html
+      .replace(/<[^>]*>/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
   }
   const node = document.createElement("div");
   node.innerHTML = html;
@@ -81,7 +87,10 @@ const sanitizeHtml = (html: string) => {
     .replace(/<svg[\s\S]*?>/gi, "")
     .replace(/&lt;script[\s\S]*?&lt;\/script&gt;/gi, "")
     .replace(/\son\w+=(?:"[^"]*"|'[^']*'|[^\s>]+)/gi, "")
-    .replace(/\s(?:href|src)=(?:"(?:javascript|data|vbscript):[^"]*"|'(?:javascript|data|vbscript):[^']*'|(?:javascript|data|vbscript):[^\s>]+)/gi, "")
+    .replace(
+      /\s(?:href|src)=(?:"(?:javascript|data|vbscript):[^"]*"|'(?:javascript|data|vbscript):[^']*'|(?:javascript|data|vbscript):[^\s>]+)/gi,
+      "",
+    )
     .replace(/javascript:/gi, "");
 };
 
@@ -97,9 +106,7 @@ const preprocessDirectives = (source: string, warnings: RenderWarning[], atsMode
   markdown = markdown.replace(/\{\{atsOnly\}\}([\s\S]*?)\{\{\/atsOnly\}\}/gi, (_all, content) =>
     atsMode ? content : `<span class="ats-only">${content}</span>`,
   );
-  markdown = markdown.replace(/\{\{hideForAts\}\}([\s\S]*?)\{\{\/hideForAts\}\}/gi, (_all, content) =>
-    atsMode ? "" : content,
-  );
+  markdown = markdown.replace(/\{\{hideForAts\}\}([\s\S]*?)\{\{\/hideForAts\}\}/gi, (_all, content) => (atsMode ? "" : content));
   markdown = markdown.replace(/\[\[ref:([^\]]+)\]\]/g, (_all, ref) => `(${ref})`);
   if (/\|.+\|/.test(markdown)) {
     warnings.push({
@@ -117,17 +124,23 @@ export const parseFrontmatter = (markdown: string): FrontmatterParseResult => {
   const warnings: RenderWarning[] = [];
   try {
     const match = markdown.match(/^\s*---\n([\s\S]*?)\n---\n?/);
-    const data = match ? YAML.parse(match[1]) ?? {} : {};
+    const data = match ? (YAML.parse(match[1]) ?? {}) : {};
     const content = match ? markdown.slice(match[0].length).trimStart() : markdown;
     const result = frontmatterSchema.safeParse(data);
     if (!match) {
-      warnings.push({ severity: "info", message: "No YAML frontmatter found. Add contact fields for better exports and ATS review.", location: "frontmatter" });
+      warnings.push({
+        severity: "info",
+        message: "No YAML frontmatter found. Add contact fields for better exports and ATS review.",
+        location: "frontmatter",
+      });
     }
     if (!result.success) {
       warnings.push({ severity: "warning", message: "Frontmatter has invalid fields; safe defaults were used.", location: "frontmatter" });
     }
     return {
-      frontmatter: result.success ? { ...defaultFrontmatter, ...result.data } : { ...defaultFrontmatter, name: String(data.name ?? "Untitled Candidate") },
+      frontmatter: result.success
+        ? { ...defaultFrontmatter, ...result.data }
+        : { ...defaultFrontmatter, name: String(data.name ?? "Untitled Candidate") },
       content,
       warnings,
       hasFrontmatter: Boolean(match),
@@ -160,8 +173,12 @@ export const renderMarkdown = (markdown: string, atsMode = false): RenderResult 
     parsed.frontmatter.email ? `[${parsed.frontmatter.email}](mailto:${parsed.frontmatter.email})` : "",
     parsed.frontmatter.phone ?? "",
     parsed.frontmatter.location ?? "",
-    ...(parsed.frontmatter.links ?? []).filter((link) => /^(https?:|mailto:|tel:)/i.test(link)).map((link) => `[${link.replace(/^https?:\/\//, "")}](${link})`),
-  ].filter(Boolean).join(" | ");
+    ...(parsed.frontmatter.links ?? [])
+      .filter((link) => /^(https?:|mailto:|tel:)/i.test(link))
+      .map((link) => `[${link.replace(/^https?:\/\//, "")}](${link})`),
+  ]
+    .filter(Boolean)
+    .join(" | ");
   const headerMarkdown = parsed.hasFrontmatter
     ? `# ${parsed.frontmatter.name}\n\n${parsed.frontmatter.title ? `**${parsed.frontmatter.title}**\n\n` : ""}${contactLine}\n\n`
     : "";
@@ -196,9 +213,7 @@ export const parseStructuredResume = (markdown: string): StructuredResume => {
   const { frontmatter } = parseFrontmatter(markdown);
   const sections = sectionBlocks(markdown);
   const bulletsFrom = (name: string) =>
-    (sections[name] ?? [])
-      .filter((line) => /^[-*]\s+/.test(line.trim()))
-      .map((line) => line.replace(/^[-*]\s+/, "").trim());
+    (sections[name] ?? []).filter((line) => /^[-*]\s+/.test(line.trim())).map((line) => line.replace(/^[-*]\s+/, "").trim());
   const experienceLines = sections.experience ?? sections["professional experience"] ?? [];
   const experience = experienceLines
     .join("\n")
@@ -225,7 +240,12 @@ export const parseStructuredResume = (markdown: string): StructuredResume => {
     summary: (sections.summary ?? []).join("\n").trim(),
     experience,
     education: bulletsFrom("education").map((bullet) => ({ id: uid("edu"), title: bullet, bullets: [] })),
-    skills: bulletsFrom("skills").flatMap((line) => line.split(/,|•/).map((part) => part.trim()).filter(Boolean)),
+    skills: bulletsFrom("skills").flatMap((line) =>
+      line
+        .split(/,|•/)
+        .map((part) => part.trim())
+        .filter(Boolean),
+    ),
     projects: bulletsFrom("projects").map((bullet) => ({ id: uid("project"), title: bullet, bullets: [] })),
     certifications: bulletsFrom("certifications"),
     awards: bulletsFrom("awards"),
@@ -260,7 +280,11 @@ export const structuredToMarkdown = (structured: StructuredResume, previousMarkd
     ...structured.education.map((entry) => `- ${entry.title}${entry.subtitle ? `, ${entry.subtitle}` : ""}`),
     "",
     "## Projects",
-    ...structured.projects.flatMap((entry) => [entry.title ? `### ${entry.title}` : "", ...entry.bullets.map((bullet) => `- ${bullet}`), ""]),
+    ...structured.projects.flatMap((entry) => [
+      entry.title ? `### ${entry.title}` : "",
+      ...entry.bullets.map((bullet) => `- ${bullet}`),
+      "",
+    ]),
     "## Certifications",
     ...structured.certifications.map((item) => `- ${item}`),
     "",
@@ -273,5 +297,10 @@ export const structuredToMarkdown = (structured: StructuredResume, previousMarkd
     "## Languages",
     ...structured.languages.map((item) => `- ${item}`),
   ];
-  return lines.filter((line, index) => line !== "" || lines[index - 1] !== "").join("\n").trim() + "\n";
+  return (
+    lines
+      .filter((line, index) => line !== "" || lines[index - 1] !== "")
+      .join("\n")
+      .trim() + "\n"
+  );
 };

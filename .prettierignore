@@ -1,0 +1,11 @@
+dist
+coverage
+node_modules
+test-results
+playwright-report
+.tmp-demo-video
+package-lock.json
+public/**/*.png
+public/**/*.ico
+public/**/*.webm
+public/**/*.gif

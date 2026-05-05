@@ -13,7 +13,9 @@ Resume Studio is a free, private, Markdown-first resume builder from Bractos Lab
 - Plainspoken Terms and Security pages
 - Known limitations and no-guarantee guidance for review, keyword, and export tools
 - Markdown/HTML sanitization coverage and security model docs
-- Dependabot and dependency review automation
+- Dependabot configuration
+- ESLint and Prettier contributor tooling
+- Browser support, accessibility, roadmap, and starter issue docs
 - Open-source release under the MIT License
 
 ## Public beta notes

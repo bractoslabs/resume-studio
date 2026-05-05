@@ -2,16 +2,39 @@
   "name": "resume-studio",
   "private": true,
   "version": "0.2.0",
+  "description": "Free, private, Markdown-first resume builder with live preview, local storage, Resume Review, Keyword & Fit Check, and exports.",
+  "license": "MIT",
+  "author": "Bractos Labs",
+  "homepage": "https://resume.bractos.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bractoslabs/resume-studio.git"
+  },
+  "bugs": {
+    "url": "https://github.com/bractoslabs/resume-studio/issues"
+  },
+  "keywords": [
+    "resume",
+    "resume-builder",
+    "markdown",
+    "job-search",
+    "career-tools",
+    "local-first",
+    "react",
+    "vite"
+  ],
+  "packageManager": "npm@11.12.1",
   "type": "module",
   "scripts": {
     "dev": "vite --host 127.0.0.1",
     "build": "tsc -b && vite build",
+    "lint": "eslint .",
+    "format": "prettier . --write",
+    "format:check": "prettier . --check",
     "preview": "vite preview --host 127.0.0.1",
-    "test": "vitest run",
-    "screenshots": "node scripts/generate-screenshots.mjs"
+    "test": "vitest run"
   },
   "dependencies": {
-    "@vitejs/plugin-react": "^5.0.4",
     "docx": "^9.1.1",
     "dompurify": "^3.1.7",
     "lucide-react": "^0.468.0",
@@ -20,18 +43,24 @@
     "pdfjs-dist": "^5.7.284",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
-    "typescript": "^5.9.3",
-    "vite": "^7.1.11",
     "yaml": "^2.5.1",
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@types/dompurify": "^3.0.5",
+    "@eslint/js": "^10.0.1",
     "@types/markdown-it": "^14.1.2",
     "@types/node": "^24.0.0",
     "@types/react": "^19.1.10",
     "@types/react-dom": "^19.1.7",
-    "playwright": "^1.59.1",
+    "@vitejs/plugin-react": "^5.0.4",
+    "eslint": "^10.3.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "eslint-plugin-react-refresh": "^0.5.2",
+    "prettier": "^3.8.3",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.59.2",
+    "vite": "^7.1.11",
     "vitest": "^3.2.4"
   }
 }

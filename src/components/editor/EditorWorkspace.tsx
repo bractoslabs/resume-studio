@@ -1,6 +1,15 @@
 import React from "react";
 import { Check, Code, Download, FileDown, History, Palette, Plus, Printer, Save, ShieldCheck, Sparkles, StickyNote, X } from "lucide-react";
-import type { AppState, PageSize, ResumeDocument, ResumeFrontmatter, ResumeTemplate, ResumeVersion, SimpleEntry, StructuredResume } from "../../lib/types";
+import type {
+  AppState,
+  PageSize,
+  ResumeDocument,
+  ResumeFrontmatter,
+  ResumeTemplate,
+  ResumeVersion,
+  SimpleEntry,
+  StructuredResume,
+} from "../../lib/types";
 import { analyzeAts } from "../../lib/ats";
 import { defaultResumeMarkdown } from "../../lib/defaultDraft";
 import { compareResumeToJob } from "../../lib/jobMatcher";
@@ -188,27 +197,54 @@ export const EditorWorkspace = (props: EditorWorkspaceProps) => {
 
   return (
     <div className="editor-workspace">
+      <p className="mobile-editor-note">Resume editing works best on a desktop or laptop. You can review and make light edits on mobile.</p>
       <header className="editor-topbar">
         <div className="document-switcher">
-          <button className="link-button" onClick={() => setView("dashboard")}>All resumes</button>
+          <button className="link-button" onClick={() => setView("dashboard")}>
+            All resumes
+          </button>
           <select value={resume.id} onChange={(event) => selectResume(event.target.value)} aria-label="Switch resume">
-            {resumes.map((item) => <option key={item.id} value={item.id}>{item.title}</option>)}
+            {resumes.map((item) => (
+              <option key={item.id} value={item.id}>
+                {item.title}
+              </option>
+            ))}
           </select>
         </div>
         <div className="document-status">
           <strong>{resume.title}</strong>
-          <span className={`save-status ${saveFailed ? "failed" : ""}`} title="Resume Studio saves your work in this browser. If you clear site data or switch devices, your work may not come with you. Download a backup file for extra safety."><Save size={14} /> {saveStateText || (lastSavedAt ? `Saved locally at ${timeOnly(lastSavedAt)}` : "Saved locally")}</span>
-          {state.storageMeta?.significantChangesSinceBackup && <button className="backup-chip" onClick={downloadBackup}>Backup recommended</button>}
+          <span
+            className={`save-status ${saveFailed ? "failed" : ""}`}
+            title="Resume Studio saves your work in this browser. If you clear site data or switch devices, your work may not come with you. Download a backup file for extra safety."
+          >
+            <Save size={14} /> {saveStateText || (lastSavedAt ? `Saved locally at ${timeOnly(lastSavedAt)}` : "Saved locally")}
+          </span>
+          {state.storageMeta?.significantChangesSinceBackup && (
+            <button className="backup-chip" onClick={downloadBackup}>
+              Backup recommended
+            </button>
+          )}
           <span className={`score-chip ${scoreTone(ats.scores.overall)}`}>Review {ats.scores.overall}</span>
-          <span className="meta-chip">{activePageCount} page{activePageCount > 1 ? "s" : ""}</span>
+          <span className="meta-chip">
+            {activePageCount} page{activePageCount > 1 ? "s" : ""}
+          </span>
         </div>
         <div className="page-actions">
-          <Button onClick={() => setDesignOpen(true)}><Palette size={16} /> Design</Button>
-          <Button onClick={() => {
-            recordExport("Print / Save as PDF");
-            printPdf(resume.pageSize);
-          }} title="Opens your browser's print dialog. Choose Save as PDF and check page breaks before sending."><Printer size={16} /> Print / Save as PDF</Button>
-          <Button className="primary" aria-label="Open export center" onClick={() => setTab("export")}><Download size={16} /> Export</Button>
+          <Button onClick={() => setDesignOpen(true)}>
+            <Palette size={16} /> Design
+          </Button>
+          <Button
+            onClick={() => {
+              recordExport("Print / Save as PDF");
+              printPdf(resume.pageSize);
+            }}
+            title="Opens your browser's print dialog. Choose Save as PDF and check page breaks before sending."
+          >
+            <Printer size={16} /> Print / Save as PDF
+          </Button>
+          <Button className="primary" aria-label="Open export center" onClick={() => setTab("export")}>
+            <Download size={16} /> Export
+          </Button>
         </div>
       </header>
 
@@ -275,7 +311,16 @@ export const EditorWorkspace = (props: EditorWorkspaceProps) => {
                 setTimeout(() => editorRef.current?.focus(), 0);
               }}
               ignoreIssue={(id: string) => setIgnoredIssues([...ignoredIssues, id])}
-              onReviewed={() => updateResume(resume.id, { reviewMeta: { openedAt: resume.reviewMeta?.openedAt ?? nowIso(), lastReviewedAt: nowIso(), currentMustFixCount: review.groups.mustFix.length, noMustFixIssues: review.groups.mustFix.length === 0 } })}
+              onReviewed={() =>
+                updateResume(resume.id, {
+                  reviewMeta: {
+                    openedAt: resume.reviewMeta?.openedAt ?? nowIso(),
+                    lastReviewedAt: nowIso(),
+                    currentMustFixCount: review.groups.mustFix.length,
+                    noMustFixIssues: review.groups.mustFix.length === 0,
+                  },
+                })
+              }
             />
           )}
           {tab === "tailor" && (
@@ -285,8 +330,12 @@ export const EditorWorkspace = (props: EditorWorkspaceProps) => {
               analyzed={jobAnalyzed}
               setAnalyzed={setJobAnalyzed}
               report={jobAnalyzed ? review.keywordMatch : null}
-              onCreateVersion={(decisions: Record<string, "important" | "not-relevant" | "have" | "do-not-have">) => saveJobTarget(true, decisions)}
-              onSaveTarget={(decisions: Record<string, "important" | "not-relevant" | "have" | "do-not-have">) => saveJobTarget(false, decisions)}
+              onCreateVersion={(decisions: Record<string, "important" | "not-relevant" | "have" | "do-not-have">) =>
+                saveJobTarget(true, decisions)
+              }
+              onSaveTarget={(decisions: Record<string, "important" | "not-relevant" | "have" | "do-not-have">) =>
+                saveJobTarget(false, decisions)
+              }
               resume={resume}
               updateResume={updateResume}
             />
@@ -308,12 +357,7 @@ export const EditorWorkspace = (props: EditorWorkspaceProps) => {
               setMarkdown={setMarkdown}
             />
           )}
-          {tab === "notes" && (
-            <NotesPanel
-              resume={resume}
-              updateResume={updateResume}
-            />
-          )}
+          {tab === "notes" && <NotesPanel resume={resume} updateResume={updateResume} />}
           {tab === "history" && (
             <HistoryPanel
               resume={resume}
@@ -323,7 +367,11 @@ export const EditorWorkspace = (props: EditorWorkspaceProps) => {
               captureVersion={captureVersion}
               openSaveVersion={openSaveVersion}
               restore={openRestoreVersion}
-              duplicate={(version: ResumeVersion) => updateResume(resume.id, { versions: [{ ...version, id: uid("version"), name: `${version.name} copy`, createdAt: nowIso() }, ...resume.versions] })}
+              duplicate={(version: ResumeVersion) =>
+                updateResume(resume.id, {
+                  versions: [{ ...version, id: uid("version"), name: `${version.name} copy`, createdAt: nowIso() }, ...resume.versions],
+                })
+              }
             />
           )}
         </section>
@@ -339,7 +387,14 @@ export const EditorWorkspace = (props: EditorWorkspaceProps) => {
             warnings={rendered.warnings.length + reviewIssues.filter((issue) => issue.severity !== "info").length}
             pageCount={activePageCount}
           />
-          <ResumePreview renderedHtml={rendered.html} pageStyle={pageStyle} templateId={template.id} pageSize={resume.pageSize} zoom={zoom} warnings={rendered.warnings.length + reviewIssues.filter((issue) => issue.severity !== "info").length} />
+          <ResumePreview
+            renderedHtml={rendered.html}
+            pageStyle={pageStyle}
+            templateId={template.id}
+            pageSize={resume.pageSize}
+            zoom={zoom}
+            warnings={rendered.warnings.length + reviewIssues.filter((issue) => issue.severity !== "info").length}
+          />
         </aside>
       </section>
 
@@ -379,12 +434,28 @@ const NotesPanel = ({ resume, updateResume }: { resume: ResumeDocument; updateRe
           ].join("\n")}
         />
       </label>
-      <p className="muted">Private notes are included only in full backups and Resume Studio JSON exports so you can restore your workspace. They are excluded from PDF, DOCX, Markdown, HTML, plain text, JSON Resume, and YAML exports.</p>
+      <p className="muted">
+        Private notes are included only in full backups and Resume Studio JSON exports so you can restore your workspace. They are excluded
+        from PDF, DOCX, Markdown, HTML, plain text, JSON Resume, and YAML exports.
+      </p>
     </section>
   </div>
 );
 
-const EditPanel = ({ resume, checklist, editMode, setEditMode, onChecklistSelect, structured, setStructured, setMarkdown, updateResume, insertSnippet, applyStructured, editorRef }: EditPanelProps) => (
+const EditPanel = ({
+  resume,
+  checklist,
+  editMode,
+  setEditMode,
+  onChecklistSelect,
+  structured,
+  setStructured,
+  setMarkdown,
+  updateResume,
+  insertSnippet,
+  applyStructured,
+  editorRef,
+}: EditPanelProps) => (
   <div className="workflow-panel edit-panel">
     <div className="panel-heading">
       <div>
@@ -392,8 +463,12 @@ const EditPanel = ({ resume, checklist, editMode, setEditMode, onChecklistSelect
         <p>Markdown stays the source of truth. Use guided mode when you want a structured form.</p>
       </div>
       <div className="segmented" role="tablist" aria-label="Edit mode">
-        <button className={editMode === "markdown" ? "active" : ""} onClick={() => setEditMode("markdown")}>Markdown</button>
-        <button className={editMode === "guided" ? "active" : ""} onClick={() => setEditMode("guided")}>Guided</button>
+        <button className={editMode === "markdown" ? "active" : ""} onClick={() => setEditMode("markdown")}>
+          Markdown
+        </button>
+        <button className={editMode === "guided" ? "active" : ""} onClick={() => setEditMode("guided")}>
+          Guided
+        </button>
       </div>
     </div>
     <ChecklistCard checklist={checklist} onSelect={onChecklistSelect} />
@@ -404,7 +479,11 @@ const EditPanel = ({ resume, checklist, editMode, setEditMode, onChecklistSelect
     {editMode === "markdown" ? (
       <>
         <div className="snippet-bar refined-snippets">
-          {snippets.map((snippet) => <button key={snippet.command} onClick={() => insertSnippet(snippet.text)}>{snippet.command}</button>)}
+          {snippets.map((snippet) => (
+            <button key={snippet.command} onClick={() => insertSnippet(snippet.text)}>
+              {snippet.command}
+            </button>
+          ))}
         </div>
         <textarea
           ref={editorRef}
@@ -426,21 +505,38 @@ const PreviewToolbar = ({ zoom, setZoom, atsMode, setAtsMode, pageSize, applyDes
   <div className="preview-toolbar">
     <div>
       <strong>{pageSize.toUpperCase()}</strong>
-      <span>{pageCount} page{pageCount > 1 ? "s" : ""}</span>
-      <span>{warnings} review item{warnings === 1 ? "" : "s"}</span>
+      <span>
+        {pageCount} page{pageCount > 1 ? "s" : ""}
+      </span>
+      <span>
+        {warnings} review item{warnings === 1 ? "" : "s"}
+      </span>
     </div>
     <div className="preview-controls">
-      <button onClick={() => setZoom((z: number) => Math.max(0.55, z - 0.08))}>-</button>
+      <button onClick={() => setZoom((z: number) => Math.max(0.55, z - 0.08))} aria-label="Zoom out">
+        -
+      </button>
       <button onClick={() => setZoom(0.92)}>Fit width</button>
-      <button onClick={() => setZoom((z: number) => Math.min(1.25, z + 0.08))}>+</button>
-      <select value={pageSize} onChange={(event) => applyDesignPatch({ pageSize: event.target.value as PageSize })} aria-label="Preview page size"><option value="letter">Letter</option><option value="a4">A4</option></select>
-      <label><input type="checkbox" checked={atsMode} onChange={(event) => setAtsMode(event.target.checked)} /> ATS-safe</label>
+      <button onClick={() => setZoom((z: number) => Math.min(1.25, z + 0.08))} aria-label="Zoom in">
+        +
+      </button>
+      <select
+        value={pageSize}
+        onChange={(event) => applyDesignPatch({ pageSize: event.target.value as PageSize })}
+        aria-label="Preview page size"
+      >
+        <option value="letter">Letter</option>
+        <option value="a4">A4</option>
+      </select>
+      <label>
+        <input type="checkbox" checked={atsMode} onChange={(event) => setAtsMode(event.target.checked)} /> ATS-safe
+      </label>
       <span>{Math.round(zoom * 100)}%</span>
     </div>
   </div>
 );
 
-const templateFontPx = (item: ResumeTemplate) => Math.round(item.fontSize * 96 / 72 * 10) / 10;
+const templateFontPx = (item: ResumeTemplate) => Math.round(((item.fontSize * 96) / 72) * 10) / 10;
 
 const DesignDrawer = ({ activeResume, template, frontmatter, applyDesignPatch, onClose }: DesignDrawerProps) => {
   const accentColor = frontmatter.accentColor ?? template.accentColor;
@@ -464,8 +560,13 @@ const DesignDrawer = ({ activeResume, template, frontmatter, applyDesignPatch, o
     <div className="drawer-backdrop" role="dialog" aria-modal="true" aria-label="Design controls">
       <aside className="design-drawer">
         <header>
-          <div><h2>Design</h2><p>Choose a template, then tune the visual details for export.</p></div>
-          <button className="icon-btn" onClick={onClose} aria-label="Close design drawer"><X size={18} /></button>
+          <div>
+            <h2>Design</h2>
+            <p>Choose a template, then tune the visual details for export.</p>
+          </div>
+          <button className="icon-btn" onClick={onClose} aria-label="Close design drawer">
+            <X size={18} />
+          </button>
         </header>
         <div className="design-controls" aria-label="Resume design controls">
           <section className="design-group template-picker">
@@ -476,7 +577,11 @@ const DesignDrawer = ({ activeResume, template, frontmatter, applyDesignPatch, o
             <label>
               Resume template
               <select value={template.id} onChange={(event) => applyTemplatePreset(event.target.value)}>
-                {templates.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}
+                {templates.map((item) => (
+                  <option key={item.id} value={item.id}>
+                    {item.name}
+                  </option>
+                ))}
               </select>
             </label>
             <div className="template-preview-card">
@@ -489,30 +594,67 @@ const DesignDrawer = ({ activeResume, template, frontmatter, applyDesignPatch, o
           </section>
 
           <section className="design-group">
-            <div className="design-section-heading"><h3>Color</h3></div>
+            <div className="design-section-heading">
+              <h3>Color</h3>
+            </div>
             <div className="swatches">
               {themeColors.map((color) => (
-                <button key={color} className={accentColor === color ? "selected" : ""} style={{ "--swatch": color } as React.CSSProperties} aria-label={`Use ${color}`} onClick={() => applyDesignPatch({ accentColor: color })} />
+                <button
+                  key={color}
+                  className={accentColor === color ? "selected" : ""}
+                  style={{ "--swatch": color } as React.CSSProperties}
+                  aria-label={`Use ${color}`}
+                  onClick={() => applyDesignPatch({ accentColor: color })}
+                />
               ))}
             </div>
             <label className="color-input">
               <input type="color" value={accentColor} onChange={(event) => applyDesignPatch({ accentColor: event.target.value })} />
-              <input value={accentColor} onChange={(event) => applyDesignPatch({ accentColor: event.target.value })} aria-label="Accent color hex" />
+              <input
+                value={accentColor}
+                onChange={(event) => applyDesignPatch({ accentColor: event.target.value })}
+                aria-label="Accent color hex"
+              />
             </label>
           </section>
 
           <section className="design-group">
-            <div className="design-section-heading"><h3>Typography</h3></div>
+            <div className="design-section-heading">
+              <h3>Typography</h3>
+            </div>
             <label>
               Font
-              <select value={selectedFont} onChange={(event) => applyDesignPatch({ font: event.target.value })}>{englishFonts.map((font) => <option key={font} value={font}>{font}</option>)}</select>
+              <select value={selectedFont} onChange={(event) => applyDesignPatch({ font: event.target.value })}>
+                {englishFonts.map((font) => (
+                  <option key={font} value={font}>
+                    {font}
+                  </option>
+                ))}
+              </select>
             </label>
-            <RangeControl label="Font size" min={10} max={20} step={0.5} value={frontmatter.fontSizePx ?? templateFontPx(template)} suffix="px" onChange={(value: number) => applyDesignPatch({ fontSizePx: value })} />
-            <RangeControl label="Line spacing" min={1} max={1.8} step={0.05} value={frontmatter.lineHeight ?? template.lineHeight} onChange={(value: number) => applyDesignPatch({ lineHeight: value })} />
+            <RangeControl
+              label="Font size"
+              min={10}
+              max={20}
+              step={0.5}
+              value={frontmatter.fontSizePx ?? templateFontPx(template)}
+              suffix="px"
+              onChange={(value: number) => applyDesignPatch({ fontSizePx: value })}
+            />
+            <RangeControl
+              label="Line spacing"
+              min={1}
+              max={1.8}
+              step={0.05}
+              value={frontmatter.lineHeight ?? template.lineHeight}
+              onChange={(value: number) => applyDesignPatch({ lineHeight: value })}
+            />
           </section>
 
           <section className="design-group">
-            <div className="design-section-heading"><h3>Page and spacing</h3></div>
+            <div className="design-section-heading">
+              <h3>Page and spacing</h3>
+            </div>
             <label>
               Page size
               <select value={activeResume.pageSize} onChange={(event) => applyDesignPatch({ pageSize: event.target.value as PageSize })}>
@@ -520,9 +662,30 @@ const DesignDrawer = ({ activeResume, template, frontmatter, applyDesignPatch, o
                 <option value="a4">A4</option>
               </select>
             </label>
-            <RangeControl label="Top and bottom margin" min={32} max={96} value={frontmatter.marginVerticalPx ?? Math.round(template.margin * 96)} suffix="px" onChange={(value: number) => applyDesignPatch({ marginVerticalPx: value })} />
-            <RangeControl label="Left and right margin" min={32} max={96} value={frontmatter.marginHorizontalPx ?? Math.round(template.margin * 96)} suffix="px" onChange={(value: number) => applyDesignPatch({ marginHorizontalPx: value })} />
-            <RangeControl label="Paragraph spacing" min={0} max={18} value={frontmatter.paragraphSpacingPx ?? 5} suffix="px" onChange={(value: number) => applyDesignPatch({ paragraphSpacingPx: value })} />
+            <RangeControl
+              label="Top and bottom margin"
+              min={32}
+              max={96}
+              value={frontmatter.marginVerticalPx ?? Math.round(template.margin * 96)}
+              suffix="px"
+              onChange={(value: number) => applyDesignPatch({ marginVerticalPx: value })}
+            />
+            <RangeControl
+              label="Left and right margin"
+              min={32}
+              max={96}
+              value={frontmatter.marginHorizontalPx ?? Math.round(template.margin * 96)}
+              suffix="px"
+              onChange={(value: number) => applyDesignPatch({ marginHorizontalPx: value })}
+            />
+            <RangeControl
+              label="Paragraph spacing"
+              min={0}
+              max={18}
+              value={frontmatter.paragraphSpacingPx ?? 5}
+              suffix="px"
+              onChange={(value: number) => applyDesignPatch({ paragraphSpacingPx: value })}
+            />
           </section>
         </div>
       </aside>
@@ -570,14 +733,35 @@ const RangeControl = ({ label, min, max, step = 1, value, suffix = "", onChange 
     <h3>{label}</h3>
     <label className="range-with-value">
       <input type="range" min={min} max={max} step={step} value={value} onChange={(event) => onChange(Number(event.target.value))} />
-      <span>{value}{suffix}</span>
+      <span>
+        {value}
+        {suffix}
+      </span>
     </label>
-    <div className="range-labels"><span>{min}{suffix}</span><span>{max}{suffix}</span></div>
+    <div className="range-labels">
+      <span>
+        {min}
+        {suffix}
+      </span>
+      <span>
+        {max}
+        {suffix}
+      </span>
+    </div>
   </div>
 );
 
-const GuidedEditor = ({ structured, onChange, onApply }: { structured: StructuredResume; onChange: (value: StructuredResume) => void; onApply: () => void }) => {
-  const updateContact = (key: (typeof contactFields)[number], value: string) => onChange({ ...structured, contact: { ...structured.contact, [key]: value } });
+const GuidedEditor = ({
+  structured,
+  onChange,
+  onApply,
+}: {
+  structured: StructuredResume;
+  onChange: (value: StructuredResume) => void;
+  onApply: () => void;
+}) => {
+  const updateContact = (key: (typeof contactFields)[number], value: string) =>
+    onChange({ ...structured, contact: { ...structured.contact, [key]: value } });
   const updateExperience = (index: number, patch: Partial<(typeof structured.experience)[number]>) => {
     const experience = [...structured.experience];
     experience[index] = { ...experience[index], ...patch };
@@ -589,7 +773,10 @@ const GuidedEditor = ({ structured, onChange, onApply }: { structured: Structure
         <h3>Contact</h3>
         <div className="form-grid">
           {contactFields.map((field) => (
-            <label key={field}>{field}<input value={String(structured.contact[field] ?? "")} onChange={(event) => updateContact(field, event.target.value)} /></label>
+            <label key={field}>
+              {field}
+              <input value={String(structured.contact[field] ?? "")} onChange={(event) => updateContact(field, event.target.value)} />
+            </label>
           ))}
         </div>
       </section>
@@ -598,59 +785,167 @@ const GuidedEditor = ({ structured, onChange, onApply }: { structured: Structure
         <textarea value={structured.summary} onChange={(event) => onChange({ ...structured, summary: event.target.value })} />
       </section>
       <section className="form-card" data-checklist-target="experience">
-        <header className="card-section-head"><h3>Experience</h3><Button onClick={() => onChange({ ...structured, experience: [...structured.experience, { id: uid("exp"), company: "", role: "Role", bullets: ["Action + scope + method + result."], technologies: [], impactMetrics: [], keywords: [] }] })}><Plus size={15} /> Add experience</Button></header>
+        <header className="card-section-head">
+          <h3>Experience</h3>
+          <Button
+            onClick={() =>
+              onChange({
+                ...structured,
+                experience: [
+                  ...structured.experience,
+                  {
+                    id: uid("exp"),
+                    company: "",
+                    role: "Role",
+                    bullets: ["Action + scope + method + result."],
+                    technologies: [],
+                    impactMetrics: [],
+                    keywords: [],
+                  },
+                ],
+              })
+            }
+          >
+            <Plus size={15} /> Add experience
+          </Button>
+        </header>
         {structured.experience.map((entry, index) => (
           <details className="experience-card" key={entry.id} open={index === 0}>
-            <summary>{entry.role || "Role"} {entry.company ? `at ${entry.company}` : ""}</summary>
+            <summary>
+              {entry.role || "Role"} {entry.company ? `at ${entry.company}` : ""}
+            </summary>
             <div className="form-grid">
-              <label>Role<input value={entry.role} onChange={(event) => updateExperience(index, { role: event.target.value })} /></label>
-              <label>Company<input value={entry.company} onChange={(event) => updateExperience(index, { company: event.target.value })} /></label>
-              <label>Location<input value={entry.location ?? ""} onChange={(event) => updateExperience(index, { location: event.target.value })} /></label>
-              <label>Start date<input value={entry.startDate ?? ""} onChange={(event) => updateExperience(index, { startDate: event.target.value })} /></label>
-              <label>End date<input value={entry.endDate ?? ""} onChange={(event) => updateExperience(index, { endDate: event.target.value })} /></label>
-              <label className="checkbox-label"><input type="checkbox" checked={entry.current ?? false} onChange={(event) => updateExperience(index, { current: event.target.checked })} /> Current role</label>
+              <label>
+                Role
+                <input value={entry.role} onChange={(event) => updateExperience(index, { role: event.target.value })} />
+              </label>
+              <label>
+                Company
+                <input value={entry.company} onChange={(event) => updateExperience(index, { company: event.target.value })} />
+              </label>
+              <label>
+                Location
+                <input value={entry.location ?? ""} onChange={(event) => updateExperience(index, { location: event.target.value })} />
+              </label>
+              <label>
+                Start date
+                <input value={entry.startDate ?? ""} onChange={(event) => updateExperience(index, { startDate: event.target.value })} />
+              </label>
+              <label>
+                End date
+                <input value={entry.endDate ?? ""} onChange={(event) => updateExperience(index, { endDate: event.target.value })} />
+              </label>
+              <label className="checkbox-label">
+                <input
+                  type="checkbox"
+                  checked={entry.current ?? false}
+                  onChange={(event) => updateExperience(index, { current: event.target.checked })}
+                />{" "}
+                Current role
+              </label>
             </div>
             <div className="bullet-rows">
               <h4>Bullets</h4>
               {entry.bullets.map((bullet, bulletIndex) => (
-                <label key={`${entry.id}-${bulletIndex}`}>Bullet {bulletIndex + 1}<textarea value={bullet} onChange={(event) => {
-                  const bullets = [...entry.bullets];
-                  bullets[bulletIndex] = event.target.value;
-                  updateExperience(index, { bullets });
-                }} /></label>
+                <label key={`${entry.id}-${bulletIndex}`}>
+                  Bullet {bulletIndex + 1}
+                  <textarea
+                    value={bullet}
+                    onChange={(event) => {
+                      const bullets = [...entry.bullets];
+                      bullets[bulletIndex] = event.target.value;
+                      updateExperience(index, { bullets });
+                    }}
+                  />
+                </label>
               ))}
-              <Button onClick={() => updateExperience(index, { bullets: [...entry.bullets, "Action + scope + method + result."] })}><Plus size={15} /> Add bullet</Button>
+              <Button onClick={() => updateExperience(index, { bullets: [...entry.bullets, "Action + scope + method + result."] })}>
+                <Plus size={15} /> Add bullet
+              </Button>
             </div>
           </details>
         ))}
       </section>
       <section className="form-card" data-checklist-target="skills">
         <h3>Skills and sections</h3>
-        <label>Skills<textarea value={structured.skills.join(", ")} onChange={(event) => onChange({ ...structured, skills: event.target.value.split(",").map((skill) => skill.trim()).filter(Boolean) })} /></label>
+        <label>
+          Skills
+          <textarea
+            value={structured.skills.join(", ")}
+            onChange={(event) =>
+              onChange({
+                ...structured,
+                skills: event.target.value
+                  .split(",")
+                  .map((skill) => skill.trim())
+                  .filter(Boolean),
+              })
+            }
+          />
+        </label>
         <div className="form-grid">
-          <SimpleEntryEditor title="Education" values={structured.education} onChange={(education) => onChange({ ...structured, education })} />
+          <SimpleEntryEditor
+            title="Education"
+            values={structured.education}
+            onChange={(education) => onChange({ ...structured, education })}
+          />
           <SimpleEntryEditor title="Projects" values={structured.projects} onChange={(projects) => onChange({ ...structured, projects })} />
-          <label>Certifications<textarea value={structured.certifications.join("\n")} onChange={(event) => onChange({ ...structured, certifications: event.target.value.split("\n").filter(Boolean) })} /></label>
-          <label>Awards<textarea value={structured.awards.join("\n")} onChange={(event) => onChange({ ...structured, awards: event.target.value.split("\n").filter(Boolean) })} /></label>
+          <label>
+            Certifications
+            <textarea
+              value={structured.certifications.join("\n")}
+              onChange={(event) => onChange({ ...structured, certifications: event.target.value.split("\n").filter(Boolean) })}
+            />
+          </label>
+          <label>
+            Awards
+            <textarea
+              value={structured.awards.join("\n")}
+              onChange={(event) => onChange({ ...structured, awards: event.target.value.split("\n").filter(Boolean) })}
+            />
+          </label>
         </div>
       </section>
       <section className="sync-card">
-        <div><strong>Update Markdown from form</strong><p>This replaces the Markdown body with the structured fields above while keeping frontmatter settings.</p></div>
-        <Button className="primary" onClick={onApply}>Update Markdown from form</Button>
+        <div>
+          <strong>Update Markdown from form</strong>
+          <p>This replaces the Markdown body with the structured fields above while keeping frontmatter settings.</p>
+        </div>
+        <Button className="primary" onClick={onApply}>
+          Update Markdown from form
+        </Button>
       </section>
     </div>
   );
 };
 
 const SimpleEntryEditor = ({ title, values, onChange }: SimpleEntryEditorProps) => (
-  <label>{title}<textarea value={values.map((entry) => entry.title).join("\n")} onChange={(event) => onChange(event.target.value.split("\n").filter(Boolean).map((item) => ({ id: uid(title.toLowerCase()), title: item, bullets: [] })))} /></label>
+  <label>
+    {title}
+    <textarea
+      value={values.map((entry) => entry.title).join("\n")}
+      onChange={(event) =>
+        onChange(
+          event.target.value
+            .split("\n")
+            .filter(Boolean)
+            .map((item) => ({ id: uid(title.toLowerCase()), title: item, bullets: [] })),
+        )
+      }
+    />
+  </label>
 );
 
 const ChecklistCard = ({ checklist, onSelect }: { checklist: ReturnType<typeof resumeChecklist>; onSelect: (id: string) => void }) => {
   const done = checklist.filter((item) => item.done).length;
   return (
     <section className="checklist-card" aria-label="Job seeker checklist">
-      <div><strong>Job seeker checklist</strong><span>{done}/{checklist.length} complete</span></div>
+      <div>
+        <strong>Job seeker checklist</strong>
+        <span>
+          {done}/{checklist.length} complete
+        </span>
+      </div>
       <ul>
         {checklist.map((item) => (
           <li key={item.id} className={item.done ? "done" : ""}>

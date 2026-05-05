@@ -4,7 +4,11 @@ export const removeDuplicateBlankLines = (): ResumeSafeFix => ({
   id: "remove-duplicate-blank-lines",
   label: "Clean blank lines",
   description: "Remove repeated blank lines and trailing whitespace.",
-  apply: (markdown) => markdown.replace(/[ \t]+$/gm, "").replace(/\n{3,}/g, "\n\n").trimEnd() + "\n",
+  apply: (markdown) =>
+    markdown
+      .replace(/[ \t]+$/gm, "")
+      .replace(/\n{3,}/g, "\n\n")
+      .trimEnd() + "\n",
 });
 
 export const normalizeDateDashSpacing = (): ResumeSafeFix => ({
@@ -25,7 +29,11 @@ export const normalizeRepeatedSpaces = (): ResumeSafeFix => ({
   id: "normalize-repeated-spaces",
   label: "Clean spacing",
   description: "Convert repeated spaces and trailing whitespace to clean Markdown spacing.",
-  apply: (markdown) => markdown.replace(/[ \t]{2,}/g, " ").replace(/[ \t]+$/gm, "").trimEnd() + "\n",
+  apply: (markdown) =>
+    markdown
+      .replace(/[ \t]{2,}/g, " ")
+      .replace(/[ \t]+$/gm, "")
+      .trimEnd() + "\n",
 });
 
 export const convertSmartBullets = (): ResumeSafeFix => ({

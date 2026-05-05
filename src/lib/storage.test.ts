@@ -1,5 +1,16 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { createBackupFile, createInitialState, createSnapshotVersion, loadStateAsync, mergeBackupState, pruneSnapshots, restoreBackup, saveState, serializeBackup, validateBackup } from "./storage";
+import {
+  createBackupFile,
+  createInitialState,
+  createSnapshotVersion,
+  loadStateAsync,
+  mergeBackupState,
+  pruneSnapshots,
+  restoreBackup,
+  saveState,
+  serializeBackup,
+  validateBackup,
+} from "./storage";
 import { createResume } from "../app/resumeTransforms";
 
 const originalLocalStorage = globalThis.localStorage;
@@ -46,7 +57,9 @@ describe("storage backup and restore utilities", () => {
 
   it("prunes autosaved snapshots but keeps named versions", () => {
     const named = createSnapshotVersion("named", "Named version", "", "named");
-    const autosaves = Array.from({ length: 55 }, (_, index) => createSnapshotVersion(`auto-${index}`, "Autosaved snapshot", "", "autosave"));
+    const autosaves = Array.from({ length: 55 }, (_, index) =>
+      createSnapshotVersion(`auto-${index}`, "Autosaved snapshot", "", "autosave"),
+    );
     const pruned = pruneSnapshots([named, ...autosaves], 50);
     expect(pruned.filter((version) => version.kind === "autosave")).toHaveLength(50);
     expect(pruned).toContain(named);
