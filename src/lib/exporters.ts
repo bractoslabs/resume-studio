@@ -116,15 +116,3 @@ export const exportDocx = async (resume: ResumeDocument) => {
   const blob = await Packer.toBlob(doc);
   downloadBlob(blob, `${slugify(resume.title)}.docx`);
 };
-
-export const printPdf = (pageSize: "letter" | "a4" = "letter") => {
-  const styleId = "resume-studio-print-page-size";
-  const existing = document.getElementById(styleId);
-  existing?.remove();
-  const style = document.createElement("style");
-  style.id = styleId;
-  style.textContent = `@page{size:${pageSize === "a4" ? "A4" : "Letter"};margin:0}`;
-  document.head.appendChild(style);
-  document.documentElement.dataset.printPageSize = pageSize;
-  window.print();
-};

@@ -18,7 +18,7 @@ const jobStatuses = [
 const nextActionForJob = (job: JobTarget | ResumeDocument["applications"][number]) => {
   const status = "status" in job ? job.status : undefined;
   if (status === "tailoring") return "Review missing keywords";
-  if (status === "ready") return "Print / Save as PDF";
+  if (status === "ready") return "Export PDF";
   if (status === "follow-up-due") return "Follow up";
   if (status === "interviewing") return "Prep for interview";
   if (status === "applied") return "Track response";

@@ -412,10 +412,7 @@ export const resumeChecklist = (resume: ResumeDocument, ats: ReturnType<typeof a
     { id: "summary", label: "Summary added", done: content.split(/^##\s+/m)[0]?.trim().length > 80 },
     { id: "experience", label: "Experience added", done: hasHeading("experience") && /###\s+/.test(content) },
     { id: "skills", label: "Skills added", done: hasHeading("skills") },
-    { id: "review", label: "Resume reviewed", done: Boolean(resume.reviewMeta?.lastReviewedAt) },
     { id: "job", label: "Job target added", done: resume.jobTargets.length > 0 || jobDescription.trim().length > 0 },
-    { id: "export", label: "Export tested", done: resume.versions.some((version) => /export/i.test(version.notes ?? version.name)) },
-    { id: "version", label: "Version saved", done: resume.versions.length > 1 },
   ];
 };
 

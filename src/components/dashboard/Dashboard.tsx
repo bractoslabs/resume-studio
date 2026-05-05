@@ -70,7 +70,7 @@ export const Dashboard = ({
           ["1", "Create your resume", "Start a new resume or continue one you already saved."],
           ["2", "Add your details", "Write your experience, skills, education, and projects in the format you prefer."],
           ["3", "Improve the content", "Check structure, keywords, readability, and fit for the roles you want."],
-          ["4", "Save and send", "Download a backup, then export your resume or save it as a PDF."],
+          ["4", "Save and send", "Download a backup, then export your resume as a PDF."],
         ].map(([step, title, body]) => (
           <article key={step}>
             <span>{step}</span>

@@ -120,6 +120,25 @@ const preprocessDirectives = (source: string, warnings: RenderWarning[], atsMode
 
 const defaultFrontmatter: ResumeFrontmatter = { name: "Untitled Candidate", pageSize: "letter", template: "ats-classic" };
 
+const normalizeIntroLine = (line: string) =>
+  line
+    .replace(/^#+\s*/, "")
+    .replace(/[*_`[\]()]/g, "")
+    .replace(/\s+/g, " ")
+    .trim()
+    .toLowerCase();
+
+const removeDuplicateIntroLine = (source: string, frontmatter: ResumeFrontmatter) => {
+  const duplicates = [frontmatter.name, frontmatter.title].filter(Boolean).map((value) => normalizeIntroLine(value ?? ""));
+  if (!duplicates.length) return source;
+  const lines = source.split("\n");
+  const firstContentIndex = lines.findIndex((line) => line.trim());
+  if (firstContentIndex === -1) return source;
+  if (lines[firstContentIndex].trim().startsWith("##")) return source;
+  if (!duplicates.includes(normalizeIntroLine(lines[firstContentIndex]))) return source;
+  return [...lines.slice(0, firstContentIndex), ...lines.slice(firstContentIndex + 1)].join("\n").trimStart();
+};
+
 export const parseFrontmatter = (markdown: string): FrontmatterParseResult => {
   const warnings: RenderWarning[] = [];
   try {
@@ -169,6 +188,7 @@ export const renderMarkdown = (markdown: string, atsMode = false): RenderResult 
   const parsed = parseFrontmatter(markdown);
   const warnings = [...parsed.warnings];
   const processed = preprocessDirectives(parsed.content, warnings, atsMode);
+  const content = removeDuplicateIntroLine(processed, parsed.frontmatter);
   const contactLine = [
     parsed.frontmatter.email ? `[${parsed.frontmatter.email}](mailto:${parsed.frontmatter.email})` : "",
     parsed.frontmatter.phone ?? "",
@@ -182,7 +202,7 @@ export const renderMarkdown = (markdown: string, atsMode = false): RenderResult 
   const headerMarkdown = parsed.hasFrontmatter
     ? `# ${parsed.frontmatter.name}\n\n${parsed.frontmatter.title ? `**${parsed.frontmatter.title}**\n\n` : ""}${contactLine}\n\n`
     : "";
-  const unsafe = md.render(`${headerMarkdown}${processed}`);
+  const unsafe = md.render(`${headerMarkdown}${content}`);
   const html = sanitizeHtml(unsafe);
   return {
     html,
@@ -193,7 +213,8 @@ export const renderMarkdown = (markdown: string, atsMode = false): RenderResult 
 };
 
 const sectionBlocks = (markdown: string) => {
-  const lines = parseFrontmatter(markdown).content.split("\n");
+  const parsed = parseFrontmatter(markdown);
+  const lines = removeDuplicateIntroLine(parsed.content, parsed.frontmatter).split("\n");
   const sections: Record<string, string[]> = {};
   let current = "summary";
   sections[current] = [];

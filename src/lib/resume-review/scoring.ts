@@ -63,7 +63,7 @@ export const scoreReview = (issues: ResumeReviewIssue[], bulletTexts: string[], 
     exportSafety: score(
       "Export Safety",
       100 - categoryPenalty(issues, ["export-safety"]) - formattingPenalty * 0.25,
-      "Design settings and export risks are checked while preserving text-based PDF/print output.",
+      "Design settings and export risks are checked while preserving text-based PDF output.",
     ),
   };
 };

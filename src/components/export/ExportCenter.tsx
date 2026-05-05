@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Archive, Clipboard, Copy, Download, FileDown, Minimize2 } from "lucide-react";
+import { Archive, Clipboard, Copy, FileDown, Minimize2 } from "lucide-react";
 import type { ResumeDocument, ResumeTemplate } from "../../lib/types";
 import type { ResumeReviewIssue } from "../../lib/resume-review";
 import { parseFrontmatter, renderMarkdown } from "../../lib/markdown";
@@ -11,8 +11,8 @@ import {
   exportPlainText,
   exportResumeForgeJson,
   exportYaml,
-  printPdf,
 } from "../../lib/exporters";
+import { exportPdf } from "../../lib/pdfExport";
 import { Button } from "../common/Button";
 import { writeClipboard } from "../../app/resumeTransforms";
 
@@ -55,8 +55,8 @@ export const ExportCenter = ({
       await action();
       if (shouldRecord) recordExport?.(label);
       setStatus(
-        label === "Print / Save as PDF"
-          ? "Print dialog opened. Choose Save as PDF, then check page size, margins, and page breaks before sending."
+        label === "PDF"
+          ? "PDF downloaded. Check page breaks and formatting before sending."
           : shouldRecord
             ? `${label} ready. If your browser blocked a download, allow downloads for this site and retry.`
             : `${label} applied.`,
@@ -69,17 +69,17 @@ export const ExportCenter = ({
     <div className="workflow-panel export-panel">
       <section className="recommended-export">
         <div>
-          <h2>Print / Save as PDF</h2>
+          <h2>Export PDF</h2>
           <p>
-            This opens your browser's print dialog. Choose "Save as PDF," then check page size, margins, and page breaks before sending.
+            Generate and download a PDF directly from your resume data. Check page breaks, margins, and formatting before sending.
           </p>
           <p className="beta-inline-note">Public beta note: check page breaks, margins, and formatting before sending exported files.</p>
           <p className="beta-inline-note">Guidance only. Resume Studio does not guarantee ATS results, interviews, or job offers.</p>
-          <p className="muted">Browser output may vary slightly between Chrome, Safari, Edge, and Firefox.</p>
+          <p className="muted">PDF export uses your resume content, page size, and current design settings.</p>
         </div>
         <div className="inline-actions">
-          <Button className="primary" onClick={() => runExport("Print / Save as PDF", () => printPdf(resume.pageSize))}>
-            <FileDown size={16} /> Print / Save as PDF
+          <Button className="primary" onClick={() => runExport("PDF", () => exportPdf(resume))}>
+            <FileDown size={16} /> Export PDF
           </Button>
         </div>
       </section>

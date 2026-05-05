@@ -125,7 +125,7 @@ describe("resume app transforms", () => {
   it("keeps checklist and page estimate deterministic", () => {
     const resume = createResume("blank");
     const checklist = resumeChecklist(resume, analyzeAts(resume.markdown));
-    expect(checklist.map((item) => item.id)).toContain("review");
+    expect(checklist.map((item) => item.id)).toEqual(["contact", "summary", "experience", "skills", "job"]);
     expect(pageCountEstimate("x".repeat(3301))).toBe(2);
   });
 });

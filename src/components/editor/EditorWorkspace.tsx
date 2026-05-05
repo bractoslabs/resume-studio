@@ -1,5 +1,23 @@
 import React from "react";
-import { Check, Code, Download, FileDown, History, Palette, Plus, Printer, Save, ShieldCheck, Sparkles, StickyNote, X } from "lucide-react";
+import {
+  Check,
+  ChevronLeft,
+  ChevronRight,
+  Code,
+  Download,
+  FileDown,
+  History,
+  Maximize2,
+  Palette,
+  Plus,
+  Save,
+  ShieldCheck,
+  Sparkles,
+  StickyNote,
+  X,
+  ZoomIn,
+  ZoomOut,
+} from "lucide-react";
 import type {
   AppState,
   PageSize,
@@ -15,7 +33,6 @@ import { defaultResumeMarkdown } from "../../lib/defaultDraft";
 import { compareResumeToJob } from "../../lib/jobMatcher";
 import type { ResumeReviewIssue, ResumeReviewResult } from "../../lib/resume-review";
 import { parseFrontmatter, parseStructuredResume, renderMarkdown } from "../../lib/markdown";
-import { printPdf } from "../../lib/exporters";
 import type { EditMode, View, WorkflowTab } from "../../app/types";
 import { englishFonts, snippets, themeColors } from "../../app/constants";
 import { Button } from "../common/Button";
@@ -105,12 +122,13 @@ interface EditPanelProps {
 interface PreviewToolbarProps {
   zoom: number;
   setZoom: ZoomSetter;
-  atsMode: boolean;
-  setAtsMode: (value: boolean) => void;
   pageSize: PageSize;
-  applyDesignPatch: (patch: DesignPatch) => void;
   warnings: number;
   pageCount: number;
+  currentPage: number;
+  setCurrentPage: (page: number) => void;
+  fitWidth: () => void;
+  openDesign: () => void;
 }
 
 interface DesignDrawerProps {
@@ -194,6 +212,38 @@ export const EditorWorkspace = (props: EditorWorkspaceProps) => {
     openSaveVersion,
     openRestoreVersion,
   } = props;
+  const previewColumnRef = React.useRef<HTMLElement | null>(null);
+  const [currentPreviewPage, setCurrentPreviewPage] = React.useState(1);
+  const [measuredPreviewPageCount, setMeasuredPreviewPageCount] = React.useState(1);
+  const normalizedPageCount = Math.max(1, activePageCount, measuredPreviewPageCount);
+  const setPreviewPage = (pageNumber: number) => {
+    const nextPage = Math.min(normalizedPageCount, Math.max(1, pageNumber));
+    setCurrentPreviewPage(nextPage);
+  };
+  const fitPreviewWidth = React.useCallback(() => {
+    const column = previewColumnRef.current;
+    if (!column) {
+      setZoom(0.92);
+      return;
+    }
+    const pageWidth = resume.pageSize === "a4" ? 8.27 * 96 : 8.5 * 96;
+    const availableWidth = Math.max(320, column.clientWidth - 64);
+    setZoom(Math.min(1.15, Math.max(0.45, availableWidth / pageWidth)));
+  }, [resume.pageSize, setZoom]);
+
+  React.useEffect(() => {
+    setCurrentPreviewPage((page) => Math.min(Math.max(1, page), normalizedPageCount));
+  }, [normalizedPageCount]);
+
+  React.useEffect(() => {
+    setMeasuredPreviewPageCount(1);
+    setCurrentPreviewPage(1);
+  }, [resume.id, resume.markdown, resume.pageSize, template.id]);
+
+  React.useLayoutEffect(() => {
+    const frame = window.requestAnimationFrame(fitPreviewWidth);
+    return () => window.cancelAnimationFrame(frame);
+  }, [fitPreviewWidth, resume.id, template.id]);
 
   return (
     <div className="editor-workspace">
@@ -225,18 +275,6 @@ export const EditorWorkspace = (props: EditorWorkspaceProps) => {
           </span>
         </div>
         <div className="page-actions">
-          <Button onClick={() => setDesignOpen(true)}>
-            <Palette size={16} /> Design
-          </Button>
-          <Button
-            onClick={() => {
-              recordExport("Print / Save as PDF");
-              printPdf(resume.pageSize);
-            }}
-            title="Opens your browser's print dialog. Choose Save as PDF and check page breaks before sending."
-          >
-            <Printer size={16} /> Print / Save as PDF
-          </Button>
           <Button className="primary" aria-label="Open export center" onClick={() => setTab("export")}>
             <Download size={16} /> Export
           </Button>
@@ -268,10 +306,7 @@ export const EditorWorkspace = (props: EditorWorkspaceProps) => {
               setEditMode={setEditMode}
               onChecklistSelect={(id: string) => {
                 const tabTargets: Record<string, WorkflowTab> = {
-                  review: "review",
                   job: "tailor",
-                  export: "export",
-                  version: "history",
                 };
                 if (tabTargets[id]) {
                   setTab(tabTargets[id]);
@@ -371,24 +406,29 @@ export const EditorWorkspace = (props: EditorWorkspaceProps) => {
           )}
         </section>
 
-        <aside className="preview-column" aria-label="Live resume preview">
+        <aside ref={previewColumnRef} className="preview-column" aria-label="Live resume preview">
           <PreviewToolbar
             zoom={zoom}
             setZoom={setZoom}
-            atsMode={atsMode}
-            setAtsMode={setAtsMode}
             pageSize={resume.pageSize}
-            applyDesignPatch={applyDesignPatch}
             warnings={rendered.warnings.length + reviewIssues.filter((issue) => issue.severity !== "info").length}
-            pageCount={activePageCount}
+            pageCount={normalizedPageCount}
+            currentPage={currentPreviewPage}
+            setCurrentPage={setPreviewPage}
+            fitWidth={fitPreviewWidth}
+            openDesign={() => setDesignOpen(true)}
           />
           <ResumePreview
             renderedHtml={rendered.html}
+            frontmatter={rendered.frontmatter}
             pageStyle={pageStyle}
             templateId={template.id}
             pageSize={resume.pageSize}
             zoom={zoom}
             warnings={rendered.warnings.length + reviewIssues.filter((issue) => issue.severity !== "info").length}
+            pageCount={normalizedPageCount}
+            currentPage={currentPreviewPage}
+            onPageCountChange={setMeasuredPreviewPageCount}
           />
         </aside>
       </section>
@@ -496,37 +536,52 @@ const EditPanel = ({
   </div>
 );
 
-const PreviewToolbar = ({ zoom, setZoom, atsMode, setAtsMode, pageSize, applyDesignPatch, warnings, pageCount }: PreviewToolbarProps) => (
+const PreviewToolbar = ({
+  zoom,
+  setZoom,
+  pageSize,
+  warnings,
+  pageCount,
+  currentPage,
+  setCurrentPage,
+  fitWidth,
+  openDesign,
+}: PreviewToolbarProps) => (
   <div className="preview-toolbar">
-    <div>
-      <strong>{pageSize.toUpperCase()}</strong>
+    <div className="preview-summary">
+      <strong>Resume preview</strong>
       <span>
-        {pageCount} page{pageCount > 1 ? "s" : ""}
-      </span>
-      <span>
-        {warnings} review item{warnings === 1 ? "" : "s"}
+        {pageSize === "letter" ? "Letter" : "A4"} size · {pageCount} page{pageCount > 1 ? "s" : ""} ·{" "}
+        {warnings === 0 ? "No urgent review items" : `${warnings} item${warnings === 1 ? "" : "s"} to review before export`}
       </span>
     </div>
     <div className="preview-controls">
-      <button onClick={() => setZoom((z: number) => Math.max(0.55, z - 0.08))} aria-label="Zoom out">
-        -
+      <div className="toolbar-group page-stepper" aria-label="Preview pages">
+        <button onClick={() => setCurrentPage(currentPage - 1)} disabled={currentPage <= 1} aria-label="Previous page">
+          <ChevronLeft size={16} />
+        </button>
+        <span>
+          Page {currentPage} of {pageCount}
+        </span>
+        <button onClick={() => setCurrentPage(currentPage + 1)} disabled={currentPage >= pageCount} aria-label="Next page">
+          <ChevronRight size={16} />
+        </button>
+      </div>
+      <div className="toolbar-group zoom-controls" aria-label="Preview zoom">
+        <button onClick={() => setZoom((z: number) => Math.max(0.45, z - 0.08))} aria-label="Zoom out">
+          <ZoomOut size={16} />
+        </button>
+        <span>{Math.round(zoom * 100)}%</span>
+        <button onClick={() => setZoom((z: number) => Math.min(1.35, z + 0.08))} aria-label="Zoom in">
+          <ZoomIn size={16} />
+        </button>
+        <button className="fit-width-control" onClick={fitWidth} aria-label="Fit width" title="Fit width">
+          <Maximize2 size={15} />
+        </button>
+      </div>
+      <button className="design-center-button" onClick={openDesign}>
+        <Palette size={16} /> Design Center
       </button>
-      <button onClick={() => setZoom(0.92)}>Fit width</button>
-      <button onClick={() => setZoom((z: number) => Math.min(1.25, z + 0.08))} aria-label="Zoom in">
-        +
-      </button>
-      <select
-        value={pageSize}
-        onChange={(event) => applyDesignPatch({ pageSize: event.target.value as PageSize })}
-        aria-label="Preview page size"
-      >
-        <option value="letter">Letter</option>
-        <option value="a4">A4</option>
-      </select>
-      <label>
-        <input type="checkbox" checked={atsMode} onChange={(event) => setAtsMode(event.target.checked)} /> ATS-safe
-      </label>
-      <span>{Math.round(zoom * 100)}%</span>
     </div>
   </div>
 );
@@ -933,19 +988,59 @@ const SimpleEntryEditor = ({ title, values, onChange }: SimpleEntryEditorProps) 
 
 const ChecklistCard = ({ checklist, onSelect }: { checklist: ReturnType<typeof resumeChecklist>; onSelect: (id: string) => void }) => {
   const done = checklist.filter((item) => item.done).length;
+  const nextItem = checklist.find((item) => !item.done) ?? checklist[checklist.length - 1];
+  const percent = Math.round((done / checklist.length) * 100);
+  const helperText: Record<string, string> = {
+    contact: "Add email, phone, and location",
+    summary: "Write a focused opening",
+    experience: "Add roles and impact bullets",
+    skills: "List relevant strengths",
+    job: "Compare against a target role",
+  };
+  const actionText: Record<string, string> = {
+    contact: "Add contact info",
+    summary: "Write summary",
+    experience: "Add experience",
+    skills: "Add skills",
+    job: "Add job target",
+  };
+  const statusText: Record<string, string> = {
+    contact: "Missing contact",
+    summary: "Missing summary",
+    experience: "Missing experience",
+    skills: "Missing skills",
+    job: "No job target",
+  };
   return (
-    <section className="checklist-card" aria-label="Job seeker checklist">
-      <div>
-        <strong>Job seeker checklist</strong>
-        <span>
-          {done}/{checklist.length} complete
-        </span>
+    <section className="checklist-card readiness-card" aria-label="Resume readiness">
+      <div className="readiness-main">
+        <div className="readiness-meter" aria-label={`${percent}% complete`}>
+          <span style={{ width: `${percent}%` }} />
+        </div>
+        <div className="readiness-copy">
+          <strong>Resume readiness</strong>
+          <span>
+            {done}/{checklist.length} complete
+          </span>
+        </div>
+        {nextItem && (
+          <button className="readiness-next" type="button" onClick={() => onSelect(nextItem.id)}>
+            <span>Next</span>
+            <strong>{actionText[nextItem.id] ?? nextItem.label}</strong>
+            <small>{helperText[nextItem.id] ?? "Keep improving this resume"}</small>
+          </button>
+        )}
       </div>
-      <ul>
+      <ul className="readiness-steps" aria-label="Readiness steps">
         {checklist.map((item) => (
-          <li key={item.id} className={item.done ? "done" : ""}>
-            <button type="button" onClick={() => onSelect(item.id)} aria-label={`${item.done ? "Review" : "Complete"} ${item.label}`}>
-              <Check size={13} /> <span>{item.label}</span>
+          <li key={item.id} className={`${item.done ? "done" : "missing"} step-${item.id}`}>
+            <button
+              type="button"
+              onClick={() => onSelect(item.id)}
+              title={helperText[item.id]}
+              aria-label={`${item.done ? "Review" : "Complete"} ${item.label}`}
+            >
+              {item.done ? <Check size={13} /> : <X size={13} />} <span>{item.done ? item.label : (statusText[item.id] ?? `Missing ${item.label}`)}</span>
             </button>
           </li>
         ))}

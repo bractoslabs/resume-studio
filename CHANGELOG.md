@@ -1,11 +1,29 @@
 # Changelog
 
+## v0.2.1 - PDF export and editor preview polish
+
+### Added
+
+- Direct PDF export generated from resume data with `@react-pdf/renderer`.
+
+### Changed
+
+- Replaced the old browser print-to-PDF flow with direct PDF export across app copy and documentation.
+- Redesigned the resume preview toolbar with grouped page and zoom controls, icon-only fit-width, and a separate Design Center action.
+- Simplified the resume readiness panel so it focuses on resume content and job targeting.
+
+### Fixed
+
+- Preview pagination now shows one page at a time, repeats the candidate header on later pages, and avoids cutting text at the page bottom.
+- Duplicate resume title/header text is removed when imported or edited Markdown repeats frontmatter values.
+
 ## v0.2.0-beta - Public beta launch prep
 
 Upcoming public beta release focused on launch readiness. Core features are usable, but imports, exports, templates, and review tools may continue to change.
 
 ### Added
 
+- Direct PDF export generated from resume data with `@react-pdf/renderer`.
 - Real feedback paths through GitHub Issues and Bractos Labs email.
 - SEO metadata, favicon, app icon, and web manifest.
 - Public Privacy, Terms, and Security pages.
@@ -16,7 +34,7 @@ Upcoming public beta release focused on launch readiness. Core features are usab
 
 ### Changed
 
-- Export wording now uses Print / Save as PDF for browser-print-based output.
+- Export wording now uses direct PDF export across the product and documentation.
 - Import copy now sets expectations for Markdown, TXT, DOCX, selectable-text PDFs, and scanned/image-only PDFs.
 - README now links the root public roadmap/backlog.
 - CI now runs lint, format check, unit tests, and build.
@@ -37,7 +55,7 @@ Upcoming public beta release focused on launch readiness. Core features are usab
 ### Known Limitations
 
 - Browser storage is local to each browser/device.
-- Print / Save as PDF depends on browser print behavior.
+- PDF export may not match the live browser preview pixel-for-pixel.
 - DOCX export may not match visual templates perfectly.
 - Complex imports may need cleanup.
 - Resume Review and Keyword & Fit Check are guidance only.
