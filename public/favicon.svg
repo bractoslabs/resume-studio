@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Resume Studio">
+  <rect width="64" height="64" rx="14" fill="#436a6b"/>
+  <path d="M20 12h18l10 10v30H20z" fill="#ffffff"/>
+  <path d="M38 12v11h10z" fill="#dbe8e7"/>
+  <path d="M26 30h16M26 37h16M26 44h11" stroke="#436a6b" stroke-width="4" stroke-linecap="round"/>
+  <circle cx="28" cy="22" r="4" fill="#436a6b"/>
+</svg>

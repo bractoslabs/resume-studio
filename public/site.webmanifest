@@ -1,0 +1,16 @@
+{
+  "name": "Resume Studio",
+  "short_name": "Resume Studio",
+  "description": "Free, private, Markdown-first resume builder from Bractos Labs.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#436a6b",
+  "icons": [
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ]
+}
