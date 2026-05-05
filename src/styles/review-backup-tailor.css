@@ -4,16 +4,21 @@
   overflow: auto;
   max-height: 280px;
   padding: 14px;
-  border: 1px solid var(--border);
+  border: 1px solid var(--line);
   border-radius: 10px;
-  background: rgba(2, 6, 23, .55);
-  color: var(--text);
+  background: color-mix(in srgb, var(--panel-soft) 82%, transparent);
+  color: var(--ink);
   line-height: 1.55;
 }
 
 .checklist-card {
   display: grid;
   gap: 12px;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--panel) 92%, var(--panel-soft));
+  box-shadow: var(--shadow);
 }
 
 .checklist-card ul {
@@ -56,7 +61,7 @@
 }
 
 .checklist-card li.done {
-  color: var(--text);
+  color: var(--ink);
 }
 
 .mini-progress {
@@ -70,7 +75,11 @@
   display: block;
   height: 100%;
   border-radius: inherit;
-  background: linear-gradient(90deg, var(--accent), #8bda6f);
+  background: linear-gradient(
+    90deg,
+    var(--accent-ui),
+    color-mix(in srgb, var(--accent-ui) 58%, white)
+  );
 }
 
 .intelligence-grid {
@@ -79,15 +88,16 @@
 
 .intelligence-grid article {
   padding: 14px;
-  border: 1px solid var(--border);
+  border: 1px solid var(--line);
   border-radius: 12px;
-  background: rgba(15, 23, 42, .5);
+  background: color-mix(in srgb, var(--panel) 92%, var(--panel-soft));
+  box-shadow: 0 10px 24px rgba(28, 45, 52, .08);
 }
 
 .intelligence-grid strong {
   display: block;
   margin-top: 4px;
-  color: var(--text);
+  color: var(--ink);
   font-size: 28px;
 }
 
@@ -96,7 +106,7 @@
   border: 1px solid rgba(34, 211, 238, .35);
   border-radius: 10px;
   background: rgba(34, 211, 238, .1);
-  color: var(--text);
+  color: var(--ink);
 }
 
 .status-note.error {
@@ -121,7 +131,7 @@
   border: 1px solid rgba(34, 211, 238, .28);
   border-radius: 999px;
   background: rgba(34, 211, 238, .1);
-  color: var(--accent);
+  color: var(--accent-ui);
   cursor: pointer;
 }
 
@@ -133,9 +143,9 @@
   gap: 16px;
   margin: 14px 18px 0;
   padding: 14px 16px;
-  border: 1px solid rgba(34, 211, 238, .24);
+  border: 1px solid color-mix(in srgb, var(--accent-ui) 32%, var(--line));
   border-radius: 14px;
-  background: rgba(8, 47, 73, .34);
+  background: color-mix(in srgb, var(--accent-ui) 8%, var(--panel));
 }
 
 .local-storage-warning {
@@ -167,9 +177,9 @@
 
 .restore-preview div {
   padding: 10px;
-  border: 1px solid var(--border);
+  border: 1px solid var(--line);
   border-radius: 10px;
-  background: rgba(15, 23, 42, .42);
+  background: color-mix(in srgb, var(--panel) 90%, var(--panel-soft));
 }
 
 .restore-preview dt {
@@ -179,7 +189,7 @@
 
 .restore-preview dd {
   margin: 3px 0 0;
-  color: var(--text);
+  color: var(--ink);
   font-weight: 700;
 }
 
@@ -188,7 +198,7 @@
   gap: 8px;
   margin: 14px 0;
   padding: 12px;
-  border: 1px solid var(--border);
+  border: 1px solid var(--line);
   border-radius: 10px;
 }
 
@@ -210,9 +220,9 @@
   gap: 12px;
   align-items: center;
   padding: 12px;
-  border: 1px solid var(--border);
+  border: 1px solid var(--line);
   border-radius: 12px;
-  background: rgba(15, 23, 42, .42);
+  background: color-mix(in srgb, var(--panel) 90%, var(--panel-soft));
 }
 
 .term-review-card span {

@@ -16,7 +16,7 @@
 
 .landing-section h2 {
   margin: 0 0 8px;
-  color: var(--text);
+  color: var(--ink);
   font-size: clamp(26px, 3vw, 40px);
 }
 
@@ -25,8 +25,7 @@
 }
 
 .landing-grid,
-.helper-grid,
-.intelligence-grid {
+.helper-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 14px;
@@ -34,29 +33,22 @@
 
 .landing-section article,
 .public-page section,
-.helper-card,
-.checklist-card,
-.import-review,
-.modal-card,
-.confirm-card {
-  border: 1px solid var(--border);
+.helper-card {
+  border: 1px solid var(--line);
   border-radius: 14px;
-  background: rgba(15, 23, 42, .72);
-  box-shadow: 0 18px 45px rgba(0, 0, 0, .2);
+  background: var(--panel);
+  box-shadow: var(--shadow);
 }
 
 .landing-section article,
-.helper-card,
-.checklist-card,
-.import-review {
+.helper-card {
   padding: 18px;
 }
 
 .landing-section h3,
-.helper-card h3,
-.checklist-card h3 {
+.helper-card h3 {
   margin: 0 0 8px;
-  color: var(--text);
+  color: var(--ink);
 }
 
 .public-footer {
@@ -66,7 +58,7 @@
   display: flex;
   justify-content: space-between;
   gap: 18px;
-  border-top: 1px solid var(--border);
+  border-top: 1px solid var(--line);
   color: var(--muted);
 }
 
@@ -114,7 +106,7 @@
 
 .privacy-policy h1 {
   margin: 0;
-  color: var(--text);
+  color: var(--ink);
 }
 
 .policy-kicker {
@@ -125,7 +117,7 @@
 
 .policy-intro {
   margin: 0;
-  color: var(--text);
+  color: var(--ink);
   font-size: 1.05rem;
 }
 
@@ -133,12 +125,12 @@
   display: grid;
   gap: 8px;
   padding-top: 18px;
-  border-top: 1px solid var(--border);
+  border-top: 1px solid var(--line);
 }
 
 .policy-section h2 {
   margin: 0;
-  color: var(--text);
+  color: var(--ink);
   font-size: 1.15rem;
 }
 
