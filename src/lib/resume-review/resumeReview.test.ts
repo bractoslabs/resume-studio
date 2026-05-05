@@ -93,7 +93,10 @@ describe("resume review engine", () => {
   });
 
   it("matches deterministic job keywords without an LLM", () => {
-    const match = analyzeJobKeywords(strongResume, "Role: Senior Frontend Engineer. Required: React, TypeScript, accessibility, Kubernetes. Preferred: GitHub Actions and mentoring.");
+    const match = analyzeJobKeywords(
+      strongResume,
+      "Role: Senior Frontend Engineer. Required: React, TypeScript, accessibility, Kubernetes. Preferred: GitHub Actions and mentoring.",
+    );
     expect(match.matched).toEqual(expect.arrayContaining(["React", "TypeScript", "GitHub Actions"]));
     expect(match.missing).toContain("Kubernetes");
     expect(match.suggestions.find((suggestion) => suggestion.keyword === "Kubernetes")?.suggestedWording).toContain("[add metric");

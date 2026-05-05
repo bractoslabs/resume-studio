@@ -14,7 +14,8 @@
 }
 
 @media (max-width: 760px) {
-  .topbar, .dashboard-head {
+  .topbar,
+  .dashboard-head {
     padding-left: 16px;
     padding-right: 16px;
   }

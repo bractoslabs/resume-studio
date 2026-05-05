@@ -11,7 +11,7 @@ Free, private, Markdown-first resume builder from Bractos Labs.
 
 Resume Studio helps you write, review, tailor, and export resumes without creating an account. It is built for people who want control over their resume source, a clean live preview, and local-first privacy.
 
-![Resume Studio app screenshot](./public/screenshots/resume-studio-editor.png)
+Resume Studio is an open-source Bractos Labs project.
 
 ## Public Beta Note
 
@@ -20,7 +20,7 @@ Resume Studio is in public beta. Core features are usable, but imports, exports,
 ## What It Does
 
 - Write resumes in Markdown with a live preview
-- Start from guided setup or sample resumes
+- Start from guided setup or Markdown templates
 - Run Resume Review and Keyword & Fit Check
 - Import common resume formats where browser parsing allows
 - Export Markdown, DOCX, backups, and browser Print / Save as PDF
@@ -63,8 +63,11 @@ Then open the local URL printed by Vite.
 
 ```bash
 npm run dev      # start local development server
+npm run lint     # run ESLint
+npm run format:check # check Prettier formatting
 npm run build    # type-check and build production assets
 npm run test     # run unit tests
+npm run test:e2e # run Playwright smoke tests
 npm run preview  # preview built assets
 ```
 
@@ -73,6 +76,8 @@ npm run preview  # preview built assets
 Contributions are welcome. Resume Studio is in public beta, so maintainers may be selective while the product direction settles. Please read [CONTRIBUTING.md](CONTRIBUTING.md) before opening a pull request.
 
 Never include private resume content, personal contact information, job application details, or other sensitive data in public issues, PRs, screenshots, or fixtures.
+
+See [docs/roadmap.md](docs/roadmap.md) for the public roadmap and [docs/starter-issues.md](docs/starter-issues.md) for ready-to-copy contributor issue drafts.
 
 ## Environment Variables
 
@@ -125,6 +130,12 @@ DOCX export produces a clean text document from Markdown source. Rich template-p
 
 ZIP export is represented as a portable package JSON in this static pass.
 
+## Import Support
+
+Best import results come from Markdown, TXT, and DOCX. Selectable-text PDFs may work. Scanned or image-only PDFs are not supported yet.
+
+Import results may need cleanup, especially complex PDFs and DOCX files. Review imported content before saving or exporting it.
+
 ## Known Limitations
 
 - Browser storage only. There is no cloud sync or account backup in the current public beta.
@@ -152,6 +163,15 @@ Do not paste untrusted complex HTML unless you understand the risk. Review resum
 
 See [docs/security-model.md](docs/security-model.md) for more detail.
 
+## Launch Docs
+
+- [Testing](docs/testing.md)
+- [Accessibility](docs/accessibility.md)
+- [Release checklist](docs/release-checklist.md)
+- [Public roadmap](docs/roadmap.md)
+- [Starter issue drafts](docs/starter-issues.md)
+- [GitHub Discussions guidance](docs/github-discussions.md)
+
 ## Privacy and Storage
 
 Resume Studio defaults to guest/local-first mode:
@@ -164,11 +184,8 @@ Resume Studio defaults to guest/local-first mode:
 
 ## Roadmap
 
-- IndexedDB storage for larger histories and imported source files.
-- Server-side PDF export with Playwright.
-- Rich DOCX styling parity with preview templates.
-- Backend persistence with private, expiring, password-protected recruiter links.
-- Optional encrypted local backup through WebCrypto.
-- Drag-and-drop section and bullet ordering.
-- DOCX/PDF import parsing with confidence review.
-- Optional AI assistant route
+See [docs/roadmap.md](docs/roadmap.md).
+
+## License
+
+Resume Studio is open source under the [MIT License](LICENSE).

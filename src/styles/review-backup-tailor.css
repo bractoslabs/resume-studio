@@ -68,18 +68,14 @@
   height: 7px;
   overflow: hidden;
   border-radius: 999px;
-  background: rgba(148, 163, 184, .22);
+  background: rgba(148, 163, 184, 0.22);
 }
 
 .mini-progress span {
   display: block;
   height: 100%;
   border-radius: inherit;
-  background: linear-gradient(
-    90deg,
-    var(--accent-ui),
-    color-mix(in srgb, var(--accent-ui) 58%, white)
-  );
+  background: linear-gradient(90deg, var(--accent-ui), color-mix(in srgb, var(--accent-ui) 58%, white));
 }
 
 .intelligence-grid {
@@ -91,7 +87,7 @@
   border: 1px solid var(--line);
   border-radius: 12px;
   background: color-mix(in srgb, var(--panel) 92%, var(--panel-soft));
-  box-shadow: 0 10px 24px rgba(28, 45, 52, .08);
+  box-shadow: 0 10px 24px rgba(28, 45, 52, 0.08);
 }
 
 .intelligence-grid strong {
@@ -103,15 +99,15 @@
 
 .status-note {
   padding: 10px 12px;
-  border: 1px solid rgba(34, 211, 238, .35);
+  border: 1px solid rgba(34, 211, 238, 0.35);
   border-radius: 10px;
-  background: rgba(34, 211, 238, .1);
+  background: rgba(34, 211, 238, 0.1);
   color: var(--ink);
 }
 
 .status-note.error {
-  border-color: rgba(248, 113, 113, .45);
-  background: rgba(127, 29, 29, .25);
+  border-color: rgba(248, 113, 113, 0.45);
+  background: rgba(127, 29, 29, 0.25);
 }
 
 .save-status,
@@ -128,9 +124,9 @@
 .backup-chip {
   min-height: 28px;
   padding: 0 10px;
-  border: 1px solid rgba(34, 211, 238, .28);
+  border: 1px solid rgba(34, 211, 238, 0.28);
   border-radius: 999px;
-  background: rgba(34, 211, 238, .1);
+  background: rgba(34, 211, 238, 0.1);
   color: var(--accent-ui);
   cursor: pointer;
 }
@@ -233,12 +229,12 @@
 }
 
 .term-review-card.important {
-  border-color: rgba(34, 211, 238, .55);
+  border-color: rgba(34, 211, 238, 0.55);
 }
 
 .term-review-card.not-relevant,
 .term-review-card.do-not-have {
-  opacity: .68;
+  opacity: 0.68;
 }
 
 .tailoring-checklist ul {

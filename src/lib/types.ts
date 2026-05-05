@@ -1,14 +1,6 @@
 export type ThemeMode = "light" | "dark" | "system";
 export type PageSize = "letter" | "a4";
-export type ResumeMode =
-  | "markdown"
-  | "guided"
-  | "preview"
-  | "ats"
-  | "job"
-  | "exports"
-  | "versions"
-  | "settings";
+export type ResumeMode = "markdown" | "guided" | "preview" | "ats" | "job" | "exports" | "versions" | "settings";
 
 export interface ResumeFrontmatter {
   name: string;
@@ -79,7 +71,18 @@ export interface ApplicationRecord {
   role: string;
   jobLink?: string;
   contact?: string;
-  status: "interested" | "tailoring" | "ready" | "applied" | "follow-up-due" | "interviewing" | "offer" | "rejected" | "archived" | "saved" | "closed";
+  status:
+    | "interested"
+    | "tailoring"
+    | "ready"
+    | "applied"
+    | "follow-up-due"
+    | "interviewing"
+    | "offer"
+    | "rejected"
+    | "archived"
+    | "saved"
+    | "closed";
   resumeVersionId?: string;
   coverLetterVersionId?: string;
   plainTextExportId?: string;

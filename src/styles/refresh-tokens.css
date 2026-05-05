@@ -28,9 +28,7 @@
 }
 
 body {
-  background:
-    radial-gradient(circle at 24% -10%, color-mix(in srgb, var(--accent-ui) 14%, transparent), transparent 34rem),
-    var(--bg);
+  background: radial-gradient(circle at 24% -10%, color-mix(in srgb, var(--accent-ui) 14%, transparent), transparent 34rem), var(--bg);
   text-rendering: geometricPrecision;
 }
 

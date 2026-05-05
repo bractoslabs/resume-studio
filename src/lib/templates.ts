@@ -153,5 +153,4 @@ export const templates: ResumeTemplate[] = [
   },
 ];
 
-export const getTemplate = (id?: string) =>
-  templates.find((template) => template.id === id) ?? templates[0];
+export const getTemplate = (id?: string) => templates.find((template) => template.id === id) ?? templates[0];

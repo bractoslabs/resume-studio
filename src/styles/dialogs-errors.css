@@ -5,7 +5,7 @@
   display: grid;
   place-items: center;
   padding: 20px;
-  background: rgba(2, 6, 23, .72);
+  background: rgba(2, 6, 23, 0.72);
   backdrop-filter: blur(8px);
 }
 
@@ -121,7 +121,7 @@
 
 .import-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.1fr) minmax(220px, .9fr);
+  grid-template-columns: minmax(0, 1.1fr) minmax(220px, 0.9fr);
   gap: 12px;
 }
 
@@ -163,7 +163,7 @@
 
 .import-review h4 {
   margin: 0;
-  font-size: .9rem;
+  font-size: 0.9rem;
 }
 
 .import-upload-btn {
@@ -172,7 +172,7 @@
 
 .import-note {
   margin-top: 10px;
-  font-size: .9rem;
+  font-size: 0.9rem;
 }
 
 .import-review ul {
@@ -225,7 +225,7 @@
 
 .import-review-details dt {
   color: var(--muted);
-  font-size: .82rem;
+  font-size: 0.82rem;
 }
 
 .import-review-details dd {
@@ -233,7 +233,7 @@
   min-width: 0;
   overflow-wrap: anywhere;
   color: var(--ink);
-  font-size: .9rem;
+  font-size: 0.9rem;
 }
 
 .import-review-list {
@@ -242,7 +242,7 @@
   margin: 0;
   padding-left: 18px;
   color: var(--muted);
-  font-size: .9rem;
+  font-size: 0.9rem;
 }
 
 .import-review summary {
@@ -305,14 +305,14 @@
 
 .new-resume-option small {
   color: var(--muted);
-  font-size: .92rem;
+  font-size: 0.92rem;
   font-weight: 500;
   line-height: 1.4;
 }
 
 .new-resume-option-arrow {
   margin-left: auto;
-  opacity: .78;
+  opacity: 0.78;
 }
 
 .setup-flow {
@@ -335,7 +335,7 @@
   border: 1px solid var(--line);
   border-radius: 999px;
   color: var(--muted);
-  font-size: .84rem;
+  font-size: 0.84rem;
 }
 
 .setup-progress .active,
@@ -347,7 +347,7 @@
 
 .setup-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.35fr) minmax(220px, .65fr);
+  grid-template-columns: minmax(0, 1.35fr) minmax(220px, 0.65fr);
   gap: 14px;
 }
 
@@ -410,7 +410,7 @@
   padding: 14px;
   border: 1px solid var(--border);
   border-radius: 12px;
-  background: rgba(2, 6, 23, .65);
+  background: rgba(2, 6, 23, 0.65);
   color: #fecaca;
 }
 

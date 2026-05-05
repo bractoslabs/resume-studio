@@ -72,7 +72,12 @@ export const createResumeForgeResumeFile = (resume: ResumeDocument): ResumeForge
 export const parseResumeForgeResumeFile = (source: string): ResumeForgeResumeFile | null => {
   try {
     const parsed = JSON.parse(source) as Partial<ResumeForgeResumeFile>;
-    if ((parsed?.appName !== "Resume Studio" && parsed?.appName !== "Resume Forge") || parsed?.kind !== "resume" || !parsed.resume?.markdown) return null;
+    if (
+      (parsed?.appName !== "Resume Studio" && parsed?.appName !== "Resume Forge") ||
+      parsed?.kind !== "resume" ||
+      !parsed.resume?.markdown
+    )
+      return null;
     return {
       $schema: parsed.$schema ?? resumeForgeResumeSchemaUrl,
       appName: "Resume Studio",

@@ -67,32 +67,25 @@ export const writeClipboard = async (text: string) => {
   textarea.remove();
 };
 
-const titleCaseSection = (value: string) => value
-  .toLowerCase()
-  .replace(/\b[a-z]/g, (letter) => letter.toUpperCase())
-  .replace(/\bAnd\b/g, "and");
+const titleCaseSection = (value: string) =>
+  value
+    .toLowerCase()
+    .replace(/\b[a-z]/g, (letter) => letter.toUpperCase())
+    .replace(/\bAnd\b/g, "and");
 
 const frontmatterValue = (value = "") => JSON.stringify(value.replace(/\s+/g, " ").trim());
 
-const monthPattern = "(?:jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|jun(?:e)?|jul(?:y)?|aug(?:ust)?|sep(?:t(?:ember)?)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)";
+const monthPattern =
+  "(?:jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|jun(?:e)?|jul(?:y)?|aug(?:ust)?|sep(?:t(?:ember)?)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)";
 const datePointPattern = `(?:(?:${monthPattern})\\s+)?(?:19|20)\\d{2}|present|current|now`;
 const dateRangePattern = new RegExp(`\\b(?:${datePointPattern})\\s*(?:-|–|—|to)\\s*(?:${datePointPattern})\\b`, "i");
 
-const isImportedSectionHeading = (line: string) => (
-  /^[A-Z][A-Z0-9&/.,'() -]{2,}$/.test(line) &&
-  /[A-Z]/.test(line) &&
-  line.length < 70
-);
+const isImportedSectionHeading = (line: string) => /^[A-Z][A-Z0-9&/.,'() -]{2,}$/.test(line) && /[A-Z]/.test(line) && line.length < 70;
 
 const isExperienceSection = (section: string) => /experience|employment|work history|career|professional background/i.test(section);
 
-const isLikelyJobHeader = (line: string, section: string) => (
-  isExperienceSection(section) &&
-  dateRangePattern.test(line) &&
-  !line.startsWith("- ") &&
-  !line.startsWith("#") &&
-  line.length <= 180
-);
+const isLikelyJobHeader = (line: string, section: string) =>
+  isExperienceSection(section) && dateRangePattern.test(line) && !line.startsWith("- ") && !line.startsWith("#") && line.length <= 180;
 
 const formatImportedBodyLines = (lines: string[]) => {
   let currentSection = "";
@@ -143,26 +136,34 @@ const importedMarkdownFromText = (fileName: string, source: string) => {
     return merged;
   }, []);
   const firstContentLine = lines.findIndex((line) => line.length > 0);
-  const name = firstContentLine >= 0 && !/^(summary|experience|education|skills|projects|certifications?)$/i.test(lines[firstContentLine])
-    ? lines[firstContentLine]
-    : fileName.replace(/\.[^.]+$/, "");
-  const contactLine = lines.slice(firstContentLine + 1, firstContentLine + 4).find((line) => /@|\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}/.test(line)) ?? "";
+  const name =
+    firstContentLine >= 0 && !/^(summary|experience|education|skills|projects|certifications?)$/i.test(lines[firstContentLine])
+      ? lines[firstContentLine]
+      : fileName.replace(/\.[^.]+$/, "");
+  const contactLine =
+    lines.slice(firstContentLine + 1, firstContentLine + 4).find((line) => /@|\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}/.test(line)) ?? "";
   const email = contactLine.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i)?.[0] ?? "";
   const phone = contactLine.match(/(?:\+?1[\s.-]?)?(?:\(\d{3}\)|\d{3})[\s.-]?\d{3}[\s.-]?\d{4}/)?.[0] ?? "";
-  const location = contactLine
-    .split("|")
-    .map((part) => part.trim())
-    .find((part) => !part.includes("@") && !/\d{3}/.test(part)) ?? "";
-  const roleLine = lines.slice(firstContentLine + 1, firstContentLine + 6).find((line) => (
-    line !== contactLine &&
-    line !== name &&
-    !line.startsWith("#") &&
-    !line.startsWith("- ") &&
-    !/^•/.test(line) &&
-    !/^(summary|core strengths|experience|professional experience|education|skills|projects|certifications?)$/i.test(line)
-  )) ?? "";
+  const location =
+    contactLine
+      .split("|")
+      .map((part) => part.trim())
+      .find((part) => !part.includes("@") && !/\d{3}/.test(part)) ?? "";
+  const roleLine =
+    lines
+      .slice(firstContentLine + 1, firstContentLine + 6)
+      .find(
+        (line) =>
+          line !== contactLine &&
+          line !== name &&
+          !line.startsWith("#") &&
+          !line.startsWith("- ") &&
+          !/^•/.test(line) &&
+          !/^(summary|core strengths|experience|professional experience|education|skills|projects|certifications?)$/i.test(line),
+      ) ?? "";
   const bodyLines = formatImportedBodyLines(
-    lines.slice(firstContentLine >= 0 && lines[firstContentLine] === name ? firstContentLine + 1 : 0)
+    lines
+      .slice(firstContentLine >= 0 && lines[firstContentLine] === name ? firstContentLine + 1 : 0)
       .filter((line, index) => index > 2 || line !== contactLine),
   );
 
@@ -183,17 +184,25 @@ ${bodyLines}
 
 const detectedImportSections = (content: string) => [...content.matchAll(/^##\s+(.+)$/gm)].map((match) => match[1].trim());
 
-const sourceHasImportedSectionHeading = (source: string) => source
-  .replace(/\r\n?/g, "\n")
-  .split("\n")
-  .some((line) => isImportedSectionHeading(line.replace(/[ \t]+/g, " ").trim()));
+const sourceHasImportedSectionHeading = (source: string) =>
+  source
+    .replace(/\r\n?/g, "\n")
+    .split("\n")
+    .some((line) => isImportedSectionHeading(line.replace(/[ \t]+/g, " ").trim()));
 
-const sourceHasDatedJobHeader = (source: string) => source
-  .replace(/\r\n?/g, "\n")
-  .split("\n")
-  .some((line) => dateRangePattern.test(line.trim()) && !/^[-*•]\s+/.test(line.trim()));
+const sourceHasDatedJobHeader = (source: string) =>
+  source
+    .replace(/\r\n?/g, "\n")
+    .split("\n")
+    .some((line) => dateRangePattern.test(line.trim()) && !/^[-*•]\s+/.test(line.trim()));
 
-const importReviewNotes = (fileName: string, source: string, markdown: string, sections: string[], resumeForge: ReturnType<typeof parseResumeForgeResumeFile>) => {
+const importReviewNotes = (
+  fileName: string,
+  source: string,
+  markdown: string,
+  sections: string[],
+  resumeForge: ReturnType<typeof parseResumeForgeResumeFile>,
+) => {
   const { frontmatter } = parseFrontmatter(markdown);
   const bulletCount = (markdown.match(/^\s*[-*]\s+/gm) ?? []).length;
   const repairedFields = [
@@ -255,7 +264,10 @@ ${basics.summary ?? ""}
 ## Experience
 
 ${work
-  .map((job) => `### ${job.position ?? "Role"} - ${job.name ?? "Company"}\n_${[job.location, job.startDate, job.endDate].filter(Boolean).join(" | ")}_\n${(job.highlights ?? []).map((item) => `- ${item}`).join("\n")}`)
+  .map(
+    (job) =>
+      `### ${job.position ?? "Role"} - ${job.name ?? "Company"}\n_${[job.location, job.startDate, job.endDate].filter(Boolean).join(" | ")}_\n${(job.highlights ?? []).map((item) => `- ${item}`).join("\n")}`,
+  )
   .join("\n\n")}
 
 ## Skills
@@ -297,22 +309,28 @@ export const buildImportDraft = (fileName: string, source: string): ImportDraft 
     confidence: resumeForge ? Math.max(confidence, 96) : confidence,
     sections,
     review: importReviewNotes(fileName, source, markdown, sections, resumeForge),
-    resumePatch: resumeForge ? {
-      title: resumeForge.resume.title,
-      targetRole: resumeForge.resume.targetRole,
-      tags: resumeForge.resume.tags ?? [],
-      privateNotes: resumeForge.resume.privateNotes ?? "",
-      templateId: resumeForge.resume.templateId,
-      pageSize: resumeForge.resume.pageSize,
-      versions: resumeForge.resume.versions ?? [],
-      jobTargets: resumeForge.resume.jobTargets ?? [],
-      applications: resumeForge.resume.applications ?? [],
-      importedSource: `Resume Studio JSON exported ${resumeForge.exportedAt}`,
-    } : undefined,
+    resumePatch: resumeForge
+      ? {
+          title: resumeForge.resume.title,
+          targetRole: resumeForge.resume.targetRole,
+          tags: resumeForge.resume.tags ?? [],
+          privateNotes: resumeForge.resume.privateNotes ?? "",
+          templateId: resumeForge.resume.templateId,
+          pageSize: resumeForge.resume.pageSize,
+          versions: resumeForge.resume.versions ?? [],
+          jobTargets: resumeForge.resume.jobTargets ?? [],
+          applications: resumeForge.resume.applications ?? [],
+          importedSource: `Resume Studio JSON exported ${resumeForge.exportedAt}`,
+        }
+      : undefined,
   };
 };
 
-export const createResume = (kind: "blank" | "wizard" | "template" | "import" | "duplicate", source?: ResumeDocument, setup?: NewResumeSetup): ResumeDocument => {
+export const createResume = (
+  kind: "blank" | "wizard" | "template" | "import" | "duplicate",
+  source?: ResumeDocument,
+  setup?: NewResumeSetup,
+): ResumeDocument => {
   const timestamp = nowIso();
   const baseMarkdown =
     kind === "duplicate" && source
@@ -320,17 +338,28 @@ export const createResume = (kind: "blank" | "wizard" | "template" | "import" | 
       : kind === "template" || setup?.templateId === "technical"
         ? defaultResumeMarkdown.replace("template: ats-classic", "template: technical")
         : defaultResumeMarkdown;
-  const setupPatch = setup ? {
-    name: setup.name || "Your Name",
-    title: setup.targetRole || "Target Role",
-    email: setup.email,
-    phone: setup.phone,
-    location: setup.location || "City, State",
-    targetRole: setup.targetRole || "Target Role",
-    template: setup.templateId,
-  } : undefined;
+  const setupPatch = setup
+    ? {
+        name: setup.name || "Your Name",
+        title: setup.targetRole || "Target Role",
+        email: setup.email,
+        phone: setup.phone,
+        location: setup.location || "City, State",
+        targetRole: setup.targetRole || "Target Role",
+        template: setup.templateId,
+      }
+    : undefined;
   const markdown = setupPatch ? updateMarkdownFrontmatter(baseMarkdown, setupPatch) : baseMarkdown;
-  const title = setup?.resumeTitle.trim() || setup?.name.trim() || (kind === "duplicate" && source ? `${source.title} Copy` : kind === "wizard" ? "Guided Resume" : kind === "import" ? "Imported Resume" : "Untitled Resume");
+  const title =
+    setup?.resumeTitle.trim() ||
+    setup?.name.trim() ||
+    (kind === "duplicate" && source
+      ? `${source.title} Copy`
+      : kind === "wizard"
+        ? "Guided Resume"
+        : kind === "import"
+          ? "Imported Resume"
+          : "Untitled Resume");
   const targetRole = setup?.targetRole.trim() || (kind === "duplicate" ? source?.targetRole : "Target Role");
   return {
     id: uid("resume"),
@@ -375,7 +404,11 @@ export const resumeChecklist = (resume: ResumeDocument, ats: ReturnType<typeof a
   const headings = [...content.matchAll(/^##\s+(.+)$/gm)].map((match) => match[1].toLowerCase());
   const hasHeading = (name: string) => headings.some((heading) => heading.includes(name));
   return [
-    { id: "contact", label: "Contact info complete", done: Boolean(parsed.frontmatter.email && parsed.frontmatter.phone && parsed.frontmatter.location) },
+    {
+      id: "contact",
+      label: "Contact info complete",
+      done: Boolean(parsed.frontmatter.email && parsed.frontmatter.phone && parsed.frontmatter.location),
+    },
     { id: "summary", label: "Summary added", done: content.split(/^##\s+/m)[0]?.trim().length > 80 },
     { id: "experience", label: "Experience added", done: hasHeading("experience") && /###\s+/.test(content) },
     { id: "skills", label: "Skills added", done: hasHeading("skills") },
@@ -386,9 +419,15 @@ export const resumeChecklist = (resume: ResumeDocument, ats: ReturnType<typeof a
   ];
 };
 
-export const intelligenceScores = (markdown: string, ats: ReturnType<typeof analyzeAts>, jobMatch: ReturnType<typeof compareResumeToJob> | null) => {
+export const intelligenceScores = (
+  markdown: string,
+  ats: ReturnType<typeof analyzeAts>,
+  jobMatch: ReturnType<typeof compareResumeToJob> | null,
+) => {
   const text = renderMarkdown(markdown, true).plainText;
-  const bullets = parseFrontmatter(markdown).content.split("\n").filter((line) => /^[-*]\s+/.test(line.trim()));
+  const bullets = parseFrontmatter(markdown)
+    .content.split("\n")
+    .filter((line) => /^[-*]\s+/.test(line.trim()));
   const withMetrics = bullets.filter((bullet) => /\d|%|\$|reduced|increased|improved|saved|grew/i.test(bullet)).length;
   const longParagraphs = text.split("\n").filter((line) => line.length > 280).length;
   return {
@@ -443,6 +482,7 @@ export const dedupeIssues = (issues: AtsIssue[]) => {
   });
 };
 
-export const documentStyle = (_templateId: string) => `.resume-page{font-family:Arial,sans-serif;color:#111}.resume-content h1{text-align:center}.page-break{break-before:page}`;
+export const documentStyle = (_templateId: string) =>
+  `.resume-page{font-family:Arial,sans-serif;color:#111}.resume-content h1{text-align:center}.page-break{break-before:page}`;
 
 export { improveBulletLocal };

@@ -23,26 +23,29 @@ const pageTextFromPdfItems = (items: PdfTextItem[]) => {
 
   return [...lines.entries()]
     .sort(([a], [b]) => b - a)
-    .map(([, lineItems]) => lineItems
-      .sort((a, b) => a.transform[4] - b.transform[4])
-      .reduce((line, item) => {
-        const text = item.str.trim();
-        if (!line) return text;
-        if (/^[,.;:!?)]/.test(text)) return `${line}${text}`;
-        if (line.endsWith("(") || line.endsWith("/") || line.endsWith("-")) return `${line}${text}`;
-        return `${line} ${text}`;
-      }, "")
-      .replace(/[ \t]{2,}/g, " ")
-      .trim())
+    .map(([, lineItems]) =>
+      lineItems
+        .sort((a, b) => a.transform[4] - b.transform[4])
+        .reduce((line, item) => {
+          const text = item.str.trim();
+          if (!line) return text;
+          if (/^[,.;:!?)]/.test(text)) return `${line}${text}`;
+          if (line.endsWith("(") || line.endsWith("/") || line.endsWith("-")) return `${line}${text}`;
+          return `${line} ${text}`;
+        }, "")
+        .replace(/[ \t]{2,}/g, " ")
+        .trim(),
+    )
     .filter(Boolean)
     .join("\n");
 };
 
 const plainTextFromPdf = async (file: File) => {
   const pdfjs = await import("pdfjs-dist/legacy/build/pdf.mjs");
-  pdfjs.GlobalWorkerOptions.workerSrc = typeof window === "undefined"
-    ? new URL("../../node_modules/pdfjs-dist/legacy/build/pdf.worker.min.mjs", import.meta.url).toString()
-    : new URL("pdfjs-dist/legacy/build/pdf.worker.min.mjs", import.meta.url).toString();
+  pdfjs.GlobalWorkerOptions.workerSrc =
+    typeof window === "undefined"
+      ? new URL("../../node_modules/pdfjs-dist/legacy/build/pdf.worker.min.mjs", import.meta.url).toString()
+      : new URL("pdfjs-dist/legacy/build/pdf.worker.min.mjs", import.meta.url).toString();
   const loadingTask = pdfjs.getDocument({ data: new Uint8Array(await file.arrayBuffer()) });
   const pdf = await loadingTask.promise;
   const pages: string[] = [];
@@ -73,13 +76,16 @@ export const extractResumeTextFromFile = async (file: File) => {
   const extension = extensionFor(file.name);
   if (textExtensions.includes(extension)) return file.text();
   if (extension === ".pdf" || file.type === "application/pdf") return plainTextFromPdf(file);
-  if (extension === ".docx" || file.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document") return plainTextFromDocx(file);
+  if (extension === ".docx" || file.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
+    return plainTextFromDocx(file);
   if (extension === ".doc") {
     try {
       const text = await plainTextFromDocx(file);
       if (text) return text;
     } catch {
-      throw new Error("Legacy .doc files are not readable in this browser import. Save the file as .docx, PDF, Markdown, or plain text and import it again.");
+      throw new Error(
+        "Legacy .doc files are not readable in this browser import. Save the file as .docx, PDF, Markdown, or plain text and import it again.",
+      );
     }
   }
   throw new Error("Unsupported import file. Use DOCX, PDF, Markdown, TXT, JSON Resume, or YAML.");

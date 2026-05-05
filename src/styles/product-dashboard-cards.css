@@ -61,7 +61,10 @@
 }
 
 .onboarding-card article {
-  transition: border-color .16s ease, background .16s ease, transform .16s ease;
+  transition:
+    border-color 0.16s ease,
+    background 0.16s ease,
+    transform 0.16s ease;
 }
 
 .onboarding-card article:hover {
@@ -120,7 +123,10 @@
   flex-direction: column;
   gap: 16px;
   padding: 20px;
-  transition: border-color .16s ease, background .16s ease, transform .16s ease;
+  transition:
+    border-color 0.16s ease,
+    background 0.16s ease,
+    transform 0.16s ease;
 }
 
 .refined-card:hover,
@@ -161,9 +167,18 @@
   background: var(--panel-soft);
 }
 
-.score-chip.good { color: var(--success); border-color: color-mix(in srgb, var(--success) 44%, var(--line)); }
-.score-chip.warn { color: var(--warning); border-color: color-mix(in srgb, var(--warning) 44%, var(--line)); }
-.score-chip.bad { color: var(--danger); border-color: color-mix(in srgb, var(--danger) 44%, var(--line)); }
+.score-chip.good {
+  color: var(--success);
+  border-color: color-mix(in srgb, var(--success) 44%, var(--line));
+}
+.score-chip.warn {
+  color: var(--warning);
+  border-color: color-mix(in srgb, var(--warning) 44%, var(--line));
+}
+.score-chip.bad {
+  color: var(--danger);
+  border-color: color-mix(in srgb, var(--danger) 44%, var(--line));
+}
 .score-chip.large {
   width: 74px;
   height: 74px;
@@ -198,7 +213,7 @@
 }
 
 .subtle-icon-btn {
-  opacity: .72;
+  opacity: 0.72;
 }
 
 .resume-card:hover .subtle-icon-btn,

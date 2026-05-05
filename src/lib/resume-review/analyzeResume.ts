@@ -13,7 +13,17 @@ import { overallScore, scoreReview } from "./scoring";
 import { buildAchievementAudit, buildSectionReviews } from "./insights";
 import type { ResumeReviewContext, ResumeReviewIssue, ResumeReviewResult, ResumeReviewRule } from "./types";
 
-const rules: ResumeReviewRule[] = [placeholderRules, contactRules, structureRules, formattingRules, bulletRules, metricsRules, dateRules, keywordRules, exportRules];
+const rules: ResumeReviewRule[] = [
+  placeholderRules,
+  contactRules,
+  structureRules,
+  formattingRules,
+  bulletRules,
+  metricsRules,
+  dateRules,
+  keywordRules,
+  exportRules,
+];
 
 const dedupe = (issues: ResumeReviewIssue[]) => {
   const seen = new Set<string>();
@@ -36,11 +46,17 @@ const stableIssueId = (issue: ResumeReviewIssue) =>
 export const analyzeResume = (context: ResumeReviewContext): ResumeReviewResult => {
   const document = buildReviewDocument(context.markdown);
   const keywordMatch = analyzeJobKeywords(context.markdown, context.jobDescription ?? "");
-  const issues = dedupe(rules.flatMap((rule) => rule(document, context))).map((issue) => ({ ...issue, id: stableIssueId(issue) })).sort((a, b) => {
-    const rank = { critical: 0, warning: 1, info: 2 };
-    return rank[a.severity] - rank[b.severity] || a.category.localeCompare(b.category);
-  });
-  const scores = scoreReview(issues, document.bullets.map((bullet) => bullet.text), keywordMatch.score);
+  const issues = dedupe(rules.flatMap((rule) => rule(document, context)))
+    .map((issue) => ({ ...issue, id: stableIssueId(issue) }))
+    .sort((a, b) => {
+      const rank = { critical: 0, warning: 1, info: 2 };
+      return rank[a.severity] - rank[b.severity] || a.category.localeCompare(b.category);
+    });
+  const scores = scoreReview(
+    issues,
+    document.bullets.map((bullet) => bullet.text),
+    keywordMatch.score,
+  );
   const overall = overallScore(scores);
   const sectionReviews = buildSectionReviews(document, issues);
   const achievementAudit = buildAchievementAudit(document);

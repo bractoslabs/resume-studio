@@ -1,4 +1,7 @@
 node_modules
 dist
+test-results
+playwright-report
+.tmp-demo-video
 *.tsbuildinfo
 .DS_Store

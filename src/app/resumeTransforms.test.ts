@@ -44,38 +44,46 @@ describe("resume app transforms", () => {
   });
 
   it("summarizes import review cleanups and missing fields", () => {
-    const draft = buildImportDraft("resume.txt", [
-      "Avery Chen",
-      "avery@example.com | Chicago, IL",
-      "EXPERIENCE",
-      "Northwind Labs | 2022 - Present",
-      "• Improved onboarding by 24%",
-    ].join("\n"));
+    const draft = buildImportDraft(
+      "resume.txt",
+      [
+        "Avery Chen",
+        "avery@example.com | Chicago, IL",
+        "EXPERIENCE",
+        "Northwind Labs | 2022 - Present",
+        "• Improved onboarding by 24%",
+      ].join("\n"),
+    );
     expect(draft.review.contact.email).toBe("avery@example.com");
     expect(draft.review.contact.location).toBe("Chicago, IL");
     expect(draft.review.bulletCount).toBe(1);
-    expect(draft.review.repairedFields).toEqual(expect.arrayContaining([
-      "Added Resume Studio frontmatter",
-      "Converted bullet symbols to Markdown bullets",
-      "Converted plain-text headings to Markdown sections",
-      "Marked dated experience lines as job entries",
-    ]));
+    expect(draft.review.repairedFields).toEqual(
+      expect.arrayContaining([
+        "Added Resume Studio frontmatter",
+        "Converted bullet symbols to Markdown bullets",
+        "Converted plain-text headings to Markdown sections",
+        "Marked dated experience lines as job entries",
+      ]),
+    );
     expect(draft.review.ignoredFields).toContain("Phone not detected");
   });
 
   it("splits imported experience into generic dated job entries", () => {
-    const draft = buildImportDraft("resume.txt", [
-      "Avery Chen",
-      "avery@example.com",
-      "EXPERIENCE",
-      "Northwind Labs - Remote | Jan 2024 - Present",
-      "Head of Product",
-      "• Led platform roadmap",
-      "across three product teams.",
-      "Contoso, Austin, TX | 2020 - 2023",
-      "Director of Operations",
-      "- Improved delivery by 35%",
-    ].join("\n"));
+    const draft = buildImportDraft(
+      "resume.txt",
+      [
+        "Avery Chen",
+        "avery@example.com",
+        "EXPERIENCE",
+        "Northwind Labs - Remote | Jan 2024 - Present",
+        "Head of Product",
+        "• Led platform roadmap",
+        "across three product teams.",
+        "Contoso, Austin, TX | 2020 - 2023",
+        "Director of Operations",
+        "- Improved delivery by 35%",
+      ].join("\n"),
+    );
     expect(draft.markdown).toContain("## Experience");
     expect(draft.markdown.match(/^###\s+/gm)).toHaveLength(2);
     expect(draft.markdown).toContain("### Northwind Labs - Remote | Jan 2024 - Present");
@@ -93,13 +101,11 @@ describe("resume app transforms", () => {
 
   it("extracts readable text from DOCX uploads", async () => {
     const doc = new Document({
-      sections: [{
-        children: [
-          new Paragraph("Avery Chen"),
-          new Paragraph("Experience"),
-          new Paragraph("Built onboarding workflows"),
-        ],
-      }],
+      sections: [
+        {
+          children: [new Paragraph("Avery Chen"), new Paragraph("Experience"), new Paragraph("Built onboarding workflows")],
+        },
+      ],
     });
     const buffer = await Packer.toBuffer(doc);
     const fileBytes = new Uint8Array(buffer.buffer as ArrayBuffer, buffer.byteOffset, buffer.byteLength);
