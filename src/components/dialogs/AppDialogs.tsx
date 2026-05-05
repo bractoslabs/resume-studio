@@ -302,7 +302,11 @@ export const NewResumeDialog = ({
   const canCreate = Boolean(setup.name.trim() || setup.resumeTitle.trim() || setup.targetRole.trim());
   const updateSetup = (patch: Partial<NewResumeSetup>) => setSetup((current) => ({ ...current, ...patch }));
   const chooseStartMode = (startMode: NewResumeSetup["startMode"]) => {
-    updateSetup({ startMode, templateId: startMode === "template" ? "technical" : setup.templateId });
+    if (startMode === "template") {
+      onTemplate({ ...setup, startMode, templateId: "technical" });
+      return;
+    }
+    updateSetup({ startMode, templateId: setup.templateId });
     setStep("details");
   };
 
@@ -349,7 +353,7 @@ export const NewResumeDialog = ({
               <LayoutTemplate size={20} />
               <span>
                 <strong>Markdown template</strong>
-                <small>Use a structured Markdown resume with the core sections already in place.</small>
+                <small>Open a structured Markdown resume with the core sections already in place.</small>
               </span>
               <ArrowRight className="new-resume-option-arrow" size={18} />
             </Button>

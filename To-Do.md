@@ -1,8 +1,8 @@
 # Resume Studio To-Do
 
-Public roadmap for improving Resume Studio's usability, usefulness, UI/UX, and long-term product quality.
+Public roadmap and backlog for improving Resume Studio's usability, usefulness, UI/UX, and long-term product quality.
 
-For the public-facing roadmap, see [docs/roadmap.md](docs/roadmap.md). This file remains a broader internal working list.
+This roadmap is not a promise. Priorities may change during public beta based on user feedback, maintenance cost, security needs, and product direction.
 
 ## Product Flow and Onboarding
 
