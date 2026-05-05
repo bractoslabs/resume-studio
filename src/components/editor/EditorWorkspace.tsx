@@ -83,6 +83,7 @@ interface EditPanelProps {
   checklist: ReturnType<typeof resumeChecklist>;
   editMode: EditMode;
   setEditMode: (value: EditMode) => void;
+  onChecklistSelect: (id: string) => void;
   structured: StructuredResume | null;
   setStructured: (value: StructuredResume) => void;
   setMarkdown: (markdown: string) => void;
@@ -234,6 +235,22 @@ export const EditorWorkspace = (props: EditorWorkspaceProps) => {
               checklist={checklist}
               editMode={editMode}
               setEditMode={setEditMode}
+              onChecklistSelect={(id: string) => {
+                const tabTargets: Record<string, WorkflowTab> = {
+                  review: "review",
+                  job: "tailor",
+                  export: "export",
+                  version: "history",
+                };
+                if (tabTargets[id]) {
+                  setTab(tabTargets[id]);
+                  return;
+                }
+                setEditMode("guided");
+                window.setTimeout(() => {
+                  document.querySelector(`[data-checklist-target="${id}"]`)?.scrollIntoView({ behavior: "smooth", block: "start" });
+                }, 0);
+              }}
               structured={structured}
               setStructured={setStructured}
               setMarkdown={setMarkdown}
@@ -366,7 +383,7 @@ const NotesPanel = ({ resume, updateResume }: { resume: ResumeDocument; updateRe
   </div>
 );
 
-const EditPanel = ({ resume, checklist, editMode, setEditMode, structured, setStructured, setMarkdown, updateResume, insertSnippet, applyStructured, editorRef }: EditPanelProps) => (
+const EditPanel = ({ resume, checklist, editMode, setEditMode, onChecklistSelect, structured, setStructured, setMarkdown, updateResume, insertSnippet, applyStructured, editorRef }: EditPanelProps) => (
   <div className="workflow-panel edit-panel">
     <div className="panel-heading">
       <div>
@@ -378,7 +395,7 @@ const EditPanel = ({ resume, checklist, editMode, setEditMode, structured, setSt
         <button className={editMode === "guided" ? "active" : ""} onClick={() => setEditMode("guided")}>Guided</button>
       </div>
     </div>
-    <ChecklistCard checklist={checklist} />
+    <ChecklistCard checklist={checklist} onSelect={onChecklistSelect} />
     <label className="title-field">
       Resume name
       <input value={resume.title} onChange={(event) => updateResume(resume.id, { title: event.target.value })} />
@@ -567,7 +584,7 @@ const GuidedEditor = ({ structured, onChange, onApply }: { structured: Structure
   };
   return (
     <div className="guided-builder">
-      <section className="form-card">
+      <section className="form-card" data-checklist-target="contact">
         <h3>Contact</h3>
         <div className="form-grid">
           {contactFields.map((field) => (
@@ -575,11 +592,11 @@ const GuidedEditor = ({ structured, onChange, onApply }: { structured: Structure
           ))}
         </div>
       </section>
-      <section className="form-card">
+      <section className="form-card" data-checklist-target="summary">
         <h3>Professional summary</h3>
         <textarea value={structured.summary} onChange={(event) => onChange({ ...structured, summary: event.target.value })} />
       </section>
-      <section className="form-card">
+      <section className="form-card" data-checklist-target="experience">
         <header className="card-section-head"><h3>Experience</h3><Button onClick={() => onChange({ ...structured, experience: [...structured.experience, { id: uid("exp"), company: "", role: "Role", bullets: ["Action + scope + method + result."], technologies: [], impactMetrics: [], keywords: [] }] })}><Plus size={15} /> Add experience</Button></header>
         {structured.experience.map((entry, index) => (
           <details className="experience-card" key={entry.id} open={index === 0}>
@@ -606,7 +623,7 @@ const GuidedEditor = ({ structured, onChange, onApply }: { structured: Structure
           </details>
         ))}
       </section>
-      <section className="form-card">
+      <section className="form-card" data-checklist-target="skills">
         <h3>Skills and sections</h3>
         <label>Skills<textarea value={structured.skills.join(", ")} onChange={(event) => onChange({ ...structured, skills: event.target.value.split(",").map((skill) => skill.trim()).filter(Boolean) })} /></label>
         <div className="form-grid">
@@ -628,13 +645,19 @@ const SimpleEntryEditor = ({ title, values, onChange }: SimpleEntryEditorProps) 
   <label>{title}<textarea value={values.map((entry) => entry.title).join("\n")} onChange={(event) => onChange(event.target.value.split("\n").filter(Boolean).map((item) => ({ id: uid(title.toLowerCase()), title: item, bullets: [] })))} /></label>
 );
 
-const ChecklistCard = ({ checklist }: { checklist: ReturnType<typeof resumeChecklist> }) => {
+const ChecklistCard = ({ checklist, onSelect }: { checklist: ReturnType<typeof resumeChecklist>; onSelect: (id: string) => void }) => {
   const done = checklist.filter((item) => item.done).length;
   return (
     <section className="checklist-card" aria-label="Job seeker checklist">
       <div><strong>Job seeker checklist</strong><span>{done}/{checklist.length} complete</span></div>
       <ul>
-        {checklist.map((item) => <li key={item.id} className={item.done ? "done" : ""}><Check size={13} /> {item.label}</li>)}
+        {checklist.map((item) => (
+          <li key={item.id} className={item.done ? "done" : ""}>
+            <button type="button" onClick={() => onSelect(item.id)} aria-label={`${item.done ? "Review" : "Complete"} ${item.label}`}>
+              <Check size={13} /> <span>{item.label}</span>
+            </button>
+          </li>
+        ))}
       </ul>
     </section>
   );

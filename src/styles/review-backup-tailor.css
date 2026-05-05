@@ -24,6 +24,30 @@
   list-style: none;
 }
 
+.checklist-card li button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: inherit;
+  padding: 2px 0;
+  cursor: pointer;
+  text-align: left;
+}
+
+.checklist-card li button:hover,
+.checklist-card li button:focus-visible {
+  color: var(--ink);
+  outline: none;
+}
+
+.checklist-card li button:focus-visible span {
+  text-decoration: underline;
+}
+
 .checklist-card li {
   display: flex;
   align-items: center;
