@@ -2,7 +2,7 @@
 
 Thanks for your interest in Resume Studio. This is an open-source Bractos Labs app for building private, local-first resumes in the browser.
 
-Resume Studio is in public beta. Contributions are welcome, but maintainers may be selective while the product direction settles. A small, focused change with clear reasoning is much easier to review than a broad rewrite.
+Contributions are welcome, but maintainers may be selective to keep the product focused and maintainable. A small, focused change with clear reasoning is much easier to review than a broad rewrite.
 
 ## Reporting Bugs
 
@@ -18,7 +18,7 @@ Do not include private resume content, personal contact information, job applica
 
 ## Requesting Features
 
-Use GitHub Issues for feature requests. Describe the problem first, then the solution you would like to see. Resume Studio is early, so maintainers may defer or decline ideas that do not fit the current public beta direction.
+Use GitHub Issues for feature requests. Describe the problem first, then the solution you would like to see. Maintainers may defer or decline ideas that do not fit the current product direction.
 
 ## Working on Issues
 
@@ -95,4 +95,4 @@ By contributing, you agree that your contributions will be licensed under the MI
 
 ## Maintainer Discretion
 
-Bractos Labs maintains the product direction for Resume Studio. Maintainers may edit, defer, close, or decline contributions to keep the public beta coherent and maintainable.
+Bractos Labs maintains the product direction for Resume Studio. Maintainers may edit, defer, close, or decline contributions to keep the app coherent and maintainable.

@@ -4,7 +4,7 @@ export { ResumePreview } from "./preview/ResumePreview";
 export { BackupReminderBanner, LocalStorageWarningBanner } from "./common/BackupReminderBanner";
 export { JobsPage } from "./jobs/JobsPage";
 export { HelpersPage } from "./career-tools/HelpersPage";
-export { LandingSections, PublicInfoPage } from "./public/PublicPages";
+export { LandingPage, PublicInfoPage } from "./public/PublicPages";
 export { SettingsPage } from "./settings/SettingsPage";
 export {
   FeedbackModal,

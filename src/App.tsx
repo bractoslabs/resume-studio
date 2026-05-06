@@ -1,19 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import {
-  BriefcaseBusiness,
-  Check,
-  Download,
-  FileText,
-  History,
-  Home,
-  MessageCircle,
-  Moon,
-  Plus,
-  Save,
-  Settings,
-  Sparkles,
-  Sun,
-} from "lucide-react";
+import { BriefcaseBusiness, Check, Download, History, Home, MessageCircle, Moon, Plus, Save, Settings, Sparkles, Sun } from "lucide-react";
 import type { AppState, JobTarget, ResumeDocument, ResumeVersion, StructuredResume } from "./lib/types";
 import { analyzeAts } from "./lib/ats";
 import { defaultResumeMarkdown } from "./lib/defaultDraft";
@@ -46,10 +32,9 @@ import {
   HelpersPage,
   ImportModal,
   JobsPage,
-  LandingSections,
+  LandingPage,
   NewResumeDialog,
   PublicInfoPage,
-  ResumePreview,
   RestoreBackupDialog,
   SaveVersionDialog,
   SettingsPage,
@@ -68,6 +53,7 @@ import type {
 import { snippets } from "./app/constants";
 import { publicPathToView, viewToPath } from "./app/viewRouting";
 import { Button } from "./components/common/Button";
+import { ResumeStudioLogo } from "./components/common/ResumeStudioLogo";
 import {
   createResume,
   createResumeFromImportDraft,
@@ -164,7 +150,6 @@ function App() {
     () => renderMarkdown(activeResume?.markdown ?? defaultResumeMarkdown, atsMode),
     [activeResume?.markdown, atsMode],
   );
-  const landingRendered = useMemo(() => renderMarkdown(defaultResumeMarkdown, false), []);
   const template = getTemplate(activeResume?.templateId ?? rendered.frontmatter.template);
   const jobMatch = useMemo(
     () => (jobDescription.trim() ? compareResumeToJob(activeResume?.markdown ?? "", jobDescription) : null),
@@ -520,8 +505,8 @@ function App() {
   const shell = (children: React.ReactNode) => (
     <main className="product-shell">
       <aside className="app-rail" aria-label="Primary navigation">
-        <button className="rail-brand" onClick={() => setView("dashboard")}>
-          <FileText size={18} /> <span className="rail-brand-name">Resume Studio</span> <small className="beta-pill">Public beta</small>
+        <button className="rail-brand" onClick={() => setView("landing")}>
+          <ResumeStudioLogo className="rail-brand-logo" /> <span className="rail-brand-name">Resume Studio</span>
         </button>
         {(
           [
@@ -582,65 +567,7 @@ function App() {
         </div>
       )}
 
-      {view === "landing" && (
-        <main className="landing">
-          <nav className="topbar clean-topbar">
-            <button className="brand" onClick={() => setView("dashboard")}>
-              <FileText size={22} /> Resume Studio <small className="beta-pill">Public beta</small>
-            </button>
-            <div className="topbar-actions">
-              {themeToggle}
-              <Button className="primary" onClick={() => setView("dashboard")}>
-                Start building
-              </Button>
-            </div>
-          </nav>
-          <section className="hero focused-hero">
-            <div className="hero-copy">
-              <h1>Free, private, Markdown-first resume builder for serious job seekers.</h1>
-              <p>
-                Create, review, tailor, and export resumes without an account. Resume Studio keeps your data local by default and never
-                invents your experience.
-              </p>
-              <div className="hero-actions">
-                <Button className="primary large" onClick={() => setView("dashboard")}>
-                  Start building
-                </Button>
-              </div>
-              <div className="benefits">
-                {[
-                  "Free to use",
-                  "No account required",
-                  "Markdown and guided editing",
-                  "Live preview",
-                  "Resume Review",
-                  "Keyword & Fit Check",
-                  "PDF, DOCX, Markdown, and plain text exports",
-                  "Local-first privacy",
-                ].map((benefit) => (
-                  <span key={benefit}>
-                    <Check size={14} /> {benefit}
-                  </span>
-                ))}
-              </div>
-            </div>
-            <div className="hero-preview">
-              <ResumePreview
-                renderedHtml={landingRendered.html}
-                frontmatter={landingRendered.frontmatter}
-                pageStyle={pageStyle}
-                templateId="technical"
-                pageSize="letter"
-                zoom={0.62}
-                warnings={0}
-                pageCount={1}
-                currentPage={1}
-              />
-            </div>
-          </section>
-          <LandingSections setView={setView} />
-        </main>
-      )}
+      {view === "landing" && <LandingPage setView={setView} themeToggle={themeToggle} />}
 
       {view === "dashboard" &&
         shell(

@@ -17,9 +17,9 @@
 - Preview pagination now shows one page at a time, repeats the candidate header on later pages, and avoids cutting text at the page bottom.
 - Duplicate resume title/header text is removed when imported or edited Markdown repeats frontmatter values.
 
-## v0.2.0-beta - Public beta launch prep
+## v0.2.0 - Launch prep
 
-Upcoming public beta release focused on launch readiness. Core features are usable, but imports, exports, templates, and review tools may continue to change.
+Release focused on launch readiness, open-source distribution, local-first storage, imports, exports, templates, and review tools.
 
 ### Added
 
@@ -30,7 +30,7 @@ Upcoming public beta release focused on launch readiness. Core features are usab
 - Local-storage warning and backup guidance.
 - Browser support, known limitations, and public roadmap/backlog updates.
 - ESLint, Prettier, and Dependabot configuration.
-- Public beta pill and subtle Bractos Labs attribution.
+- Open-source status pill and subtle Bractos Labs attribution.
 
 ### Changed
 
@@ -46,7 +46,7 @@ Upcoming public beta release focused on launch readiness. Core features are usab
 ### Security
 
 - Markdown/HTML sanitizer tests cover scripts, inline event handlers, unsafe links, malformed HTML, SVG payloads, and safe Markdown formatting.
-- README explains the static local-first public beta security model and private reporting path.
+- README explains the static local-first security model and private reporting path.
 
 ### Documentation
 

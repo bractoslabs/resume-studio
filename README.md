@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/bractoslabs/resume-studio/actions/workflows/ci.yml/badge.svg)](https://github.com/bractoslabs/resume-studio/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Status: Public Beta](https://img.shields.io/badge/status-public%20beta-436a6b.svg)](https://resume.bractos.com)
+[![Open Source](https://img.shields.io/badge/open-source-436a6b.svg)](https://github.com/bractoslabs/resume-studio)
 [![No account required](https://img.shields.io/badge/no%20account-required-436a6b.svg)](https://resume.bractos.com)
 
 Free, private, Markdown-first resume builder from Bractos Labs.
@@ -13,9 +13,9 @@ Resume Studio helps you write, review, tailor, and export resumes without creati
 
 Resume Studio is an open-source Bractos Labs project.
 
-## Public Beta Note
+## Local-First Note
 
-Resume Studio is in public beta. Core features are usable, but imports, exports, templates, and review tools may continue to change. Your resume data is saved locally in your browser, not synced to an account. Download a backup before clearing browser data, switching devices, or relying on the app for active applications.
+Your resume data is saved locally in your browser, not synced to an account. Download a backup before clearing browser data, switching devices, or relying on the app for active applications.
 
 ## What It Does
 
@@ -72,7 +72,7 @@ npm run preview  # preview built assets
 
 ## Contributing
 
-Contributions are welcome. Resume Studio is in public beta, so maintainers may be selective while the product direction settles. Please read [CONTRIBUTING.md](CONTRIBUTING.md) before opening a pull request.
+Contributions are welcome. Maintainers may be selective to keep the product focused and maintainable. Please read [CONTRIBUTING.md](CONTRIBUTING.md) before opening a pull request.
 
 Never include private resume content, personal contact information, job application details, or other sensitive data in public issues, PRs, screenshots, or fixtures.
 
@@ -134,13 +134,13 @@ ZIP export is represented as a portable package JSON in this static pass.
 
 ## Import Support
 
-Best import results come from Markdown, TXT, and DOCX. Selectable-text PDFs may work. Scanned or image-only PDFs are not supported yet.
+Best import results come from Markdown, TXT, DOCX, and PDFs with selectable text. Scanned or image-only PDFs are not supported yet.
 
 Import results may need cleanup, especially complex PDFs and DOCX files. Review imported content before saving or exporting it.
 
 ## Known Limitations
 
-- Browser storage only. There is no cloud sync or account backup in the current public beta.
+- Browser storage only. There is no cloud sync or account backup.
 - Clearing browser data may remove saved resumes.
 - PDF export is generated from resume data and may not match the live browser preview pixel-for-pixel.
 - DOCX export may not perfectly match visual templates.
@@ -148,7 +148,7 @@ Import results may need cleanup, especially complex PDFs and DOCX files. Review 
 - Import results may need cleanup, especially complex PDFs and DOCX files.
 - Resume Review and Keyword & Fit Check are guidance only.
 - Resume Studio does not guarantee ATS results, employer ranking, interviews, job offers, or hiring outcomes.
-- No AI or cloud rewriting is included in the current static beta unless added later and disclosed.
+- No AI or cloud rewriting is included unless added later and disclosed.
 - Mobile editing is limited compared to desktop.
 
 ## Browser Support
@@ -169,7 +169,7 @@ Email security vulnerabilities to labs@bractos.com. Do not open a public GitHub 
 
 Include a clear description, steps to reproduce, browser and operating system if relevant, potential impact, and proof-of-concept details if safe to share privately.
 
-Resume Studio is a static, local-first public beta. Resume content is intended to remain in browser storage on the user's device. The current beta does not require an account, does not include cloud sync, and does not include cloud resume storage.
+Resume Studio is a static, local-first app. Resume content is intended to remain in browser storage on the user's device. It does not require an account, does not include cloud sync, and does not include cloud resume storage.
 
 ## Community Conduct
 

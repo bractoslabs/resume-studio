@@ -8,9 +8,6 @@
   .rail-attribution {
     display: none;
   }
-  .rail-brand .beta-pill {
-    display: none;
-  }
   .rail-brand,
   .app-rail > button {
     justify-content: center;
@@ -52,9 +49,6 @@
   .app-rail > button {
     width: auto;
     min-width: 48px;
-  }
-  .rail-brand .beta-pill {
-    display: inline-flex;
   }
   .dashboard-page,
   .content-page {
