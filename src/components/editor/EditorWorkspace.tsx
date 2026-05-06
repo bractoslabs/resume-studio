@@ -79,8 +79,6 @@ interface EditorWorkspaceProps {
   editorRef: React.RefObject<HTMLTextAreaElement | null>;
   zoom: number;
   setZoom: ZoomSetter;
-  atsMode: boolean;
-  setAtsMode: (value: boolean) => void;
   activePageCount: number;
   checklist: ReturnType<typeof resumeChecklist>;
   intelligence: ReturnType<typeof intelligenceScores>;
@@ -153,6 +151,7 @@ interface SimpleEntryEditorProps {
   title: string;
   values: SimpleEntry[];
   onChange: (values: SimpleEntry[]) => void;
+  checklistTarget?: string;
 }
 
 const contactFields = ["name", "title", "email", "phone", "location", "targetRole"] as const;
@@ -188,8 +187,6 @@ export const EditorWorkspace = (props: EditorWorkspaceProps) => {
     editorRef,
     zoom,
     setZoom,
-    atsMode,
-    setAtsMode,
     activePageCount,
     checklist,
     intelligence,
@@ -389,8 +386,6 @@ export const EditorWorkspace = (props: EditorWorkspaceProps) => {
               style={documentStyle(template.id)}
               appState={state}
               template={template}
-              atsMode={atsMode}
-              setAtsMode={setAtsMode}
               downloadBackup={downloadBackup}
               recordExport={recordExport}
               activePageCount={normalizedPageCount}
@@ -947,6 +942,7 @@ const GuidedEditor = ({
             title="Education"
             values={structured.education}
             onChange={(education) => onChange({ ...structured, education })}
+            checklistTarget="education"
           />
           <SimpleEntryEditor title="Projects" values={structured.projects} onChange={(projects) => onChange({ ...structured, projects })} />
           <label>
@@ -978,8 +974,8 @@ const GuidedEditor = ({
   );
 };
 
-const SimpleEntryEditor = ({ title, values, onChange }: SimpleEntryEditorProps) => (
-  <label>
+const SimpleEntryEditor = ({ title, values, onChange, checklistTarget }: SimpleEntryEditorProps) => (
+  <label data-checklist-target={checklistTarget}>
     {title}
     <textarea
       value={values.map((entry) => entry.title).join("\n")}
@@ -997,35 +993,35 @@ const SimpleEntryEditor = ({ title, values, onChange }: SimpleEntryEditorProps) 
 
 const ChecklistCard = ({ checklist, onSelect }: { checklist: ReturnType<typeof resumeChecklist>; onSelect: (id: string) => void }) => {
   const done = checklist.filter((item) => item.done).length;
-  const nextItem = checklist.find((item) => !item.done) ?? checklist[checklist.length - 1];
+  const nextItem = checklist.find((item) => !item.done);
   const percent = Math.round((done / checklist.length) * 100);
   const helperText: Record<string, string> = {
     contact: "Add email, phone, and location",
     summary: "Write a focused opening",
     experience: "Add roles and impact bullets",
     skills: "List relevant strengths",
-    job: "Compare against a target role",
+    education: "Add school, degree, or training",
   };
   const actionText: Record<string, string> = {
     contact: "Add contact info",
     summary: "Write summary",
     experience: "Add experience",
     skills: "Add skills",
-    job: "Add job target",
+    education: "Add education",
   };
   const statusText: Record<string, string> = {
     contact: "Contact missing",
     summary: "Summary missing",
     experience: "Experience missing",
     skills: "Skills missing",
-    job: "Job missing",
+    education: "Education missing",
   };
   const doneText: Record<string, string> = {
-    contact: "Contact done",
-    summary: "Summary done",
-    experience: "Experience done",
-    skills: "Skills done",
-    job: "Job ready",
+    contact: "Contact",
+    summary: "Summary",
+    experience: "Experience",
+    skills: "Skills",
+    education: "Education",
   };
   return (
     <section className="checklist-card readiness-card" aria-label="Resume readiness">
@@ -1039,13 +1035,18 @@ const ChecklistCard = ({ checklist, onSelect }: { checklist: ReturnType<typeof r
             {done}/{checklist.length} complete
           </span>
         </div>
-        {nextItem && (
-          <button className="readiness-next" type="button" onClick={() => onSelect(nextItem.id)}>
-            <span>Next</span>
-            <strong>{actionText[nextItem.id] ?? nextItem.label}</strong>
-            <small>{helperText[nextItem.id] ?? "Keep improving this resume"}</small>
-          </button>
-        )}
+        <button
+          className={`readiness-next ${nextItem ? "" : "complete"}`}
+          type="button"
+          disabled={!nextItem}
+          onClick={() => {
+            if (nextItem) onSelect(nextItem.id);
+          }}
+        >
+          <span>{nextItem ? "Next" : "Ready"}</span>
+          <strong>{nextItem ? (actionText[nextItem.id] ?? nextItem.label) : "No further action"}</strong>
+          <small>{nextItem ? (helperText[nextItem.id] ?? "Keep improving this resume") : "All readiness steps are complete."}</small>
+        </button>
       </div>
       <ul className="readiness-steps" aria-label="Readiness steps">
         {checklist.map((item) => (

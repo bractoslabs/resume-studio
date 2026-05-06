@@ -297,10 +297,89 @@ describe("resume app transforms", () => {
     expect(draft.review.bulletCount).toBe(2);
   });
 
+  it("keeps multi-word PDF headings intact and avoids volunteer body-text headings", () => {
+    const draft = buildImportDraft(
+      "david-mercer.pdf",
+      [
+        "DAVID MERCER",
+        "Austin, TX | (512) 555-0196 | david.mercer@example.com",
+        "PROFESSIONAL SUMMARY",
+        "Operations technology and product leader.",
+        "CORE SKILLS",
+        "Operations Systems WMS workflows, inventory accuracy, order routing",
+        "PROFESSIONAL EXPERIENCE",
+        "Director of Operations Technology",
+        "Northline Fulfillment Group | Austin, TX | 2022 - 2026",
+        "• Reduced unresolved exceptions by 47%.",
+        "SELECTED PROJECTS",
+        "Warehouse Exception Control Tower Designed a daily exception review process.",
+        "EDUCATION",
+        "Texas State University | B.B.A., Computer Information Systems",
+        "TOOLS",
+        "SQL | Power BI | Looker Studio | Jira | Confluence",
+        "ADDITIONAL LEADERSHIP HIGHLIGHTS",
+        "• Hired and coached analysts and implementation specialists.",
+        "PROFESSIONAL DEVELOPMENT",
+        "Coursework and workshops in API fundamentals and data visualization.",
+        "COMMUNITY",
+        "Volunteer mentor for early-career operations analysts and supply chain students.",
+      ].join("\n"),
+    );
+
+    expect(draft.sections).toEqual(
+      expect.arrayContaining([
+        "Summary",
+        "Core Skills",
+        "Professional Experience",
+        "Selected Projects",
+        "Education",
+        "Tools",
+        "Additional Leadership Highlights",
+        "Professional Development",
+        "Community",
+      ]),
+    );
+    expect(draft.sections).not.toEqual(expect.arrayContaining(["Core", "Additional Leadership", "Volunteer"]));
+    expect(draft.markdown).toContain("## Community\n\nVolunteer mentor for early-career operations analysts");
+    expect(draft.markdown).not.toContain("## Volunteer");
+  });
+
   it("keeps checklist and page estimate deterministic", () => {
     const resume = createResume("blank");
     const checklist = resumeChecklist(resume, analyzeAts(resume.markdown));
-    expect(checklist.map((item) => item.id)).toEqual(["contact", "summary", "experience", "skills", "job"]);
+    expect(checklist.map((item) => item.id)).toEqual(["contact", "summary", "experience", "skills", "education"]);
     expect(pageCountEstimate("x".repeat(3301))).toBe(2);
+  });
+
+  it("counts imported Summary sections toward resume readiness", () => {
+    const resume = createResume("blank");
+    const markdown = `---
+name: David Mercer
+email: david.mercer@example.com
+phone: (512) 555-0196
+location: Austin, TX
+---
+
+## Summary
+
+Operations technology leader.
+
+## Experience
+
+### Director of Operations Technology
+- Reduced unresolved exceptions by 47%.
+
+## Skills
+
+- SQL, Power BI, Jira
+
+## Education
+
+Texas State University | B.B.A., Computer Information Systems
+`;
+    const checklist = resumeChecklist({ ...resume, markdown }, analyzeAts(markdown));
+    expect(checklist.find((item) => item.id === "summary")?.done).toBe(true);
+    expect(checklist.find((item) => item.id === "education")?.done).toBe(true);
+    expect(checklist.some((item) => item.id === "job")).toBe(false);
   });
 });

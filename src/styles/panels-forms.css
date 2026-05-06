@@ -269,33 +269,6 @@
   align-items: center;
 }
 
-.bullet-lab {
-  display: grid;
-  gap: 10px;
-  margin: 14px 0;
-}
-
-.bullet-lab article {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 12px;
-  align-items: center;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  padding: 12px;
-  background: color-mix(in srgb, var(--panel) 88%, var(--panel-soft));
-}
-
-.bullet-lab span {
-  color: var(--muted);
-  font-size: 11px;
-  text-transform: uppercase;
-}
-
-.bullet-lab p {
-  margin: 3px 0 8px;
-}
-
 .tracker-row {
   display: grid;
   grid-template-columns: minmax(120px, 1fr) minmax(120px, 1fr) 130px 145px;

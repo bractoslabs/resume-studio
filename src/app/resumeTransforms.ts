@@ -96,10 +96,12 @@ const importedSectionAliases = [
   "summary",
   "professional summary",
   "profile",
+  "core skills",
   "core competencies",
   "competencies",
   "skills",
   "technical skills",
+  "selected projects",
   "selected recent publications",
   "selected publications",
   "publications",
@@ -107,6 +109,10 @@ const importedSectionAliases = [
   "certifications",
   "projects",
   "awards",
+  "tools",
+  "additional leadership highlights",
+  "professional development",
+  "community",
   "volunteer",
   "volunteering",
   "volunteer experience",
@@ -118,9 +124,15 @@ const normalizeImportedSectionName = (section: string) => {
   const normalized = section.replace(/\s+/g, " ").trim();
   if (/recent professional experience/i.test(normalized)) return "Professional Experience";
   if (/selected recent publications|selected publications/i.test(normalized)) return "Selected Publications";
+  if (/core skills/i.test(normalized)) return "Core Skills";
   if (/core competencies|competencies|technical skills|skills/i.test(normalized)) return "Skills";
+  if (/selected projects/i.test(normalized)) return "Selected Projects";
+  if (/additional leadership highlights/i.test(normalized)) return "Additional Leadership Highlights";
+  if (/professional development/i.test(normalized)) return "Professional Development";
   if (/selected highlights|highlights/i.test(normalized)) return "Highlights";
   if (/professional summary|profile|summary/i.test(normalized)) return "Summary";
+  if (/community/i.test(normalized)) return "Community";
+  if (/tools/i.test(normalized)) return "Tools";
   if (/volunteer experience|volunteering|volunteer/i.test(normalized)) return "Volunteer";
   return titleCaseSection(normalized);
 };
@@ -142,6 +154,7 @@ const isLikelyJobHeader = (line: string, section: string) =>
 const splitInlineImportedSections = (line: string) => {
   const normalized = line.replace(/[ \t]+/g, " ").trim();
   if (!normalized || normalized.startsWith("#") || normalized.startsWith("- ")) return [normalized].filter(Boolean);
+  if (isImportedSectionHeading(normalized)) return [normalized];
   const output: string[] = [];
   let remaining = normalized;
   let safety = 0;
@@ -151,9 +164,11 @@ const splitInlineImportedSections = (line: string) => {
     const match = matches.find((candidate) => {
       const text = candidate[0];
       const isSingleWord = !/\s/.test(text);
-      return isSingleWord
-        ? (candidate.index ?? 0) === 0 || text === text.toUpperCase()
-        : /^[A-Z]/.test(text) || text === text.toUpperCase();
+      if (!isSingleWord) return /^[A-Z]/.test(text) || text === text.toUpperCase();
+      if (text === text.toUpperCase()) return true;
+      if ((candidate.index ?? 0) !== 0) return false;
+      const after = remaining.slice((candidate.index ?? 0) + text.length).trimStart();
+      return !after || /^[A-Z]/.test(after);
     });
     if (!match || match.index === undefined) {
       output.push(remaining);
@@ -206,7 +221,7 @@ const formatImportedBodyLines = (lines: string[]) => {
       return output;
     }
     if (isImportedSectionHeading(normalized)) {
-      currentSection = titleCaseSection(normalized);
+      currentSection = normalizeImportedSectionName(normalized);
       output.push(`\n## ${currentSection}\n`);
       return output;
     }
@@ -630,21 +645,31 @@ export const createResumeFromImportDraft = (draft: ImportDraft): ResumeDocument 
   };
 };
 
-export const resumeChecklist = (resume: ResumeDocument, ats: ReturnType<typeof analyzeAts>, jobDescription = "") => {
+const sectionBody = (content: string, names: string[]) => {
+  const match = [...content.matchAll(/^##\s+(.+?)\s*\n+([\s\S]*?)(?=\n+##\s+|$)/gm)].find(([_, heading]) =>
+    names.some((name) => heading.toLowerCase().includes(name)),
+  );
+  return match?.[2]?.trim() ?? "";
+};
+
+const hasSectionContent = (content: string, names: string[]) => sectionBody(content, names).replace(/[#_*`\-\s|]/g, "").length > 0;
+
+export const resumeChecklist = (resume: ResumeDocument, ats: ReturnType<typeof analyzeAts>) => {
   const parsed = parseFrontmatter(resume.markdown);
   const content = parsed.content;
   const headings = [...content.matchAll(/^##\s+(.+)$/gm)].map((match) => match[1].toLowerCase());
   const hasHeading = (name: string) => headings.some((heading) => heading.includes(name));
+  const introText = (content.split(/^##\s+/m)[0] ?? "").replace(/[#_*`\-\s|]/g, "");
   return [
     {
       id: "contact",
       label: "Contact info complete",
       done: Boolean(parsed.frontmatter.email && parsed.frontmatter.phone && parsed.frontmatter.location),
     },
-    { id: "summary", label: "Summary added", done: content.split(/^##\s+/m)[0]?.trim().length > 80 },
+    { id: "summary", label: "Summary added", done: introText.length > 0 || hasSectionContent(content, ["summary", "profile"]) },
     { id: "experience", label: "Experience added", done: hasHeading("experience") && /###\s+/.test(content) },
     { id: "skills", label: "Skills added", done: hasHeading("skills") },
-    { id: "job", label: "Job target added", done: resume.jobTargets.length > 0 || jobDescription.trim().length > 0 },
+    { id: "education", label: "Education added", done: hasSectionContent(content, ["education"]) },
   ];
 };
 

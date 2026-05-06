@@ -230,6 +230,15 @@
   gap: 14px;
 }
 
+.import-create-btn {
+  flex: 0 0 auto;
+  min-height: 40px;
+  padding: 0 18px;
+  align-self: center;
+  line-height: 1;
+  white-space: nowrap;
+}
+
 .import-review-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -479,6 +488,10 @@
   .setup-grid {
     grid-template-columns: 1fr;
     display: grid;
+  }
+
+  .import-create-btn {
+    width: 100%;
   }
 
   .modal-card,
