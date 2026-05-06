@@ -2,7 +2,7 @@
 
 Public roadmap and backlog for improving Resume Studio's usability, usefulness, UI/UX, and long-term product quality.
 
-This roadmap is not a promise. Priorities may change during public beta based on user feedback, maintenance cost, security needs, and product direction.
+This roadmap is not a promise. Priorities may change based on user feedback, maintenance cost, security needs, and product direction.
 
 ## Product Flow and Onboarding
 

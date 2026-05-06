@@ -1,99 +1,242 @@
-import { Check, FileText } from "lucide-react";
+import { ArrowRight, Check, ClipboardCheck, Code2, Eye, FileDown, Github, LockKeyhole, SearchCheck, ShieldCheck } from "lucide-react";
 import type { ReactNode } from "react";
 import type { View } from "../../app/types";
 import { Button } from "../common/Button";
+import { ResumeStudioLogo } from "../common/ResumeStudioLogo";
 
-export const LandingSections = ({ setView }: { setView: (view: View) => void }) => (
-  <>
-    <section className="landing-section how-it-works">
-      <h2>How it works</h2>
-      <div className="landing-grid four">
-        {[
-          "Create a resume in Markdown or guided mode.",
-          "Run Resume Review for quality and readability issues.",
-          "Use Keyword & Fit Check without fabricating facts.",
-          "Export a PDF, DOCX, Markdown, plain text, HTML, JSON Resume, or experimental YAML.",
-        ].map((item, index) => (
-          <article key={item}>
-            <span>{index + 1}</span>
-            <p>{item}</p>
-          </article>
-        ))}
-      </div>
-    </section>
-    <section className="landing-section">
-      <h2>Features</h2>
-      <div className="landing-grid">
-        {[
-          "Markdown source of truth with guided editing",
-          "Live preview with print-oriented styling",
-          "Explainable Resume Review and plain-text parse preview",
-          "Keyword overlap and truthful tailoring suggestions",
-          "Version history, templates, and local backups",
-          "Cover letter, LinkedIn, and interview prep career tools",
-        ].map((item) => (
-          <article key={item}>
-            <Check size={16} />
-            <p>{item}</p>
-          </article>
-        ))}
-      </div>
-    </section>
-    <section className="landing-section split">
-      <div>
-        <h2>Privacy-first design</h2>
-        <p>
-          Guest mode stores resumes in your browser. Resume Studio does not require accounts, does not add analytics by default, and does
-          not upload resume content in this static beta.
-        </p>
-        <Button onClick={() => setView("privacy")}>Read privacy notes</Button>
-      </div>
-      <div>
-        <h2>Export formats</h2>
-        <p>
-          PDF export creates a downloadable file from your resume data. Plain text helps with job portals. Markdown is ideal for editing and
-          backups. JSON Resume supports portability.
-        </p>
-        <Button onClick={() => setView("dashboard")}>Start free</Button>
-      </div>
-    </section>
-    <section className="landing-section beta-note-section">
-      <article className="beta-note-card">
-        <strong>Public beta</strong>
-        <p>
-          Resume Studio is in public beta. Core features are usable, but imports, exports, templates, and review tools may continue to
-          change.
-        </p>
-        <p>Please keep a backup of important resumes and review exported files before sending them.</p>
-      </article>
-    </section>
-    <section className="landing-section faq">
-      <h2>FAQ</h2>
-      {[
-        ["Is Resume Studio free?", "Yes. The public beta is free to use, with no account requirement and no paywalls."],
-        ["Does it use an LLM?", "No. Review, Keyword & Fit Check, and helper drafts are local rule-based suggestions."],
-        ["Where is my data stored?", "In this browser until you export, copy, download, or delete it."],
-        [
-          "Can I import an existing resume?",
-          "Best import results come from Markdown, TXT, and DOCX. Selectable-text PDFs may work. Scanned or image-only PDFs are not supported yet.",
-        ],
-        [
-          "Which browsers work best?",
-          "Best tested on current Chrome, Edge, and Safari desktop. Firefox should work, but PDF download behavior may vary. Mobile works for review and light edits, but full resume editing is best on desktop.",
-        ],
-        [
-          "What are the current beta limitations?",
-          "Resume Studio saves data locally in your browser, not to an account. PDF and DOCX exports may not match visual templates perfectly, scanned PDFs may not import, and review tools are guidance only. Resume Studio does not guarantee ATS results, interviews, or job offers.",
-        ],
-      ].map(([q, a]) => (
-        <details key={q}>
-          <summary>{q}</summary>
-          <p>{a}</p>
-        </details>
-      ))}
-    </section>
+const githubUrl = "https://github.com/bractoslabs/resume-studio";
+
+export const LandingPage = ({ setView, themeToggle }: { setView: (view: View) => void; themeToggle?: ReactNode }) => (
+  <main className="landing landing-home">
+    <LandingNav setView={setView} themeToggle={themeToggle} />
+    <LandingHero setView={setView} />
+    <FeatureGrid />
+    <PrivacySection setView={setView} />
+    <MarkdownSection />
     <PublicFooter setView={setView} />
-  </>
+  </main>
+);
+
+const LandingNav = ({ setView, themeToggle }: { setView: (view: View) => void; themeToggle?: ReactNode }) => (
+  <nav className="landing-nav" aria-label="Home">
+    <button className="landing-brand" onClick={() => setView("landing")}>
+      <span className="landing-brand-mark" aria-hidden="true">
+        <ResumeStudioLogo className="landing-brand-logo" />
+      </span>
+      <span>Resume Studio</span>
+    </button>
+    <div className="landing-nav-actions">
+      {themeToggle}
+      <a
+        className="landing-icon-link"
+        href={githubUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="View on GitHub"
+        title="GitHub"
+      >
+        <Github size={18} />
+      </a>
+      <Button className="primary" onClick={() => setView("dashboard")}>
+        Start building
+      </Button>
+    </div>
+  </nav>
+);
+
+const LandingHero = ({ setView }: { setView: (view: View) => void }) => (
+  <section className="landing-hero" aria-labelledby="landing-title">
+    <div className="landing-hero-copy">
+      <h1 id="landing-title">Resume Studio</h1>
+      <p className="landing-subheadline">A free, private, Markdown-first resume builder.</p>
+      <p className="landing-support">
+        Write in Markdown. Preview instantly. Review, tailor, and export your resume without creating an account.
+      </p>
+      <div className="landing-hero-actions">
+        <Button className="primary large" onClick={() => setView("dashboard")}>
+          Start building <ArrowRight size={17} />
+        </Button>
+        <a className="btn landing-secondary-btn" href={githubUrl} target="_blank" rel="noopener noreferrer">
+          <Github size={17} /> View on GitHub
+        </a>
+      </div>
+      <div className="landing-trust-list" aria-label="Key product details">
+        {["No account required", "Local-first", "Open source", "Multi-format export"].map((item) => (
+          <span key={item}>
+            <Check size={14} /> {item}
+          </span>
+        ))}
+      </div>
+    </div>
+    <ProductMockup />
+  </section>
+);
+
+const ProductMockup = () => (
+  <div className="product-mockup" aria-label="Resume Studio Markdown editor and resume preview mockup">
+    <div className="mockup-frame">
+      <div className="mockup-chrome" aria-hidden="true">
+        <span />
+        <span />
+        <span />
+      </div>
+      <div className="mockup-toolbar">
+        <strong>John Smith</strong>
+        <span>Autosaved locally</span>
+      </div>
+      <div className="mockup-workspace">
+        <section className="mockup-editor" aria-label="Markdown editor example">
+          <div className="mockup-pane-label">Markdown</div>
+          <pre>{`---
+name: John Smith
+title: Product Operations Manager
+email: john.smith@example.com
+location: San Francisco, CA
+---
+
+## Summary
+Product operations manager who turns
+messy workflows into clear operating systems.
+
+## Experience
+### Product Operations Manager
+Acme Labs · 2021 - Present
+- Led quarterly planning and operating reviews
+  across product, engineering, and operations.
+- Improved intake and handoff workflows,
+  reducing cycle time by 28%.
+- Built KPI dashboards used by leadership to
+  track delivery, quality, and customer outcomes.
+
+## Skills
+Operations strategy, KPI dashboards, planning
+
+## Education
+B.S. Business Administration`}</pre>
+        </section>
+        <section className="mockup-preview" aria-label="Resume preview example">
+          <div className="mockup-pane-label">Preview</div>
+          <article className="mockup-resume">
+            <header>
+              <h2>John Smith</h2>
+              <p>Product Operations Manager</p>
+              <span>john.smith@example.com · San Francisco, CA</span>
+            </header>
+            <div>
+              <h3>Summary</h3>
+              <p>Product operations manager who turns messy workflows into clear operating systems.</p>
+            </div>
+            <div>
+              <h3>Experience</h3>
+              <h4>Product Operations Manager · Acme Labs</h4>
+              <ul>
+                <li>Led quarterly planning and operating reviews across product, engineering, and operations.</li>
+                <li>Improved intake and handoff workflows, reducing cycle time by 28%.</li>
+                <li>Built KPI dashboards used by leadership to track delivery, quality, and customer outcomes.</li>
+              </ul>
+            </div>
+            <div className="mockup-resume-grid">
+              <div>
+                <h3>Skills</h3>
+                <p>Operations strategy, KPI dashboards, planning</p>
+              </div>
+              <div>
+                <h3>Education</h3>
+                <p>B.S. Business Administration</p>
+              </div>
+            </div>
+          </article>
+        </section>
+      </div>
+    </div>
+  </div>
+);
+
+const featureItems = [
+  {
+    title: "Live Preview",
+    body: "See your resume update as you write.",
+    icon: Eye,
+  },
+  {
+    title: "Resume Review",
+    body: "Catch weak bullets, ATS readability issues, formatting problems, and missing context.",
+    icon: ClipboardCheck,
+  },
+  {
+    title: "Keyword & Fit Check",
+    body: "Compare your resume with a job description and find relevant keywords, skills, and gaps.",
+    icon: SearchCheck,
+  },
+  {
+    title: "Export to multiple formats",
+    body: "Download PDF, DOCX, Markdown, plain text, HTML, JSON Resume, YAML, and backups.",
+    icon: FileDown,
+  },
+];
+
+const FeatureGrid = () => (
+  <section className="landing-section landing-feature-section" aria-labelledby="feature-title">
+    <div className="landing-section-heading">
+      <h2 id="feature-title">Everything you need to get a resume ready</h2>
+    </div>
+    <div className="landing-feature-grid">
+      {featureItems.map(({ title, body, icon: Icon }) => (
+        <article className="landing-feature-card" key={title}>
+          <span className="landing-card-icon" aria-hidden="true">
+            <Icon size={20} />
+          </span>
+          <h3>{title}</h3>
+          <p>{body}</p>
+        </article>
+      ))}
+    </div>
+  </section>
+);
+
+const PrivacySection = ({ setView }: { setView: (view: View) => void }) => (
+  <section className="landing-section landing-split-section landing-privacy-section" aria-labelledby="privacy-title">
+    <div>
+      <span className="landing-section-icon" aria-hidden="true">
+        <LockKeyhole size={22} />
+      </span>
+      <h2 id="privacy-title">Private by default</h2>
+      <p>
+        Resume Studio does not require an account. Your resumes are stored locally in your browser unless you choose to export, copy, or
+        share them.
+      </p>
+      <Button onClick={() => setView("privacy")}>Read privacy notes</Button>
+    </div>
+    <div className="privacy-diagram" aria-label="Your browser stores your resume locally">
+      <span>Your browser</span>
+      <ArrowRight size={20} aria-hidden="true" />
+      <strong>Your resume</strong>
+      <ShieldCheck size={22} aria-hidden="true" />
+    </div>
+  </section>
+);
+
+const MarkdownSection = () => (
+  <section className="landing-section landing-split-section landing-markdown-section" aria-labelledby="markdown-title">
+    <div>
+      <span className="landing-section-icon" aria-hidden="true">
+        <Code2 size={22} />
+      </span>
+      <h2 id="markdown-title">Built around Markdown</h2>
+      <p>No fighting with text boxes. No mystery formatting. Your resume content stays readable, portable, and easy to edit.</p>
+    </div>
+    <div className="markdown-transform" aria-label="Markdown turns into a resume preview">
+      <pre>{`## Experience
+- Improved intake workflows by 28%
+- Built KPI dashboards for leaders`}</pre>
+      <ArrowRight size={20} aria-hidden="true" />
+      <div>
+        <strong>Experience</strong>
+        <span>Improved intake workflows by 28%</span>
+        <span>Built KPI dashboards for leaders</span>
+      </div>
+    </div>
+  </section>
 );
 
 const PublicFooter = ({ setView }: { setView: (view: View) => void }) => (
@@ -137,8 +280,8 @@ const privacySections = [
   {
     title: "What Bractos Labs Does Not Receive",
     body: [
-      "Bractos Labs does not receive, store, or review your resume content in the current static public beta.",
-      "No account is required. Resume content is not intentionally uploaded to a Resume Studio backend in the current public beta. Resume Studio does not use AI or cloud processing for resume content unless a future version explicitly introduces and discloses that feature.",
+      "Bractos Labs does not receive, store, or review your resume content through the static local-first app.",
+      "No account is required. Resume content is not intentionally uploaded to a Resume Studio backend. Resume Studio does not use AI or cloud processing for resume content unless a future version explicitly introduces and discloses that feature.",
     ],
   },
   {
@@ -179,7 +322,7 @@ const privacySections = [
   {
     title: "Analytics and Tracking",
     body: [
-      "Resume Studio does not currently use analytics, tracking pixels, advertising cookies, or behavioral tracking in the public beta.",
+      "Resume Studio does not currently use analytics, tracking pixels, advertising cookies, or behavioral tracking.",
       "If privacy-respecting analytics are added in the future, this page should be updated before or at the same time those tools are introduced.",
     ],
   },
@@ -206,8 +349,8 @@ const PrivacyPolicyPage = () => (
     <p className="policy-kicker">Effective date: May 2026</p>
     <h1>Privacy Policy</h1>
     <p className="policy-intro">
-      Resume Studio is designed to be local-first. In the current public beta, your resume content stays in your browser. You do not need an
-      account, and Bractos Labs does not receive, store, or review your resume content through the app.
+      Resume Studio is designed to be local-first. Your resume content stays in your browser. You do not need an account, and Bractos Labs
+      does not receive, store, or review your resume content through the app.
     </p>
     {privacySections.map((section) => (
       <article className="policy-section" key={section.title}>
@@ -228,9 +371,9 @@ const PrivacyPolicyPage = () => (
 
 const termsSections = [
   {
-    title: "Public Beta",
+    title: "Product Changes",
     body: [
-      "Resume Studio is in public beta. Features may change, and imports, exports, templates, and review tools may continue to evolve.",
+      "Resume Studio features may change, and imports, exports, templates, and review tools may continue to evolve.",
       "Some behavior may vary by browser. Keep backups of important resumes before clearing browser data, switching devices, or relying on the app for active applications.",
     ],
   },
@@ -258,7 +401,7 @@ const termsSections = [
   {
     title: "Local Storage and Backups",
     body: [
-      "In the current public beta, Resume Studio stores work locally in your browser. It is not cloud backup and it does not sync to an account.",
+      "Resume Studio stores work locally in your browser. It is not cloud backup and it does not sync to an account.",
       "Clearing browser data, changing devices, switching browsers, or using private browsing may remove saved work. You are responsible for downloading backups.",
     ],
   },
@@ -277,7 +420,7 @@ const termsSections = [
   {
     title: "Limitation of Liability",
     body: [
-      "Resume Studio is provided as-is in public beta. You are responsible for how you use the app, your resume content, your backups, and the files you send to employers or other people.",
+      "Resume Studio is provided as-is. You are responsible for how you use the app, your resume content, your backups, and the files you send to employers or other people.",
     ],
   },
   {
@@ -292,8 +435,8 @@ const securitySections = [
   {
     title: "Current Security Model",
     body: [
-      "Resume Studio is currently a static, local-first public beta. Resume content is intended to remain in your browser.",
-      "The current beta does not require an account and does not include cloud sync or cloud resume storage.",
+      "Resume Studio is a static, local-first app. Resume content is intended to remain in your browser.",
+      "Resume Studio does not require an account and does not include cloud sync or cloud resume storage.",
     ],
   },
   {
@@ -386,7 +529,7 @@ export const PublicInfoPage = ({
     feedback: {
       title: "Feedback",
       body: [
-        "Resume Studio is in public beta. GitHub Issues are the best place to report bugs, request features, or share export/import problems.",
+        "GitHub Issues are the best place to report bugs, request features, or share export/import problems.",
         "If your feedback includes private resume details, email Bractos Labs instead of posting publicly.",
       ],
     },
@@ -394,7 +537,7 @@ export const PublicInfoPage = ({
       title: "Resume Studio is free",
       body: [
         "There are no paywalls, no hidden export gates, and no account gates.",
-        "The goal is a trustworthy free public beta for creating serious resumes.",
+        "The goal is a trustworthy free tool for creating serious resumes.",
       ],
     },
   };
@@ -403,7 +546,7 @@ export const PublicInfoPage = ({
     <main className="public-page">
       <nav className="topbar clean-topbar">
         <button className="brand" onClick={() => setView("landing")}>
-          <FileText size={22} /> Resume Studio <small className="beta-pill">Public beta</small>
+          <ResumeStudioLogo className="brand-logo" /> Resume Studio
         </button>
         <div className="topbar-actions">
           {themeToggle}
@@ -418,13 +561,13 @@ export const PublicInfoPage = ({
         <SectionedPublicPage
           title="Terms of Use"
           effectiveDate="May 2026"
-          intro="Resume Studio is a free public beta provided by Bractos Labs. By using the app, you are responsible for reviewing your resume content, exports, backups, and application materials before sending them."
+          intro="Resume Studio is a free open-source app provided by Bractos Labs. By using the app, you are responsible for reviewing your resume content, exports, backups, and application materials before sending them."
           sections={termsSections}
         />
       ) : view === "security" ? (
         <SectionedPublicPage
           title="Security"
-          intro="Resume Studio is designed as a local-first static app in the current public beta. This page explains the current security model and how to report vulnerabilities."
+          intro="Resume Studio is designed as a local-first static app. This page explains the current security model and how to report vulnerabilities."
           sections={securitySections}
         />
       ) : (

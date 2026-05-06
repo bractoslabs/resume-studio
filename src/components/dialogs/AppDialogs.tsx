@@ -1,5 +1,16 @@
 import { useEffect, useRef, useState } from "react";
-import { ArrowLeft, ArrowRight, CheckCircle2, Download, FileCheck2, FileDown, LayoutTemplate, Upload, X } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  CheckCircle2,
+  ClipboardPaste,
+  Download,
+  FileCheck2,
+  FileDown,
+  LayoutTemplate,
+  Upload,
+  X,
+} from "lucide-react";
 import type { ImportDraft, NewResumeSetup, RenameDraft, RestoreDraft, SaveVersionDraft } from "../../app/types";
 import { formatDate } from "../../lib/utils";
 import { validateBackup } from "../../lib/storage";
@@ -43,8 +54,8 @@ export const FeedbackModal = ({ onClose, setToast }: { onClose: () => void; setT
           <div>
             <h2>Send feedback</h2>
             <p>
-              Resume Studio is in public beta, so bug reports and feature requests are especially helpful. GitHub Issues are best for public
-              feedback. If your feedback includes private resume details, email us instead.
+              Bug reports and feature requests help improve Resume Studio. GitHub Issues are best for public feedback. If your feedback
+              includes private resume details, email us instead.
             </p>
           </div>
           <button ref={closeRef} className="icon-btn" onClick={onClose} aria-label="Close feedback">
@@ -134,33 +145,21 @@ export const ImportModal = ({
         <header>
           <div>
             <h2>Import resume</h2>
-            <p>
-              Best import results: Markdown, TXT, and DOCX. Selectable-text PDFs may work. Scanned or image-only PDFs are not supported yet.
-            </p>
+            <p>Upload a file or paste resume text. You can review the parsed content before creating a resume.</p>
           </div>
           <button ref={closeRef} className="icon-btn" onClick={onClose} aria-label="Close import">
             <X size={18} />
           </button>
         </header>
-        <p className="beta-inline-note">Public beta note: imports may need cleanup, especially PDFs and complex DOCX files.</p>
         <div className="import-grid">
-          <section className="import-choice-card">
-            <h3>Paste</h3>
-            <textarea
-              id="resume-import-text"
-              aria-label="Resume import text"
-              value={text}
-              onChange={(event) => setText(event.target.value)}
-              placeholder="Paste resume text or Markdown..."
-            />
-            <Button disabled={!text.trim()} onClick={() => analyze()}>
-              Preview import
-            </Button>
-          </section>
           <section className="import-choice-card upload-card">
-            <Upload size={22} />
-            <h3>Upload</h3>
-            <p>Markdown, TXT, DOCX, selectable-text PDF, JSON, or YAML.</p>
+            <div className="import-choice-head">
+              <Upload size={22} />
+              <div>
+                <h3>Upload</h3>
+                <p>Use Markdown, TXT, DOCX, PDF with selectable text, JSON, or YAML.</p>
+              </div>
+            </div>
             <label className="btn import-upload-btn">
               {isReadingFile ? "Reading file..." : "Choose file"}
               <input
@@ -174,10 +173,26 @@ export const ImportModal = ({
               />
             </label>
           </section>
+          <section className="import-choice-card">
+            <div className="import-choice-head">
+              <ClipboardPaste size={22} />
+              <div>
+                <h3>Paste</h3>
+                <p>Paste resume text or Markdown when you want to review the parsed content first.</p>
+              </div>
+            </div>
+            <textarea
+              id="resume-import-text"
+              aria-label="Resume import text"
+              value={text}
+              onChange={(event) => setText(event.target.value)}
+              placeholder="Paste resume text or Markdown..."
+            />
+            <Button disabled={!text.trim()} onClick={() => analyze()}>
+              Preview import
+            </Button>
+          </section>
         </div>
-        <p className="import-note">
-          Import results may need cleanup, especially complex PDFs and DOCX files. Review imported content before saving or exporting it.
-        </p>
         {error && <p className="status-note error">{error}</p>}
         {draft && (
           <section className="import-review">
@@ -341,7 +356,15 @@ export const NewResumeDialog = ({
         </header>
         {step === "start" ? (
           <div className="new-resume-options">
-            <Button ref={firstOptionRef} className="new-resume-option" onClick={() => chooseStartMode("guided")}>
+            <Button ref={firstOptionRef} className="new-resume-option" onClick={onImport}>
+              <Upload size={18} />
+              <span>
+                <strong>Import existing resume</strong>
+                <small>Use Markdown, TXT, DOCX, or PDF with selectable text.</small>
+              </span>
+              <ArrowRight className="new-resume-option-arrow" size={18} />
+            </Button>
+            <Button className="new-resume-option" onClick={() => chooseStartMode("guided")}>
               <FileCheck2 size={20} />
               <span>
                 <strong>Guided setup</strong>
@@ -354,14 +377,6 @@ export const NewResumeDialog = ({
               <span>
                 <strong>Markdown template</strong>
                 <small>Open a structured Markdown resume with the core sections already in place.</small>
-              </span>
-              <ArrowRight className="new-resume-option-arrow" size={18} />
-            </Button>
-            <Button className="new-resume-option" onClick={onImport}>
-              <Upload size={18} />
-              <span>
-                <strong>Import existing resume</strong>
-                <small>Best results: Markdown, TXT, and DOCX. Selectable-text PDFs may work.</small>
               </span>
               <ArrowRight className="new-resume-option-arrow" size={18} />
             </Button>
