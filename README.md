@@ -7,9 +7,9 @@
 
 Free, private, Markdown-first resume builder from Bractos Labs.
 
-[Try the app](https://resume.bractos.com) · [Report a bug](https://github.com/bractoslabs/resume-studio/issues/new?template=bug_report.yml) · [Request a feature](https://github.com/bractoslabs/resume-studio/issues/new?template=feature_request.yml)
+[Try the app](https://resume.bractos.com) · [Watch intro video](docs/assets/resume-studio-intro.mp4) · [Report a bug](https://github.com/bractoslabs/resume-studio/issues/new?template=bug_report.yml) · [Request a feature](https://github.com/bractoslabs/resume-studio/issues/new?template=feature_request.yml)
 
-<video src="docs/assets/resume-studio-intro.mp4" controls width="100%" title="Resume Studio intro"></video>
+[![Resume Studio intro video](docs/assets/resume-studio-intro-poster.png)](docs/assets/resume-studio-intro.mp4)
 
 Resume Studio helps you write, review, tailor, and export resumes without creating an account. It is built for people who want control over their resume source, a clean live preview, and local-first privacy.
 
