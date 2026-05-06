@@ -70,10 +70,16 @@
   }
   .onboarding-card,
   .tailor-results,
-  .export-settings,
   .settings-grid,
   .job-row {
     grid-template-columns: 1fr;
+  }
+  .recommended-export .inline-actions {
+    min-width: 0;
+    justify-content: stretch;
+  }
+  .recommended-export .btn {
+    width: 100%;
   }
   .copy-actions {
     grid-template-columns: 1fr;

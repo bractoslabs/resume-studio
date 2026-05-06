@@ -12,7 +12,6 @@ import {
   exportResumeForgeJson,
   exportYaml,
 } from "../../lib/exporters";
-import { exportPdf } from "../../lib/pdfExport";
 import { Button } from "../common/Button";
 import { writeClipboard } from "../../app/resumeTransforms";
 
@@ -22,8 +21,6 @@ interface ExportCenterProps {
   style: string;
   appState?: unknown;
   template: ResumeTemplate;
-  atsMode: boolean;
-  setAtsMode: (value: boolean) => void;
   downloadBackup: () => void;
   recordExport?: (format: string) => void;
   activePageCount: number;
@@ -39,8 +36,6 @@ export const ExportCenter = ({
   renderedHtml,
   style,
   template,
-  atsMode,
-  setAtsMode,
   downloadBackup,
   recordExport,
   activePageCount,
@@ -74,7 +69,7 @@ export const ExportCenter = ({
           <p className="muted">Check page breaks, margins, and formatting before sending.</p>
         </div>
         <div className="inline-actions">
-          <Button className="primary" onClick={() => runExport("PDF", () => exportPdf(resume))}>
+          <Button className="primary" onClick={() => runExport("PDF", async () => (await import("../../lib/pdfExport")).exportPdf(resume))}>
             <FileDown size={16} /> Export PDF
           </Button>
         </div>
@@ -98,14 +93,6 @@ export const ExportCenter = ({
           </ul>
         </section>
       )}
-      <section className="export-settings">
-        <h3>Export settings</h3>
-        <p className="muted">Template, color, font, and page size live in the Design panel.</p>
-        <label>
-          <input type="checkbox" checked={atsMode} onChange={(event) => setAtsMode(event.target.checked)} /> ATS-safe mode
-        </label>
-        <span className={`risk-pill risk-${template.atsRisk}`}>{template.atsRisk} ATS risk</span>
-      </section>
       <FitAssistant
         resume={resume}
         template={template}

@@ -18,6 +18,21 @@ const italicFont = (fontFamily: string) => (fontFamily === "Times-Roman" ? "Time
 const pointsFromPx = (value?: number) => (value === undefined ? undefined : value * 0.75);
 const marginPoints = (valuePx: number | undefined, fallbackInches: number) => pointsFromPx(valuePx) ?? fallbackInches * 72;
 const templateFontPoints = (template: ResumeTemplate, fontSizePx?: number) => pointsFromPx(fontSizePx) ?? template.fontSize;
+const cssPxToPt = (value: number) => value * 0.75;
+
+const h1FontSize = (template: ResumeTemplate, baseFontSize: number) => {
+  if (template.id === "ats-classic") return 21;
+  if (template.id === "minimal-one-page") return 20;
+  if (template.id === "executive") return 24;
+  if (template.id === "academic") return 23;
+  return Math.max(22, baseFontSize + 10);
+};
+
+const h2FontSize = (template: ResumeTemplate) => {
+  if (template.id === "minimal-one-page") return 10;
+  if (template.id === "academic") return 12;
+  return 11;
+};
 
 type PdfStyles = ReturnType<typeof createPdfStyles>;
 
@@ -27,7 +42,7 @@ const createPdfStyles = (template: ResumeTemplate, frontmatter: ResumeFrontmatte
   const marginVertical = marginPoints(frontmatter.marginVerticalPx, template.margin);
   const marginHorizontal = marginPoints(frontmatter.marginHorizontalPx, template.margin);
   const paragraphGap = pointsFromPx(frontmatter.paragraphSpacingPx) ?? 3.75;
-  const bulletGap = template.bulletSpacing === "compact" ? 1.5 : template.bulletSpacing === "airy" ? 4 : 2.5;
+  const bulletGap = template.bulletSpacing === "compact" ? cssPxToPt(1) : template.bulletSpacing === "airy" ? cssPxToPt(5) : cssPxToPt(3);
   const fontFamily = pdfFont(frontmatter.font ?? template.fontFamily);
 
   return StyleSheet.create({
@@ -42,14 +57,14 @@ const createPdfStyles = (template: ResumeTemplate, frontmatter: ResumeFrontmatte
       backgroundColor: "#ffffff",
     },
     h1: {
-      marginBottom: 3,
+      marginBottom: cssPxToPt(4),
       fontFamily: boldFont(fontFamily),
-      fontSize: baseFontSize + (template.id === "executive" ? 12 : 10),
+      fontSize: h1FontSize(template, baseFontSize),
       textAlign: "center",
       color: template.id === "technical" ? "#1d4ed8" : template.id === "product" ? "#581c87" : "#111827",
     },
     headerText: {
-      marginBottom: 2,
+      marginVertical: cssPxToPt(2),
       textAlign: "center",
     },
     headerLink: {
@@ -57,23 +72,23 @@ const createPdfStyles = (template: ResumeTemplate, frontmatter: ResumeFrontmatte
       textDecoration: "none",
     },
     h2: {
-      marginTop: paragraphGap + 8,
-      marginBottom: paragraphGap,
-      paddingBottom: template.headingStyle === "boxed" ? 2 : 3,
+      marginTop: template.id === "minimal-one-page" ? cssPxToPt(9) : cssPxToPt(13),
+      marginBottom: cssPxToPt(5),
+      paddingBottom: template.headingStyle === "boxed" ? cssPxToPt(2) : cssPxToPt(3),
       paddingHorizontal: template.headingStyle === "boxed" ? 4 : 0,
       borderBottomWidth: template.headingStyle === "boxed" ? 0 : template.id === "technical" ? 2 : 1,
       borderBottomColor: template.id === "ats-classic" || template.id === "minimal-one-page" ? "#111827" : accent,
       backgroundColor: template.headingStyle === "boxed" ? `${accent}22` : undefined,
       color: template.headingStyle === "boxed" ? "#111827" : template.id === "ats-classic" ? "#111827" : accent,
       fontFamily: boldFont(fontFamily),
-      fontSize: baseFontSize + (template.id === "academic" ? 1.3 : 0.4),
+      fontSize: h2FontSize(template),
       textTransform: template.headingStyle === "accent" || template.id === "academic" ? "none" : "uppercase",
     },
     h3: {
-      marginTop: paragraphGap + 4,
-      marginBottom: 1.5,
+      marginTop: cssPxToPt(9),
+      marginBottom: cssPxToPt(2),
       fontFamily: template.id === "executive" ? italicFont(fontFamily) : boldFont(fontFamily),
-      fontSize: baseFontSize + 0.2,
+      fontSize: 10.5,
     },
     paragraph: {
       marginVertical: paragraphGap / 2,
@@ -92,7 +107,7 @@ const createPdfStyles = (template: ResumeTemplate, frontmatter: ResumeFrontmatte
       marginBottom: bulletGap,
     },
     bullet: {
-      width: 10,
+      width: cssPxToPt(18) - 4,
     },
     bulletText: {
       flex: 1,
@@ -104,6 +119,32 @@ const createPdfStyles = (template: ResumeTemplate, frontmatter: ResumeFrontmatte
     break: {
       height: 0,
     },
+    continuedHeader: {
+      position: "absolute",
+      top: marginVertical * 0.34,
+      left: marginHorizontal,
+      right: marginHorizontal,
+      minHeight: 17,
+      paddingBottom: 4.3,
+      borderBottomWidth: 1,
+      borderBottomColor: accent,
+      flexDirection: "row",
+      justifyContent: "space-between",
+      gap: 12,
+      color: "#111827",
+    },
+    continuedHeaderName: {
+      fontFamily: boldFont(fontFamily),
+      fontSize: 10.5,
+      lineHeight: 1.2,
+    },
+    continuedHeaderContact: {
+      flex: 1,
+      color: "#475569",
+      fontSize: 9.5,
+      lineHeight: 1.2,
+      textAlign: "right",
+    },
   });
 };
 
@@ -112,7 +153,7 @@ const textFrom = (node: ChildNode): string => node.textContent?.replace(/\s+/g, 
 const renderInlineNodes = (nodes: ChildNode[], styles: PdfStyles, keyPrefix: string): ReactNode[] =>
   nodes.flatMap((node, index): ReactNode[] => {
     const key = `${keyPrefix}-${index}`;
-    if (node.nodeType === Node.TEXT_NODE) return [node.textContent ?? ""];
+    if (node.nodeType === Node.TEXT_NODE) return [node.textContent?.replace(/\s+/g, " ") ?? ""];
     if (node.nodeType !== Node.ELEMENT_NODE) return [];
 
     const element = node as HTMLElement;
@@ -220,9 +261,23 @@ const ResumePdfDocument = ({
   frontmatter: ResumeFrontmatter;
 }) => {
   const styles = createPdfStyles(template, frontmatter);
+  const contactLine = [frontmatter.email, frontmatter.phone, frontmatter.location, ...(frontmatter.links ?? [])]
+    .map(safeText)
+    .filter(Boolean);
   return (
     <Document title={resume.title} author={frontmatter.name || "Resume Studio"}>
       <Page size={resume.pageSize === "a4" ? "A4" : "LETTER"} style={styles.page} wrap>
+        <View
+          fixed
+          render={({ pageNumber }) =>
+            pageNumber > 1 ? (
+              <View style={styles.continuedHeader}>
+                <Text style={styles.continuedHeaderName}>{safeText(frontmatter.name)}</Text>
+                {contactLine.length > 0 && <Text style={styles.continuedHeaderContact}>{contactLine.join(" | ")}</Text>}
+              </View>
+            ) : null
+          }
+        />
         {htmlToPdfNodes(html, styles)}
       </Page>
     </Document>
@@ -230,7 +285,7 @@ const ResumePdfDocument = ({
 };
 
 export const exportPdf = async (resume: ResumeDocument) => {
-  const rendered = renderMarkdown(resume.markdown, true);
+  const rendered = renderMarkdown(resume.markdown);
   const template = getTemplate(rendered.frontmatter.template ?? resume.templateId);
   const blob = await pdf(
     <ResumePdfDocument resume={resume} template={template} html={rendered.html} frontmatter={rendered.frontmatter} />,

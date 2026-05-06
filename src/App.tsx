@@ -21,7 +21,6 @@ import { downloadBlob, nowIso, uid } from "./lib/utils";
 import { compareResumeToJob, extractJobTarget } from "./lib/jobMatcher";
 import { analyzeResume } from "./lib/resume-review";
 import { parseFrontmatter, parseStructuredResume, renderMarkdown, structuredToMarkdown, updateMarkdownFrontmatter } from "./lib/markdown";
-import { exportPdf } from "./lib/pdfExport";
 import {
   ClearLocalDataDialog,
   ConfirmDialog,
@@ -78,7 +77,6 @@ function App() {
   const [editMode, setEditMode] = useState<EditMode>("markdown");
   const [query, setQuery] = useState("");
   const [sort, setSort] = useState("updated");
-  const [atsMode, setAtsMode] = useState(false);
   const [zoom, setZoom] = useState(0.92);
   const [saveStateText, setSaveStateText] = useState("Saved locally");
   const [lastSavedAt, setLastSavedAt] = useState(state.storageMeta?.lastSavedAt ?? "");
@@ -146,10 +144,7 @@ function App() {
   };
 
   const activeResume = state.resumes.find((resume) => resume.id === state.activeResumeId) ?? state.resumes[0];
-  const rendered = useMemo(
-    () => renderMarkdown(activeResume?.markdown ?? defaultResumeMarkdown, atsMode),
-    [activeResume?.markdown, atsMode],
-  );
+  const rendered = useMemo(() => renderMarkdown(activeResume?.markdown ?? defaultResumeMarkdown, false), [activeResume?.markdown]);
   const template = getTemplate(activeResume?.templateId ?? rendered.frontmatter.template);
   const jobMatch = useMemo(
     () => (jobDescription.trim() ? compareResumeToJob(activeResume?.markdown ?? "", jobDescription) : null),
@@ -168,10 +163,7 @@ function App() {
     () => resumeReview.issues.filter((issue) => !ignoredIssues.includes(issue.id)),
     [resumeReview.issues, ignoredIssues],
   );
-  const checklist = useMemo(
-    () => (activeResume ? resumeChecklist(activeResume, ats, jobDescription) : []),
-    [activeResume, ats, jobDescription],
-  );
+  const checklist = useMemo(() => (activeResume ? resumeChecklist(activeResume, ats) : []), [activeResume, ats]);
   const compareVersion = activeResume?.versions.find((version) => version.id === versionCompareId);
 
   useEffect(() => {
@@ -264,7 +256,7 @@ function App() {
       }
       if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "p") {
         event.preventDefault();
-        if (activeResume) void exportPdf(activeResume);
+        if (activeResume) void import("./lib/pdfExport").then(({ exportPdf }) => exportPdf(activeResume));
       }
       if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
         event.preventDefault();
@@ -622,8 +614,6 @@ function App() {
             editorRef={editorRef}
             zoom={zoom}
             setZoom={setZoom}
-            atsMode={atsMode}
-            setAtsMode={setAtsMode}
             activePageCount={activePageCount}
             checklist={checklist}
             intelligence={intelligenceScores(activeResume.markdown, ats, jobMatch)}

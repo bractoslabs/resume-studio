@@ -103,13 +103,25 @@
   background: color-mix(in srgb, var(--accent-ui) 16%, transparent);
 }
 
+.readiness-next.complete {
+  cursor: default;
+  border-color: color-mix(in srgb, var(--accent-ui) 30%, var(--line));
+  background: color-mix(in srgb, var(--accent-ui) 8%, transparent);
+}
+
+.readiness-next.complete:hover {
+  border-color: color-mix(in srgb, var(--accent-ui) 30%, var(--line));
+  background: color-mix(in srgb, var(--accent-ui) 8%, transparent);
+}
+
 .readiness-steps {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  grid-template-columns: repeat(auto-fit, 118px);
   gap: 6px;
   margin: 0;
   padding: 0;
   list-style: none;
+  justify-content: start;
 }
 
 .readiness-steps li {
@@ -127,7 +139,7 @@
 
 .readiness-steps li button {
   width: 100%;
-  min-height: 30px;
+  min-height: 28px;
   display: inline-flex;
   align-items: center;
   gap: 5px;
@@ -135,7 +147,7 @@
   border-radius: 8px;
   background: color-mix(in srgb, var(--panel-soft) 72%, transparent);
   color: inherit;
-  padding: 0 8px;
+  padding: 0 9px;
   cursor: pointer;
   font-size: 12px;
   font-weight: 650;
@@ -197,7 +209,7 @@
   }
 
   .readiness-steps {
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(104px, 1fr));
   }
 }
 

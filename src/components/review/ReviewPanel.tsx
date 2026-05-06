@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 import { ChevronDown } from "lucide-react";
 import type { ResumeAchievementAudit, ResumeReviewIssue, ResumeReviewResult, ResumeSectionReview } from "../../lib/resume-review";
-import { parseFrontmatter } from "../../lib/markdown";
 import { Button } from "../common/Button";
-import { improveBulletLocal, scoreTone } from "../../app/resumeTransforms";
+import { scoreTone } from "../../app/resumeTransforms";
 
 interface ReviewPanelProps {
   ats?: unknown;
@@ -69,12 +68,16 @@ export const ReviewPanel = ({
   useEffect(() => {
     onReviewed?.();
   }, []);
+  useEffect(() => {
+    setShowAll(false);
+  }, [mode]);
   const modeIssues = issues.filter((issue) => modeIssueFilter(mode, issue));
   const groups: IssueGroup[] = [
     ["Must fix", modeIssues.filter((issue) => issue.priority === "must-fix"), 3],
     ["Should improve", modeIssues.filter((issue) => issue.priority === "should-improve"), mode === "quick" ? 4 : 6],
     ["Nice to have", modeIssues.filter((issue) => issue.priority === "nice-to-have"), mode === "deep" ? 3 : 0],
   ];
+  const hiddenIssueCount = groups.reduce((count, [, list, defaultCount]) => count + Math.max(0, list.length - defaultCount), 0);
   const scores = Object.values(review.scores) as Array<{ label: string; value: number; explanation: string }>;
   const visibleScores = scores.filter((score) => {
     if (mode === "quick" || mode === "deep") return true;
@@ -139,11 +142,14 @@ export const ReviewPanel = ({
       {(mode === "deep" || mode === "recruiter") && <AchievementAudit audit={review.achievementAudit} />}
       {(mode === "deep" || mode === "quick") && <SectionReviewGrid sections={review.sectionReviews} editSection={editSection} />}
       {(mode === "ats" || mode === "deep") && <AtsOptimizationPanel review={review} />}
-      {(mode === "quick" || mode === "recruiter") && <BulletImprover markdown={markdown} setMarkdown={setMarkdown} />}
 
-      <div className="inline-actions">
-        <Button onClick={() => setShowAll(!showAll)}>{showAll ? "Show fewer issues" : "Show all issues"}</Button>
-      </div>
+      {hiddenIssueCount > 0 && (
+        <div className="inline-actions">
+          <Button onClick={() => setShowAll(!showAll)}>
+            {showAll ? "Show fewer issues" : `Show all issues (${hiddenIssueCount} more)`}
+          </Button>
+        </div>
+      )}
       {groups.map(([title, list, defaultCount]) => {
         const visible = showAll ? list : list.slice(0, defaultCount);
         if (!showAll && defaultCount === 0 && list.length > 0) {
@@ -353,50 +359,3 @@ const IssueCard = ({ issue, markdown, setMarkdown, createSystemSnapshot, editSec
     </div>
   </article>
 );
-
-const BulletImprover = ({ markdown, setMarkdown }: { markdown: string; setMarkdown: (markdown: string) => void }) => {
-  const body = parseFrontmatter(markdown).content;
-  const experience = body.match(/##\s+Experience\s*([\s\S]*?)(?=\n##\s+|$)/i)?.[1] ?? body;
-  const bullets = experience
-    .split("\n")
-    .map((line) => line.trim())
-    .filter((line) => /^[-*]\s+/.test(line))
-    .slice(0, 4);
-  if (!bullets.length)
-    return (
-      <section className="bullet-lab compact-lab">
-        <h3>Bullet improvement lab</h3>
-        <p>No experience bullets found yet.</p>
-      </section>
-    );
-  return (
-    <section className="bullet-lab compact-lab">
-      <h3>Bullet improvement lab</h3>
-      {bullets.map((line) => {
-        const suggestion = improveBulletLocal(line, "concise");
-        return (
-          <article key={line}>
-            <div>
-              <span>Before</span>
-              <p>{suggestion.before}</p>
-              <span>Suggested</span>
-              <p>{suggestion.after}</p>
-            </div>
-            <Button
-              onClick={() => {
-                const lines = markdown.split("\n");
-                const index = lines.findIndex((candidate) => candidate.trim() === line);
-                if (index !== -1) {
-                  lines[index] = `- ${suggestion.after}`;
-                  setMarkdown(lines.join("\n"));
-                }
-              }}
-            >
-              Accept
-            </Button>
-          </article>
-        );
-      })}
-    </section>
-  );
-};

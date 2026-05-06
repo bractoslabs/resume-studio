@@ -203,7 +203,7 @@ export const ImportModal = ({
                   {draft.sections.length ? draft.sections.join(", ") : "No standard sections detected"} · {draft.confidence}% confidence
                 </p>
               </div>
-              <Button className="primary" onClick={onCreate}>
+              <Button className="primary import-create-btn" onClick={onCreate}>
                 Create resume
               </Button>
             </div>
